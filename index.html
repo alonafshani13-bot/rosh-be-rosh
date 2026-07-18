@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<title>ראש בראש — קרב מוחות</title>
+<style>
+/* ═══════════ ראש בראש — עיצוב ═══════════ */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg0: #0b1020;
+  --bg1: #141a35;
+  --card: rgba(255,255,255,.06);
+  --card2: rgba(255,255,255,.10);
+  --line: rgba(255,255,255,.12);
+  --txt: #eef1ff;
+  --dim: #9aa3c7;
+  --acc: #7c6cf0;
+  --acc2: #a89bff;
+  --gold: #ffd166;
+  --green: #3ddc84;
+  --red: #ff5470;
+  --wa: #25d366;
+  --r: 20px;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+html, body { height: 100%; }
+body {
+  font-family: "Segoe UI", "Heebo", "Arial Hebrew", Arial, sans-serif;
+  background: radial-gradient(1200px 800px at 80% -10%, #2a2565 0%, transparent 55%),
+              radial-gradient(900px 700px at -10% 110%, #143a5c 0%, transparent 55%),
+              linear-gradient(160deg, var(--bg0), var(--bg1));
+  background-attachment: fixed;
+  color: var(--txt);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── מסכים ─── */
+.screen {
+  display: none;
+  min-height: 100dvh;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: max(18px, env(safe-area-inset-top)) 18px calc(24px + env(safe-area-inset-bottom));
+  flex-direction: column;
+  animation: fadeIn .35s ease;
+}
+.screen.on { display: flex; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+h1 { font-size: 34px; font-weight: 800; letter-spacing: -.5px; }
+h2 { font-size: 22px; font-weight: 800; }
+.sec-title { margin: 22px 0 10px; font-size: 17px; color: var(--dim); font-weight: 700; }
+.dim { color: var(--dim); font-size: 13px; }
+
+/* ─── כפתורים ─── */
+.btn {
+  font-family: inherit; font-size: 16px; font-weight: 700; color: var(--txt);
+  background: var(--card2); border: 1px solid var(--line); border-radius: 16px;
+  padding: 13px 20px; cursor: pointer; transition: transform .12s, filter .15s, opacity .2s;
+  user-select: none;
+}
+.btn:active { transform: scale(.96); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn-primary {
+  background: linear-gradient(135deg, var(--acc), #5a49d8);
+  border: none; box-shadow: 0 6px 20px rgba(124,108,240,.4);
+}
+.btn-primary:not(:disabled):hover { filter: brightness(1.1); }
+.btn-big { width: 100%; padding: 16px; font-size: 18px; border-radius: 18px; }
+.btn-ghost { background: transparent; }
+.btn-gold { background: linear-gradient(135deg, #f6c453, #e8963e); border: none; color: #2c1c00; box-shadow: 0 6px 18px rgba(246,196,83,.35); }
+.btn-wa { background: var(--wa); border: none; color: #04250f; width: 100%; }
+.btn-mini { padding: 8px 12px; font-size: 15px; border-radius: 12px; }
+
+/* ─── שדות ─── */
+.txt {
+  font-family: inherit; font-size: 17px; color: var(--txt);
+  background: rgba(0,0,0,.28); border: 1.5px solid var(--line); border-radius: 14px;
+  padding: 13px 16px; width: 100%; outline: none; transition: border-color .15s;
+}
+.txt:focus { border-color: var(--acc2); }
+.txt::placeholder { color: #6a739c; }
+.fld-label { display: block; margin: 18px 0 8px; font-size: 14px; color: var(--dim); font-weight: 600; }
+.err-line { color: var(--red); font-size: 14px; min-height: 20px; margin: 8px 0; font-weight: 600; }
+
+/* ─── מסך כניסה ─── */
+#screen-login { justify-content: center; }
+.login-box { width: 100%; }
+.logo { text-align: center; margin-bottom: 26px; }
+.logo-emoji { font-size: 74px; filter: drop-shadow(0 8px 24px rgba(124,108,240,.55)); animation: float 3s ease-in-out infinite; }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+.logo h1 { background: linear-gradient(90deg, #fff, var(--acc2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tagline { color: var(--dim); margin-top: 6px; font-size: 15px; }
+.avatar-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.avatar-opt {
+  font-size: 30px; padding: 9px 0; text-align: center; background: var(--card);
+  border: 2px solid transparent; border-radius: 14px; cursor: pointer; transition: transform .12s, border-color .12s;
+}
+.avatar-opt:hover { transform: scale(1.08); }
+.avatar-opt.sel { border-color: var(--acc2); background: rgba(124,108,240,.22); }
+#btn-login { margin-top: 24px; }
+.login-note { text-align: center; color: var(--dim); font-size: 12px; margin-top: 12px; }
+
+/* ─── מסך בית ─── */
+.home-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.prof { display: flex; align-items: center; gap: 10px; }
+.prof-avatar { font-size: 38px; background: var(--card); border-radius: 14px; padding: 5px 9px; }
+.prof b { font-size: 18px; }
+.record { color: var(--dim); font-size: 12px; margin-top: 2px; }
+.wallet { display: flex; gap: 8px; }
+.chip { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; font-size: 14px; white-space: nowrap; }
+.chip b { font-size: 15px; }
+.chip-money b { color: var(--gold); }
+.chip-energy b { color: var(--green); }
+.energy-timer { font-size: 11px; color: var(--dim); margin-right: 5px; }
+
+.leagues { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.league-card {
+  font-family: inherit; color: var(--txt); text-align: center;
+  background: var(--card); border: 2px solid var(--line); border-radius: var(--r);
+  padding: 14px 6px; cursor: pointer; transition: transform .15s, border-color .15s, background .15s;
+}
+.league-card:hover { transform: translateY(-3px); }
+.league-card.sel { border-color: var(--acc2); background: rgba(124,108,240,.2); box-shadow: 0 8px 24px rgba(124,108,240,.25); }
+.league-icon { font-size: 34px; }
+.league-name { font-weight: 800; font-size: 16px; margin-top: 4px; }
+.league-fee { color: var(--gold); font-size: 13px; font-weight: 700; margin-top: 3px; }
+.league-pot { color: var(--dim); font-size: 11px; margin-top: 2px; }
+.energy-note { color: var(--dim); font-size: 12px; text-align: center; margin-top: 10px; }
+
+.home-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+.hist { display: flex; flex-direction: column; gap: 8px; }
+.hist-item {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--card); border-radius: 14px; padding: 11px 14px; font-size: 14px;
+}
+.hist-item .h-res { font-weight: 800; }
+.hist-item .h-win { color: var(--green); }
+.hist-item .h-lose { color: var(--red); }
+.hist-item .h-tie { color: var(--dim); }
+.hist-empty { color: var(--dim); text-align: center; padding: 18px; font-size: 14px; }
+.home-foot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 24px; }
+
+/* ─── חדר ─── */
+.center-box { width: 100%; max-width: 420px; margin: auto; display: flex; flex-direction: column; gap: 14px; text-align: center; }
+.league-banner {
+  background: rgba(124,108,240,.18); border: 1px solid rgba(124,108,240,.4);
+  border-radius: 999px; padding: 8px 18px; font-weight: 800; font-size: 15px; align-self: center;
+}
+.room-code {
+  font-size: 58px; font-weight: 900; letter-spacing: 14px; padding: 10px 0 10px 0;
+  text-indent: 14px; direction: ltr;
+  background: linear-gradient(90deg, var(--gold), #ffe7a3); -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: 0 0 40px rgba(255,209,102,.25);
+}
+.room-status { color: var(--dim); font-size: 15px; min-height: 22px; }
+.dots::after { content: ""; animation: dots 1.4s steps(4) infinite; }
+@keyframes dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
+.vs-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 8px 0; }
+.vs-player {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+  padding: 14px; min-width: 110px; font-weight: 700; font-size: 15px;
+}
+.vs-player .vp-avatar { font-size: 36px; display: block; }
+.vs-player.empty { color: var(--dim); font-size: 28px; border-style: dashed; }
+.vs-player.ready { border-color: var(--green); box-shadow: 0 0 18px rgba(61,220,132,.25); }
+.vs-x { font-weight: 900; font-size: 20px; color: var(--acc2); }
+.code-input { text-align: center; font-size: 34px; letter-spacing: 12px; direction: ltr; font-weight: 800; }
+
+/* ─── משחק ─── */
+#screen-game { padding-top: 12px; }
+.game-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.g-player {
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  padding: 8px 12px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700;
+  transition: box-shadow .2s, border-color .2s;
+}
+.g-player .gp-avatar { font-size: 24px; }
+.g-player .gp-score { font-size: 20px; font-weight: 900; color: var(--gold); }
+.g-player.turn { border-color: var(--acc2); box-shadow: 0 0 16px rgba(124,108,240,.4); }
+.g-mid { text-align: center; }
+.g-round { font-weight: 800; font-size: 14px; }
+.g-pot { color: var(--gold); font-size: 12px; font-weight: 700; }
+
+.g-timer-wrap { position: relative; width: 74px; height: 74px; margin: 14px auto 6px; }
+#g-timer-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.t-bg { fill: none; stroke: rgba(255,255,255,.09); stroke-width: 7; }
+.t-arc { fill: none; stroke: var(--green); stroke-width: 7; stroke-linecap: round;
+  stroke-dasharray: 276.5; stroke-dashoffset: 0; transition: stroke-dashoffset .95s linear, stroke .3s; }
+.g-timer-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; }
+.g-timer-wrap.hot .t-arc { stroke: var(--red); }
+.g-timer-wrap.hot .g-timer-num { color: var(--red); animation: pulse .5s infinite alternate; }
+@keyframes pulse { to { transform: scale(1.15); } }
+
+.g-area { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; flex: 1; }
+.g-cat {
+  font-size: 21px; font-weight: 800; text-align: center; line-height: 1.35;
+  background: var(--card); border-radius: var(--r); padding: 16px;
+}
+.g-turn { text-align: center; font-weight: 800; font-size: 16px; min-height: 24px; }
+.g-turn.mine { color: var(--green); }
+.g-turn.theirs { color: var(--dim); }
+.g-said { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; min-height: 34px; align-content: flex-start; }
+.said-chip {
+  background: rgba(61,220,132,.14); border: 1px solid rgba(61,220,132,.4); color: #baf5d4;
+  border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 700; animation: pop .25s ease;
+}
+.said-chip.op { background: rgba(124,108,240,.15); border-color: rgba(124,108,240,.45); color: #cdc6ff; }
+.said-chip.missed { background: rgba(255,84,112,.12); border-color: rgba(255,84,112,.4); color: #ffb9c6; }
+@keyframes pop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.g-input-row { display: flex; gap: 8px; margin-top: auto; }
+.g-input-wrap { position: relative; flex: 1; }
+.g-input { position: relative; background: rgba(0,0,0,.35); z-index: 2; }
+.g-ghost {
+  position: absolute; inset: 0; z-index: 1; display: flex; align-items: center;
+  padding: 13px 16px; font-size: 17px; color: #5f6890; pointer-events: none; white-space: pre;
+  overflow: hidden;
+}
+.g-input-row .btn { padding-inline: 18px; }
+.shake { animation: shake .35s; }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(6px); } 50% { transform: translateX(-6px); } 75% { transform: translateX(4px); } }
+
+.g-q { font-size: 20px; font-weight: 800; text-align: center; line-height: 1.4; background: var(--card); border-radius: var(--r); padding: 18px 14px; }
+.g-opts { display: grid; grid-template-columns: 1fr; gap: 9px; }
+.opt-btn {
+  font-family: inherit; font-size: 16px; font-weight: 700; color: var(--txt); text-align: right;
+  background: var(--card2); border: 2px solid var(--line); border-radius: 15px; padding: 13px 16px;
+  cursor: pointer; transition: transform .1s, border-color .15s, background .2s;
+}
+.opt-btn:not(:disabled):hover { border-color: var(--acc2); }
+.opt-btn:active { transform: scale(.98); }
+.opt-btn.picked { border-color: var(--acc2); background: rgba(124,108,240,.25); }
+.opt-btn.correct { border-color: var(--green); background: rgba(61,220,132,.2); }
+.opt-btn.wrong { border-color: var(--red); background: rgba(255,84,112,.16); }
+.opt-btn:disabled { cursor: default; }
+.g-mc-status { text-align: center; color: var(--dim); font-weight: 700; min-height: 22px; }
+
+.g-banner {
+  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: rgba(7,10,24,.82); backdrop-filter: blur(6px); z-index: 40; animation: fadeIn .25s;
+}
+.g-banner-inner { text-align: center; font-size: 26px; font-weight: 900; line-height: 1.5; padding: 24px; animation: bannerZoom .45s cubic-bezier(.2,1.4,.4,1); }
+.g-banner-inner .b-sub { font-size: 16px; font-weight: 700; color: var(--dim); margin-top: 10px; }
+.g-banner-inner .b-big { font-size: 44px; }
+@keyframes bannerZoom { from { transform: scale(.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* ─── תוצאות ─── */
+.res-emoji { font-size: 84px; animation: bannerZoom .6s cubic-bezier(.2,1.4,.4,1); }
+.res-score { font-size: 30px; font-weight: 900; letter-spacing: 2px; }
+.res-money { font-size: 24px; font-weight: 900; min-height: 34px; }
+.res-money.plus { color: var(--green); }
+.res-money.minus { color: var(--red); }
+.res-money.zero { color: var(--dim); }
+
+/* ─── מודאל ─── */
+.modal {
+  position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center;
+  background: rgba(5,8,20,.75); backdrop-filter: blur(5px); animation: fadeIn .2s; padding: 20px;
+}
+.modal[hidden] { display: none; }
+.modal-box {
+  background: linear-gradient(165deg, #1c2244, #12172f);
+  border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow);
+  width: 100%; max-width: 380px; padding: 24px; text-align: center;
+  display: flex; flex-direction: column; gap: 14px; animation: bannerZoom .3s cubic-bezier(.2,1.3,.4,1);
+}
+.modal-box h3 { font-size: 20px; }
+.modal-amount { font-size: 30px; font-weight: 900; color: var(--gold); }
+
+/* ─── טוסטים ─── */
+#toasts { position: fixed; top: max(14px, env(safe-area-inset-top)); left: 0; right: 0; z-index: 80; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; }
+.toast {
+  background: #1d2447; border: 1px solid var(--line); border-radius: 999px;
+  padding: 10px 20px; font-size: 14px; font-weight: 700; box-shadow: var(--shadow);
+  animation: toastIn .3s ease; max-width: 90vw;
+}
+.toast.err { border-color: rgba(255,84,112,.5); color: #ffc4cf; }
+.toast.ok { border-color: rgba(61,220,132,.5); color: #c9f7dd; }
+@keyframes toastIn { from { transform: translateY(-18px); opacity: 0; } to { transform: none; opacity: 1; } }
+.toast.out { transition: opacity .4s, transform .4s; opacity: 0; transform: translateY(-14px); }
+
+/* ─── קונפטי ─── */
+#confetti { position: fixed; inset: 0; z-index: 70; pointer-events: none; }
+
+@media (max-width: 400px) {
+  .room-code { font-size: 46px; letter-spacing: 10px; text-indent: 10px; }
+  .avatar-grid { grid-template-columns: repeat(5, 1fr); }
+  h1 { font-size: 28px; }
+}
+
+</style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+<div id="toasts"></div>
+
+<!-- ═══════════ מסך כניסה ═══════════ -->
+<div id="screen-login" class="screen">
+  <div class="login-box">
+    <div class="logo">
+      <div class="logo-emoji">🧠</div>
+      <h1>ראש בראש</h1>
+      <p class="tagline">קרב מוחות בזמן אמת · 1 על 1</p>
+    </div>
+    <label class="fld-label">איך קוראים לך?</label>
+    <input id="login-name" class="txt" maxlength="14" placeholder="השם שלך…" autocomplete="off">
+    <label class="fld-label">בחר אווטאר</label>
+    <div id="avatar-grid" class="avatar-grid"></div>
+    <button id="btn-login" class="btn btn-primary btn-big">יאללה, מתחילים! 🚀</button>
+    <p class="login-note">חד-פעמי · בלי סיסמאות · הכל נשמר במכשיר שלך</p>
+  </div>
+</div>
+
+<!-- ═══════════ מסך בית ═══════════ -->
+<div id="screen-home" class="screen">
+  <div class="home-head">
+    <div class="prof">
+      <span id="home-avatar" class="prof-avatar"></span>
+      <div>
+        <b id="home-name"></b>
+        <div id="home-record" class="record"></div>
+      </div>
+    </div>
+    <div class="wallet">
+      <div class="chip chip-money">💰 <b id="home-bal"></b> ₪</div>
+      <div class="chip chip-energy">⚡ <b id="home-energy"></b><span class="dim">/100</span><span id="energy-timer" class="energy-timer"></span></div>
+    </div>
+  </div>
+
+  <h2 class="sec-title">בחר ליגה</h2>
+  <div class="leagues">
+    <button class="league-card" data-league="beg">
+      <div class="league-icon">🥉</div>
+      <div class="league-name">מתחיל</div>
+      <div class="league-fee">50 ₪ כניסה</div>
+      <div class="league-pot">הקופה: 100 ₪</div>
+    </button>
+    <button class="league-card" data-league="adv">
+      <div class="league-icon">🥈</div>
+      <div class="league-name">מתקדם</div>
+      <div class="league-fee">125 ₪ כניסה</div>
+      <div class="league-pot">הקופה: 250 ₪</div>
+    </button>
+    <button class="league-card" data-league="pro">
+      <div class="league-icon">🥇</div>
+      <div class="league-name">מקצוען</div>
+      <div class="league-fee">500 ₪ כניסה</div>
+      <div class="league-pot">הקופה: 1,000 ₪</div>
+    </button>
+  </div>
+  <p class="energy-note">כל משחק עולה ⚡2 אנרגיה · מתחדש +1 כל 5 דקות</p>
+
+  <div class="home-actions">
+    <button id="btn-create" class="btn btn-primary btn-big">🎮 צור חדר</button>
+    <button id="btn-join" class="btn btn-ghost btn-big">🔑 הצטרף עם קוד</button>
+  </div>
+
+  <h3 class="sec-title">משחקים אחרונים</h3>
+  <div id="hist-list" class="hist"></div>
+
+  <div class="home-foot">
+    <button id="btn-mute" class="btn btn-mini">🔊</button>
+    <span class="dim">ראש בראש · גרסה אישית · לא למכירה</span>
+  </div>
+</div>
+
+<!-- ═══════════ מסך הצטרפות ═══════════ -->
+<div id="screen-join" class="screen">
+  <div class="center-box">
+    <h2>הצטרפות לחדר</h2>
+    <p class="dim">הקלד את הקוד שקיבלת מהחבר</p>
+    <input id="join-code" class="txt code-input" maxlength="4" placeholder="••••" autocomplete="off" autocapitalize="characters">
+    <div id="join-err" class="err-line"></div>
+    <button id="btn-join-go" class="btn btn-primary btn-big">התחבר 🔌</button>
+    <button id="btn-join-back" class="btn btn-ghost">חזרה</button>
+  </div>
+</div>
+
+<!-- ═══════════ מסך חדר ═══════════ -->
+<div id="screen-room" class="screen">
+  <div class="center-box">
+    <div id="room-league" class="league-banner"></div>
+    <div id="room-code-wrap">
+      <p class="dim">קוד החדר שלך</p>
+      <div id="room-code" class="room-code"></div>
+      <button id="btn-share-wa" class="btn btn-wa">📲 שלח קוד בוואטסאפ</button>
+    </div>
+    <div id="room-status" class="room-status">ממתין ליריב…<span class="dots"></span></div>
+    <div class="vs-row">
+      <div id="room-me" class="vs-player"></div>
+      <div class="vs-x">VS</div>
+      <div id="room-opp" class="vs-player empty">?</div>
+    </div>
+    <div id="room-fee-line" class="dim"></div>
+    <button id="btn-ready" class="btn btn-primary btn-big" disabled>מוכן! ✅</button>
+    <button id="btn-transfer" class="btn btn-gold" hidden>💸 העברת כסף</button>
+    <button id="btn-leave" class="btn btn-ghost">יציאה מהחדר</button>
+  </div>
+</div>
+
+<!-- ═══════════ מסך משחק ═══════════ -->
+<div id="screen-game" class="screen">
+  <div class="game-top">
+    <div id="g-me" class="g-player"></div>
+    <div class="g-mid">
+      <div id="g-round" class="g-round"></div>
+      <div id="g-pot" class="g-pot"></div>
+    </div>
+    <div id="g-opp" class="g-player"></div>
+  </div>
+
+  <div class="g-timer-wrap">
+    <svg id="g-timer-svg" viewBox="0 0 100 100">
+      <circle class="t-bg" cx="50" cy="50" r="44"></circle>
+      <circle id="t-arc" class="t-arc" cx="50" cy="50" r="44"></circle>
+    </svg>
+    <div id="g-timer-num" class="g-timer-num"></div>
+  </div>
+
+  <!-- סבב רשימה -->
+  <div id="g-list" class="g-area" hidden>
+    <div id="g-cat" class="g-cat"></div>
+    <div id="g-turn" class="g-turn"></div>
+    <div id="g-said" class="g-said"></div>
+    <div class="g-input-row">
+      <div class="g-input-wrap">
+        <div id="g-ghost" class="g-ghost"></div>
+        <input id="g-input" class="txt g-input" autocomplete="off" placeholder="הקלד תשובה…">
+      </div>
+      <button id="g-send" class="btn btn-primary">שלח</button>
+    </div>
+  </div>
+
+  <!-- שאלה אמריקאית -->
+  <div id="g-mc" class="g-area" hidden>
+    <div id="g-q" class="g-q"></div>
+    <div id="g-opts" class="g-opts"></div>
+    <div id="g-mc-status" class="g-mc-status"></div>
+  </div>
+
+  <!-- כרזת ביניים (פתיחת סבב / סיום סבב) -->
+  <div id="g-banner" class="g-banner" hidden>
+    <div id="g-banner-inner" class="g-banner-inner"></div>
+  </div>
+</div>
+
+<!-- ═══════════ מסך תוצאות ═══════════ -->
+<div id="screen-result" class="screen">
+  <div class="center-box">
+    <div id="res-emoji" class="res-emoji"></div>
+    <h1 id="res-title"></h1>
+    <div id="res-score" class="res-score"></div>
+    <div id="res-money" class="res-money"></div>
+    <div id="res-wallet" class="dim"></div>
+    <button id="btn-rematch" class="btn btn-primary btn-big">🔄 משחק חוזר</button>
+    <div id="rematch-status" class="dim"></div>
+    <button id="btn-res-home" class="btn btn-ghost">🏠 חזרה הביתה</button>
+  </div>
+</div>
+
+<!-- ═══════════ מודאל כללי ═══════════ -->
+<div id="modal" class="modal" hidden>
+  <div id="modal-box" class="modal-box"></div>
+</div>
+
+<script>
+(()=>{function e(e,t,n,r){Object.defineProperty(e,t,{get:n,set:r,enumerable:!0,configurable:!0})}function t(e){return e&&e.__esModule?e.default:e}class n{constructor(){this.chunkedMTU=16300,this._dataCount=1,this.chunk=e=>{let t=[],n=e.byteLength,r=Math.ceil(n/this.chunkedMTU),i=0,s=0;for(;s<n;){let o=Math.min(n,s+this.chunkedMTU),a=e.slice(s,o),c={__peerData:this._dataCount,n:i,data:a,total:r};t.push(c),s=o,i++}return this._dataCount++,t}}}class r{append_buffer(e){this.flush(),this._parts.push(e)}append(e){this._pieces.push(e)}flush(){if(this._pieces.length>0){let e=new Uint8Array(this._pieces);this._parts.push(e),this._pieces=[]}}toArrayBuffer(){let e=[];for(let t of this._parts)e.push(t);return function(e){let t=0;for(let n of e)t+=n.byteLength;let n=new Uint8Array(t),r=0;for(let t of e){let e=new Uint8Array(t.buffer,t.byteOffset,t.byteLength);n.set(e,r),r+=t.byteLength}return n}(e).buffer}constructor(){this.encoder=new TextEncoder,this._pieces=[],this._parts=[]}}function i(e){return new o(e).unpack()}function s(e){let t=new a,n=t.pack(e);return n instanceof Promise?n.then(()=>t.getBuffer()):t.getBuffer()}class o{unpack(){let e,t=this.unpack_uint8();if(t<128)return t;if((224^t)<32)return(224^t)-32;if((e=160^t)<=15)return this.unpack_raw(e);if((e=176^t)<=15)return this.unpack_string(e);if((e=144^t)<=15)return this.unpack_array(e);if((e=128^t)<=15)return this.unpack_map(e);switch(t){case 192:return null;case 193:case 212:case 213:case 214:case 215:return;case 194:return!1;case 195:return!0;case 202:return this.unpack_float();case 203:return this.unpack_double();case 204:return this.unpack_uint8();case 205:return this.unpack_uint16();case 206:return this.unpack_uint32();case 207:return this.unpack_uint64();case 208:return this.unpack_int8();case 209:return this.unpack_int16();case 210:return this.unpack_int32();case 211:return this.unpack_int64();case 216:return e=this.unpack_uint16(),this.unpack_string(e);case 217:return e=this.unpack_uint32(),this.unpack_string(e);case 218:return e=this.unpack_uint16(),this.unpack_raw(e);case 219:return e=this.unpack_uint32(),this.unpack_raw(e);case 220:return e=this.unpack_uint16(),this.unpack_array(e);case 221:return e=this.unpack_uint32(),this.unpack_array(e);case 222:return e=this.unpack_uint16(),this.unpack_map(e);case 223:return e=this.unpack_uint32(),this.unpack_map(e)}}unpack_uint8(){let e=255&this.dataView[this.index];return this.index++,e}unpack_uint16(){let e=this.read(2),t=(255&e[0])*256+(255&e[1]);return this.index+=2,t}unpack_uint32(){let e=this.read(4),t=((256*e[0]+e[1])*256+e[2])*256+e[3];return this.index+=4,t}unpack_uint64(){let e=this.read(8),t=((((((256*e[0]+e[1])*256+e[2])*256+e[3])*256+e[4])*256+e[5])*256+e[6])*256+e[7];return this.index+=8,t}unpack_int8(){let e=this.unpack_uint8();return e<128?e:e-256}unpack_int16(){let e=this.unpack_uint16();return e<32768?e:e-65536}unpack_int32(){let e=this.unpack_uint32();return e<0x80000000?e:e-0x100000000}unpack_int64(){let e=this.unpack_uint64();return e<0x8000000000000000?e:e-0xffffffffffffffff}unpack_raw(e){if(this.length<this.index+e)throw Error(`BinaryPackFailure: index is out of range ${this.index} ${e} ${this.length}`);let t=this.dataBuffer.slice(this.index,this.index+e);return this.index+=e,t}unpack_string(e){let t,n,r=this.read(e),i=0,s="";for(;i<e;)(t=r[i])<160?(n=t,i++):(192^t)<32?(n=(31&t)<<6|63&r[i+1],i+=2):(224^t)<16?(n=(15&t)<<12|(63&r[i+1])<<6|63&r[i+2],i+=3):(n=(7&t)<<18|(63&r[i+1])<<12|(63&r[i+2])<<6|63&r[i+3],i+=4),s+=String.fromCodePoint(n);return this.index+=e,s}unpack_array(e){let t=Array(e);for(let n=0;n<e;n++)t[n]=this.unpack();return t}unpack_map(e){let t={};for(let n=0;n<e;n++)t[this.unpack()]=this.unpack();return t}unpack_float(){let e=this.unpack_uint32();return(0==e>>31?1:-1)*(8388607&e|8388608)*2**((e>>23&255)-127-23)}unpack_double(){let e=this.unpack_uint32(),t=this.unpack_uint32(),n=(e>>20&2047)-1023;return(0==e>>31?1:-1)*((1048575&e|1048576)*2**(n-20)+t*2**(n-52))}read(e){let t=this.index;if(t+e<=this.length)return this.dataView.subarray(t,t+e);throw Error("BinaryPackFailure: read index out of range")}constructor(e){this.index=0,this.dataBuffer=e,this.dataView=new Uint8Array(this.dataBuffer),this.length=this.dataBuffer.byteLength}}class a{getBuffer(){return this._bufferBuilder.toArrayBuffer()}pack(e){if("string"==typeof e)this.pack_string(e);else if("number"==typeof e)Math.floor(e)===e?this.pack_integer(e):this.pack_double(e);else if("boolean"==typeof e)!0===e?this._bufferBuilder.append(195):!1===e&&this._bufferBuilder.append(194);else if(void 0===e)this._bufferBuilder.append(192);else if("object"==typeof e)if(null===e)this._bufferBuilder.append(192);else{let t=e.constructor;if(e instanceof Array){let t=this.pack_array(e);if(t instanceof Promise)return t.then(()=>this._bufferBuilder.flush())}else if(e instanceof ArrayBuffer)this.pack_bin(new Uint8Array(e));else if("BYTES_PER_ELEMENT"in e)this.pack_bin(new Uint8Array(e.buffer,e.byteOffset,e.byteLength));else if(e instanceof Date)this.pack_string(e.toString());else if(e instanceof Blob)return e.arrayBuffer().then(e=>{this.pack_bin(new Uint8Array(e)),this._bufferBuilder.flush()});else if(t==Object||t.toString().startsWith("class")){let t=this.pack_object(e);if(t instanceof Promise)return t.then(()=>this._bufferBuilder.flush())}else throw Error(`Type "${t.toString()}" not yet supported`)}else throw Error(`Type "${typeof e}" not yet supported`);this._bufferBuilder.flush()}pack_bin(e){let t=e.length;if(t<=15)this.pack_uint8(160+t);else if(t<=65535)this._bufferBuilder.append(218),this.pack_uint16(t);else if(t<=0xffffffff)this._bufferBuilder.append(219),this.pack_uint32(t);else throw Error("Invalid length");this._bufferBuilder.append_buffer(e)}pack_string(e){let t=this._textEncoder.encode(e),n=t.length;if(n<=15)this.pack_uint8(176+n);else if(n<=65535)this._bufferBuilder.append(216),this.pack_uint16(n);else if(n<=0xffffffff)this._bufferBuilder.append(217),this.pack_uint32(n);else throw Error("Invalid length");this._bufferBuilder.append_buffer(t)}pack_array(e){let t=e.length;if(t<=15)this.pack_uint8(144+t);else if(t<=65535)this._bufferBuilder.append(220),this.pack_uint16(t);else if(t<=0xffffffff)this._bufferBuilder.append(221),this.pack_uint32(t);else throw Error("Invalid length");let n=r=>{if(r<t){let t=this.pack(e[r]);return t instanceof Promise?t.then(()=>n(r+1)):n(r+1)}};return n(0)}pack_integer(e){if(e>=-32&&e<=127)this._bufferBuilder.append(255&e);else if(e>=0&&e<=255)this._bufferBuilder.append(204),this.pack_uint8(e);else if(e>=-128&&e<=127)this._bufferBuilder.append(208),this.pack_int8(e);else if(e>=0&&e<=65535)this._bufferBuilder.append(205),this.pack_uint16(e);else if(e>=-32768&&e<=32767)this._bufferBuilder.append(209),this.pack_int16(e);else if(e>=0&&e<=0xffffffff)this._bufferBuilder.append(206),this.pack_uint32(e);else if(e>=-0x80000000&&e<=0x7fffffff)this._bufferBuilder.append(210),this.pack_int32(e);else if(e>=-0x8000000000000000&&e<=0x8000000000000000)this._bufferBuilder.append(211),this.pack_int64(e);else if(e>=0&&e<=0xffffffffffffffff)this._bufferBuilder.append(207),this.pack_uint64(e);else throw Error("Invalid integer")}pack_double(e){let t=0;e<0&&(t=1,e=-e);let n=Math.floor(Math.log(e)/Math.LN2),r=Math.floor((e/2**n-1)*0x10000000000000),i=t<<31|n+1023<<20|r/0x100000000&1048575;this._bufferBuilder.append(203),this.pack_int32(i),this.pack_int32(r%0x100000000)}pack_object(e){let t=Object.keys(e),n=t.length;if(n<=15)this.pack_uint8(128+n);else if(n<=65535)this._bufferBuilder.append(222),this.pack_uint16(n);else if(n<=0xffffffff)this._bufferBuilder.append(223),this.pack_uint32(n);else throw Error("Invalid length");let r=n=>{if(n<t.length){let i=t[n];if(e.hasOwnProperty(i)){this.pack(i);let t=this.pack(e[i]);if(t instanceof Promise)return t.then(()=>r(n+1))}return r(n+1)}};return r(0)}pack_uint8(e){this._bufferBuilder.append(e)}pack_uint16(e){this._bufferBuilder.append(e>>8),this._bufferBuilder.append(255&e)}pack_uint32(e){let t=0|e;this._bufferBuilder.append((0xff000000&t)>>>24),this._bufferBuilder.append((0xff0000&t)>>>16),this._bufferBuilder.append((65280&t)>>>8),this._bufferBuilder.append(255&t)}pack_uint64(e){let t=e/0x100000000,n=e%0x100000000;this._bufferBuilder.append((0xff000000&t)>>>24),this._bufferBuilder.append((0xff0000&t)>>>16),this._bufferBuilder.append((65280&t)>>>8),this._bufferBuilder.append(255&t),this._bufferBuilder.append((0xff000000&n)>>>24),this._bufferBuilder.append((0xff0000&n)>>>16),this._bufferBuilder.append((65280&n)>>>8),this._bufferBuilder.append(255&n)}pack_int8(e){this._bufferBuilder.append(255&e)}pack_int16(e){this._bufferBuilder.append((65280&e)>>8),this._bufferBuilder.append(255&e)}pack_int32(e){this._bufferBuilder.append(e>>>24&255),this._bufferBuilder.append((0xff0000&e)>>>16),this._bufferBuilder.append((65280&e)>>>8),this._bufferBuilder.append(255&e)}pack_int64(e){let t=Math.floor(e/0x100000000),n=e%0x100000000;this._bufferBuilder.append((0xff000000&t)>>>24),this._bufferBuilder.append((0xff0000&t)>>>16),this._bufferBuilder.append((65280&t)>>>8),this._bufferBuilder.append(255&t),this._bufferBuilder.append((0xff000000&n)>>>24),this._bufferBuilder.append((0xff0000&n)>>>16),this._bufferBuilder.append((65280&n)>>>8),this._bufferBuilder.append(255&n)}constructor(){this._bufferBuilder=new r,this._textEncoder=new TextEncoder}}"use strict";let c=!0,p=!0;function d(e,t,n){let r=e.match(t);return r&&r.length>=n&&parseInt(r[n],10)}function l(e,t,n){if(!e.RTCPeerConnection)return;let r=e.RTCPeerConnection.prototype,i=r.addEventListener;r.addEventListener=function(e,r){if(e!==t)return i.apply(this,arguments);let s=e=>{let t=n(e);t&&(r.handleEvent?r.handleEvent(t):r(t))};return this._eventMap=this._eventMap||{},this._eventMap[t]||(this._eventMap[t]=new Map),this._eventMap[t].set(r,s),i.apply(this,[e,s])};let s=r.removeEventListener;r.removeEventListener=function(e,n){if(e!==t||!this._eventMap||!this._eventMap[t]||!this._eventMap[t].has(n))return s.apply(this,arguments);let r=this._eventMap[t].get(n);return this._eventMap[t].delete(n),0===this._eventMap[t].size&&delete this._eventMap[t],0===Object.keys(this._eventMap).length&&delete this._eventMap,s.apply(this,[e,r])},Object.defineProperty(r,"on"+t,{get(){return this["_on"+t]},set(e){this["_on"+t]&&(this.removeEventListener(t,this["_on"+t]),delete this["_on"+t]),e&&this.addEventListener(t,this["_on"+t]=e)},enumerable:!0,configurable:!0})}function h(e){return"boolean"!=typeof e?Error("Argument type: "+typeof e+". Please use a boolean."):(c=e,e?"adapter.js logging disabled":"adapter.js logging enabled")}function u(e){return"boolean"!=typeof e?Error("Argument type: "+typeof e+". Please use a boolean."):(p=!e,"adapter.js deprecation warnings "+(e?"disabled":"enabled"))}function f(){"object"==typeof window&&(c||"undefined"!=typeof console&&"function"==typeof console.log&&console.log.apply(console,arguments))}function m(e,t){p&&console.warn(e+" is deprecated, please use "+t+" instead.")}function _(e){return"[object Object]"===Object.prototype.toString.call(e)}function g(e,t,n){let r=n?"outbound-rtp":"inbound-rtp",i=new Map;if(null===t)return i;let s=[];return e.forEach(e=>{"track"===e.type&&e.trackIdentifier===t.id&&s.push(e)}),s.forEach(t=>{e.forEach(n=>{n.type===r&&n.trackId===t.id&&function e(t,n,r){!n||r.has(n.id)||(r.set(n.id,n),Object.keys(n).forEach(i=>{i.endsWith("Id")?e(t,t.get(n[i]),r):i.endsWith("Ids")&&n[i].forEach(n=>{e(t,t.get(n),r)})}))}(e,n,i)})}),i}"use strict";var y={};function C(e,t){let n=e&&e.navigator;if(!n.mediaDevices)return;let r=function(e){if("object"!=typeof e||e.mandatory||e.optional)return e;let t={};return Object.keys(e).forEach(n=>{if("require"===n||"advanced"===n||"mediaSource"===n)return;let r="object"==typeof e[n]?e[n]:{ideal:e[n]};void 0!==r.exact&&"number"==typeof r.exact&&(r.min=r.max=r.exact);let i=function(e,t){return e?e+t.charAt(0).toUpperCase()+t.slice(1):"deviceId"===t?"sourceId":t};if(void 0!==r.ideal){t.optional=t.optional||[];let e={};"number"==typeof r.ideal?(e[i("min",n)]=r.ideal,t.optional.push(e),(e={})[i("max",n)]=r.ideal):e[i("",n)]=r.ideal,t.optional.push(e)}void 0!==r.exact&&"number"!=typeof r.exact?(t.mandatory=t.mandatory||{},t.mandatory[i("",n)]=r.exact):["min","max"].forEach(e=>{void 0!==r[e]&&(t.mandatory=t.mandatory||{},t.mandatory[i(e,n)]=r[e])})}),e.advanced&&(t.optional=(t.optional||[]).concat(e.advanced)),t},i=function(e,i){if(t.version>=61)return i(e);if((e=JSON.parse(JSON.stringify(e)))&&"object"==typeof e.audio){let t=function(e,t,n){t in e&&!(n in e)&&(e[n]=e[t],delete e[t])};t((e=JSON.parse(JSON.stringify(e))).audio,"autoGainControl","googAutoGainControl"),t(e.audio,"noiseSuppression","googNoiseSuppression"),e.audio=r(e.audio)}if(e&&"object"==typeof e.video){let s=e.video.facingMode;s=s&&("object"==typeof s?s:{ideal:s});let o=t.version<66;if(s&&("user"===s.exact||"environment"===s.exact||"user"===s.ideal||"environment"===s.ideal)&&!(n.mediaDevices.getSupportedConstraints&&n.mediaDevices.getSupportedConstraints().facingMode&&!o)){let t;if(delete e.video.facingMode,"environment"===s.exact||"environment"===s.ideal?t=["back","rear"]:("user"===s.exact||"user"===s.ideal)&&(t=["front"]),t)return n.mediaDevices.enumerateDevices().then(n=>{let o=(n=n.filter(e=>"videoinput"===e.kind)).find(e=>t.some(t=>e.label.toLowerCase().includes(t)));return!o&&n.length&&t.includes("back")&&(o=n[n.length-1]),o&&(e.video.deviceId=s.exact?{exact:o.deviceId}:{ideal:o.deviceId}),e.video=r(e.video),f("chrome: "+JSON.stringify(e)),i(e)})}e.video=r(e.video)}return f("chrome: "+JSON.stringify(e)),i(e)},s=function(e){return t.version>=64?e:{name:({PermissionDeniedError:"NotAllowedError",PermissionDismissedError:"NotAllowedError",InvalidStateError:"NotAllowedError",DevicesNotFoundError:"NotFoundError",ConstraintNotSatisfiedError:"OverconstrainedError",TrackStartError:"NotReadableError",MediaDeviceFailedDueToShutdown:"NotAllowedError",MediaDeviceKillSwitchOn:"NotAllowedError",TabCaptureError:"AbortError",ScreenCaptureError:"AbortError",DeviceCaptureError:"AbortError"})[e.name]||e.name,message:e.message,constraint:e.constraint||e.constraintName,toString(){return this.name+(this.message&&": ")+this.message}}};if(n.getUserMedia=(function(e,t,r){i(e,e=>{n.webkitGetUserMedia(e,t,e=>{r&&r(s(e))})})}).bind(n),n.mediaDevices.getUserMedia){let e=n.mediaDevices.getUserMedia.bind(n.mediaDevices);n.mediaDevices.getUserMedia=function(t){return i(t,t=>e(t).then(e=>{if(t.audio&&!e.getAudioTracks().length||t.video&&!e.getVideoTracks().length)throw e.getTracks().forEach(e=>{e.stop()}),new DOMException("","NotFoundError");return e},e=>Promise.reject(s(e))))}}}"use strict";function v(e){e.MediaStream=e.MediaStream||e.webkitMediaStream}function b(e){if("object"!=typeof e||!e.RTCPeerConnection||"ontrack"in e.RTCPeerConnection.prototype)l(e,"track",e=>(e.transceiver||Object.defineProperty(e,"transceiver",{value:{receiver:e.receiver}}),e));else{Object.defineProperty(e.RTCPeerConnection.prototype,"ontrack",{get(){return this._ontrack},set(e){this._ontrack&&this.removeEventListener("track",this._ontrack),this.addEventListener("track",this._ontrack=e)},enumerable:!0,configurable:!0});let t=e.RTCPeerConnection.prototype.setRemoteDescription;e.RTCPeerConnection.prototype.setRemoteDescription=function(){return this._ontrackpoly||(this._ontrackpoly=t=>{t.stream.addEventListener("addtrack",n=>{let r;r=e.RTCPeerConnection.prototype.getReceivers?this.getReceivers().find(e=>e.track&&e.track.id===n.track.id):{track:n.track};let i=new Event("track");i.track=n.track,i.receiver=r,i.transceiver={receiver:r},i.streams=[t.stream],this.dispatchEvent(i)}),t.stream.getTracks().forEach(n=>{let r;r=e.RTCPeerConnection.prototype.getReceivers?this.getReceivers().find(e=>e.track&&e.track.id===n.id):{track:n};let i=new Event("track");i.track=n,i.receiver=r,i.transceiver={receiver:r},i.streams=[t.stream],this.dispatchEvent(i)})},this.addEventListener("addstream",this._ontrackpoly)),t.apply(this,arguments)}}}function T(e){if("object"==typeof e&&e.RTCPeerConnection&&!("getSenders"in e.RTCPeerConnection.prototype)&&"createDTMFSender"in e.RTCPeerConnection.prototype){let t=function(e,t){return{track:t,get dtmf(){return void 0===this._dtmf&&("audio"===t.kind?this._dtmf=e.createDTMFSender(t):this._dtmf=null),this._dtmf},_pc:e}};if(!e.RTCPeerConnection.prototype.getSenders){e.RTCPeerConnection.prototype.getSenders=function(){return this._senders=this._senders||[],this._senders.slice()};let n=e.RTCPeerConnection.prototype.addTrack;e.RTCPeerConnection.prototype.addTrack=function(e,r){let i=n.apply(this,arguments);return i||(i=t(this,e),this._senders.push(i)),i};let r=e.RTCPeerConnection.prototype.removeTrack;e.RTCPeerConnection.prototype.removeTrack=function(e){r.apply(this,arguments);let t=this._senders.indexOf(e);-1!==t&&this._senders.splice(t,1)}}let n=e.RTCPeerConnection.prototype.addStream;e.RTCPeerConnection.prototype.addStream=function(e){this._senders=this._senders||[],n.apply(this,[e]),e.getTracks().forEach(e=>{this._senders.push(t(this,e))})};let r=e.RTCPeerConnection.prototype.removeStream;e.RTCPeerConnection.prototype.removeStream=function(e){this._senders=this._senders||[],r.apply(this,[e]),e.getTracks().forEach(e=>{let t=this._senders.find(t=>t.track===e);t&&this._senders.splice(this._senders.indexOf(t),1)})}}else if("object"==typeof e&&e.RTCPeerConnection&&"getSenders"in e.RTCPeerConnection.prototype&&"createDTMFSender"in e.RTCPeerConnection.prototype&&e.RTCRtpSender&&!("dtmf"in e.RTCRtpSender.prototype)){let t=e.RTCPeerConnection.prototype.getSenders;e.RTCPeerConnection.prototype.getSenders=function(){let e=t.apply(this,[]);return e.forEach(e=>e._pc=this),e},Object.defineProperty(e.RTCRtpSender.prototype,"dtmf",{get(){return void 0===this._dtmf&&("audio"===this.track.kind?this._dtmf=this._pc.createDTMFSender(this.track):this._dtmf=null),this._dtmf}})}}function S(e){if(!("object"==typeof e&&e.RTCPeerConnection&&e.RTCRtpSender&&e.RTCRtpReceiver))return;if(!("getStats"in e.RTCRtpSender.prototype)){let t=e.RTCPeerConnection.prototype.getSenders;t&&(e.RTCPeerConnection.prototype.getSenders=function(){let e=t.apply(this,[]);return e.forEach(e=>e._pc=this),e});let n=e.RTCPeerConnection.prototype.addTrack;n&&(e.RTCPeerConnection.prototype.addTrack=function(){let e=n.apply(this,arguments);return e._pc=this,e}),e.RTCRtpSender.prototype.getStats=function(){let e=this;return this._pc.getStats().then(t=>g(t,e.track,!0))}}if(!("getStats"in e.RTCRtpReceiver.prototype)){let t=e.RTCPeerConnection.prototype.getReceivers;t&&(e.RTCPeerConnection.prototype.getReceivers=function(){let e=t.apply(this,[]);return e.forEach(e=>e._pc=this),e}),l(e,"track",e=>(e.receiver._pc=e.srcElement,e)),e.RTCRtpReceiver.prototype.getStats=function(){let e=this;return this._pc.getStats().then(t=>g(t,e.track,!1))}}if(!("getStats"in e.RTCRtpSender.prototype&&"getStats"in e.RTCRtpReceiver.prototype))return;let t=e.RTCPeerConnection.prototype.getStats;e.RTCPeerConnection.prototype.getStats=function(){if(arguments.length>0&&arguments[0]instanceof e.MediaStreamTrack){let e,t,n,r=arguments[0];return(this.getSenders().forEach(t=>{t.track===r&&(e?n=!0:e=t)}),this.getReceivers().forEach(e=>(e.track===r&&(t?n=!0:t=e),e.track===r)),n||e&&t)?Promise.reject(new DOMException("There are more than one sender or receiver for the track.","InvalidAccessError")):e?e.getStats():t?t.getStats():Promise.reject(new DOMException("There is no sender or receiver for the track.","InvalidAccessError"))}return t.apply(this,arguments)}}function k(e){e.RTCPeerConnection.prototype.getLocalStreams=function(){return this._shimmedLocalStreams=this._shimmedLocalStreams||{},Object.keys(this._shimmedLocalStreams).map(e=>this._shimmedLocalStreams[e][0])};let t=e.RTCPeerConnection.prototype.addTrack;e.RTCPeerConnection.prototype.addTrack=function(e,n){if(!n)return t.apply(this,arguments);this._shimmedLocalStreams=this._shimmedLocalStreams||{};let r=t.apply(this,arguments);return this._shimmedLocalStreams[n.id]?-1===this._shimmedLocalStreams[n.id].indexOf(r)&&this._shimmedLocalStreams[n.id].push(r):this._shimmedLocalStreams[n.id]=[n,r],r};let n=e.RTCPeerConnection.prototype.addStream;e.RTCPeerConnection.prototype.addStream=function(e){this._shimmedLocalStreams=this._shimmedLocalStreams||{},e.getTracks().forEach(e=>{if(this.getSenders().find(t=>t.track===e))throw new DOMException("Track already exists.","InvalidAccessError")});let t=this.getSenders();n.apply(this,arguments);let r=this.getSenders().filter(e=>-1===t.indexOf(e));this._shimmedLocalStreams[e.id]=[e].concat(r)};let r=e.RTCPeerConnection.prototype.removeStream;e.RTCPeerConnection.prototype.removeStream=function(e){return this._shimmedLocalStreams=this._shimmedLocalStreams||{},delete this._shimmedLocalStreams[e.id],r.apply(this,arguments)};let i=e.RTCPeerConnection.prototype.removeTrack;e.RTCPeerConnection.prototype.removeTrack=function(e){return this._shimmedLocalStreams=this._shimmedLocalStreams||{},e&&Object.keys(this._shimmedLocalStreams).forEach(t=>{let n=this._shimmedLocalStreams[t].indexOf(e);-1!==n&&this._shimmedLocalStreams[t].splice(n,1),1===this._shimmedLocalStreams[t].length&&delete this._shimmedLocalStreams[t]}),i.apply(this,arguments)}}function R(e,t){if(!e.RTCPeerConnection)return;if(e.RTCPeerConnection.prototype.addTrack&&t.version>=65)return k(e);let n=e.RTCPeerConnection.prototype.getLocalStreams;e.RTCPeerConnection.prototype.getLocalStreams=function(){let e=n.apply(this);return this._reverseStreams=this._reverseStreams||{},e.map(e=>this._reverseStreams[e.id])};let r=e.RTCPeerConnection.prototype.addStream;e.RTCPeerConnection.prototype.addStream=function(t){if(this._streams=this._streams||{},this._reverseStreams=this._reverseStreams||{},t.getTracks().forEach(e=>{if(this.getSenders().find(t=>t.track===e))throw new DOMException("Track already exists.","InvalidAccessError")}),!this._reverseStreams[t.id]){let n=new e.MediaStream(t.getTracks());this._streams[t.id]=n,this._reverseStreams[n.id]=t,t=n}r.apply(this,[t])};let i=e.RTCPeerConnection.prototype.removeStream;function s(e,t){let n=t.sdp;return Object.keys(e._reverseStreams||[]).forEach(t=>{let r=e._reverseStreams[t],i=e._streams[r.id];n=n.replace(RegExp(i.id,"g"),r.id)}),new RTCSessionDescription({type:t.type,sdp:n})}e.RTCPeerConnection.prototype.removeStream=function(e){this._streams=this._streams||{},this._reverseStreams=this._reverseStreams||{},i.apply(this,[this._streams[e.id]||e]),delete this._reverseStreams[this._streams[e.id]?this._streams[e.id].id:e.id],delete this._streams[e.id]},e.RTCPeerConnection.prototype.addTrack=function(t,n){if("closed"===this.signalingState)throw new DOMException("The RTCPeerConnection's signalingState is 'closed'.","InvalidStateError");let r=[].slice.call(arguments,1);if(1!==r.length||!r[0].getTracks().find(e=>e===t))throw new DOMException("The adapter.js addTrack polyfill only supports a single  stream which is associated with the specified track.","NotSupportedError");if(this.getSenders().find(e=>e.track===t))throw new DOMException("Track already exists.","InvalidAccessError");this._streams=this._streams||{},this._reverseStreams=this._reverseStreams||{};let i=this._streams[n.id];if(i)i.addTrack(t),Promise.resolve().then(()=>{this.dispatchEvent(new Event("negotiationneeded"))});else{let r=new e.MediaStream([t]);this._streams[n.id]=r,this._reverseStreams[r.id]=n,this.addStream(r)}return this.getSenders().find(e=>e.track===t)},["createOffer","createAnswer"].forEach(function(t){let n=e.RTCPeerConnection.prototype[t];e.RTCPeerConnection.prototype[t]=({[t](){let e=arguments,t=arguments.length&&"function"==typeof arguments[0];return t?n.apply(this,[t=>{let n=s(this,t);e[0].apply(null,[n])},t=>{e[1]&&e[1].apply(null,t)},arguments[2]]):n.apply(this,arguments).then(e=>s(this,e))}})[t]});let o=e.RTCPeerConnection.prototype.setLocalDescription;e.RTCPeerConnection.prototype.setLocalDescription=function(){var e,t;let n;return arguments.length&&arguments[0].type?(arguments[0]=(e=this,t=arguments[0],n=t.sdp,Object.keys(e._reverseStreams||[]).forEach(t=>{let r=e._reverseStreams[t],i=e._streams[r.id];n=n.replace(RegExp(r.id,"g"),i.id)}),new RTCSessionDescription({type:t.type,sdp:n})),o.apply(this,arguments)):o.apply(this,arguments)};let a=Object.getOwnPropertyDescriptor(e.RTCPeerConnection.prototype,"localDescription");Object.defineProperty(e.RTCPeerConnection.prototype,"localDescription",{get(){let e=a.get.apply(this);return""===e.type?e:s(this,e)}}),e.RTCPeerConnection.prototype.removeTrack=function(e){let t;if("closed"===this.signalingState)throw new DOMException("The RTCPeerConnection's signalingState is 'closed'.","InvalidStateError");if(!e._pc)throw new DOMException("Argument 1 of RTCPeerConnection.removeTrack does not implement interface RTCRtpSender.","TypeError");if(e._pc!==this)throw new DOMException("Sender was not created by this connection.","InvalidAccessError");this._streams=this._streams||{},Object.keys(this._streams).forEach(n=>{this._streams[n].getTracks().find(t=>e.track===t)&&(t=this._streams[n])}),t&&(1===t.getTracks().length?this.removeStream(this._reverseStreams[t.id]):t.removeTrack(e.track),this.dispatchEvent(new Event("negotiationneeded")))}}function P(e,t){!e.RTCPeerConnection&&e.webkitRTCPeerConnection&&(e.RTCPeerConnection=e.webkitRTCPeerConnection),e.RTCPeerConnection&&t.version<53&&["setLocalDescription","setRemoteDescription","addIceCandidate"].forEach(function(t){let n=e.RTCPeerConnection.prototype[t];e.RTCPeerConnection.prototype[t]=({[t](){return arguments[0]=new("addIceCandidate"===t?e.RTCIceCandidate:e.RTCSessionDescription)(arguments[0]),n.apply(this,arguments)}})[t]})}function w(e,t){l(e,"negotiationneeded",e=>{let n=e.target;if(!(t.version<72)&&(!n.getConfiguration||"plan-b"!==n.getConfiguration().sdpSemantics)||"stable"===n.signalingState)return e})}"use strict";e(y,"shimMediaStream",()=>v),e(y,"shimOnTrack",()=>b),e(y,"shimGetSendersWithDtmf",()=>T),e(y,"shimSenderReceiverGetStats",()=>S),e(y,"shimAddTrackRemoveTrackWithNative",()=>k),e(y,"shimAddTrackRemoveTrack",()=>R),e(y,"shimPeerConnection",()=>P),e(y,"fixNegotiationNeeded",()=>w),e(y,"shimGetUserMedia",()=>C);var E={};function x(e,t){let n=e&&e.navigator,r=e&&e.MediaStreamTrack;if(n.getUserMedia=function(e,t,r){m("navigator.getUserMedia","navigator.mediaDevices.getUserMedia"),n.mediaDevices.getUserMedia(e).then(t,r)},!(t.version>55&&"autoGainControl"in n.mediaDevices.getSupportedConstraints())){let e=function(e,t,n){t in e&&!(n in e)&&(e[n]=e[t],delete e[t])},t=n.mediaDevices.getUserMedia.bind(n.mediaDevices);if(n.mediaDevices.getUserMedia=function(n){return"object"==typeof n&&"object"==typeof n.audio&&(e((n=JSON.parse(JSON.stringify(n))).audio,"autoGainControl","mozAutoGainControl"),e(n.audio,"noiseSuppression","mozNoiseSuppression")),t(n)},r&&r.prototype.getSettings){let t=r.prototype.getSettings;r.prototype.getSettings=function(){let n=t.apply(this,arguments);return e(n,"mozAutoGainControl","autoGainControl"),e(n,"mozNoiseSuppression","noiseSuppression"),n}}if(r&&r.prototype.applyConstraints){let t=r.prototype.applyConstraints;r.prototype.applyConstraints=function(n){return"audio"===this.kind&&"object"==typeof n&&(e(n=JSON.parse(JSON.stringify(n)),"autoGainControl","mozAutoGainControl"),e(n,"noiseSuppression","mozNoiseSuppression")),t.apply(this,[n])}}}}"use strict";function D(e,t){e.navigator.mediaDevices&&"getDisplayMedia"in e.navigator.mediaDevices||e.navigator.mediaDevices&&(e.navigator.mediaDevices.getDisplayMedia=function(n){if(!(n&&n.video)){let e=new DOMException("getDisplayMedia without video constraints is undefined");return e.name="NotFoundError",e.code=8,Promise.reject(e)}return!0===n.video?n.video={mediaSource:t}:n.video.mediaSource=t,e.navigator.mediaDevices.getUserMedia(n)})}"use strict";function I(e){"object"==typeof e&&e.RTCTrackEvent&&"receiver"in e.RTCTrackEvent.prototype&&!("transceiver"in e.RTCTrackEvent.prototype)&&Object.defineProperty(e.RTCTrackEvent.prototype,"transceiver",{get(){return{receiver:this.receiver}}})}function M(e,t){if("object"!=typeof e||!(e.RTCPeerConnection||e.mozRTCPeerConnection))return;!e.RTCPeerConnection&&e.mozRTCPeerConnection&&(e.RTCPeerConnection=e.mozRTCPeerConnection),t.version<53&&["setLocalDescription","setRemoteDescription","addIceCandidate"].forEach(function(t){let n=e.RTCPeerConnection.prototype[t];e.RTCPeerConnection.prototype[t]=({[t](){return arguments[0]=new("addIceCandidate"===t?e.RTCIceCandidate:e.RTCSessionDescription)(arguments[0]),n.apply(this,arguments)}})[t]});let n={inboundrtp:"inbound-rtp",outboundrtp:"outbound-rtp",candidatepair:"candidate-pair",localcandidate:"local-candidate",remotecandidate:"remote-candidate"},r=e.RTCPeerConnection.prototype.getStats;e.RTCPeerConnection.prototype.getStats=function(){let[e,i,s]=arguments;return r.apply(this,[e||null]).then(e=>{if(t.version<53&&!i)try{e.forEach(e=>{e.type=n[e.type]||e.type})}catch(t){if("TypeError"!==t.name)throw t;e.forEach((t,r)=>{e.set(r,Object.assign({},t,{type:n[t.type]||t.type}))})}return e}).then(i,s)}}function O(e){if(!("object"==typeof e&&e.RTCPeerConnection&&e.RTCRtpSender)||e.RTCRtpSender&&"getStats"in e.RTCRtpSender.prototype)return;let t=e.RTCPeerConnection.prototype.getSenders;t&&(e.RTCPeerConnection.prototype.getSenders=function(){let e=t.apply(this,[]);return e.forEach(e=>e._pc=this),e});let n=e.RTCPeerConnection.prototype.addTrack;n&&(e.RTCPeerConnection.prototype.addTrack=function(){let e=n.apply(this,arguments);return e._pc=this,e}),e.RTCRtpSender.prototype.getStats=function(){return this.track?this._pc.getStats(this.track):Promise.resolve(new Map)}}function L(e){if(!("object"==typeof e&&e.RTCPeerConnection&&e.RTCRtpSender)||e.RTCRtpSender&&"getStats"in e.RTCRtpReceiver.prototype)return;let t=e.RTCPeerConnection.prototype.getReceivers;t&&(e.RTCPeerConnection.prototype.getReceivers=function(){let e=t.apply(this,[]);return e.forEach(e=>e._pc=this),e}),l(e,"track",e=>(e.receiver._pc=e.srcElement,e)),e.RTCRtpReceiver.prototype.getStats=function(){return this._pc.getStats(this.track)}}function A(e){!e.RTCPeerConnection||"removeStream"in e.RTCPeerConnection.prototype||(e.RTCPeerConnection.prototype.removeStream=function(e){m("removeStream","removeTrack"),this.getSenders().forEach(t=>{t.track&&e.getTracks().includes(t.track)&&this.removeTrack(t)})})}function j(e){e.DataChannel&&!e.RTCDataChannel&&(e.RTCDataChannel=e.DataChannel)}function B(e){if(!("object"==typeof e&&e.RTCPeerConnection))return;let t=e.RTCPeerConnection.prototype.addTransceiver;t&&(e.RTCPeerConnection.prototype.addTransceiver=function(){this.setParametersPromises=[];let e=arguments[1]&&arguments[1].sendEncodings;void 0===e&&(e=[]);let n=(e=[...e]).length>0;n&&e.forEach(e=>{if("rid"in e&&!/^[a-z0-9]{0,16}$/i.test(e.rid))throw TypeError("Invalid RID value provided.");if("scaleResolutionDownBy"in e&&!(parseFloat(e.scaleResolutionDownBy)>=1))throw RangeError("scale_resolution_down_by must be >= 1.0");if("maxFramerate"in e&&!(parseFloat(e.maxFramerate)>=0))throw RangeError("max_framerate must be >= 0.0")});let r=t.apply(this,arguments);if(n){let{sender:t}=r,n=t.getParameters();"encodings"in n&&(1!==n.encodings.length||0!==Object.keys(n.encodings[0]).length)||(n.encodings=e,t.sendEncodings=e,this.setParametersPromises.push(t.setParameters(n).then(()=>{delete t.sendEncodings}).catch(()=>{delete t.sendEncodings})))}return r})}function U(e){if(!("object"==typeof e&&e.RTCRtpSender))return;let t=e.RTCRtpSender.prototype.getParameters;t&&(e.RTCRtpSender.prototype.getParameters=function(){let e=t.apply(this,arguments);return"encodings"in e||(e.encodings=[].concat(this.sendEncodings||[{}])),e})}function F(e){if(!("object"==typeof e&&e.RTCPeerConnection))return;let t=e.RTCPeerConnection.prototype.createOffer;e.RTCPeerConnection.prototype.createOffer=function(){return this.setParametersPromises&&this.setParametersPromises.length?Promise.all(this.setParametersPromises).then(()=>t.apply(this,arguments)).finally(()=>{this.setParametersPromises=[]}):t.apply(this,arguments)}}function N(e){if(!("object"==typeof e&&e.RTCPeerConnection))return;let t=e.RTCPeerConnection.prototype.createAnswer;e.RTCPeerConnection.prototype.createAnswer=function(){return this.setParametersPromises&&this.setParametersPromises.length?Promise.all(this.setParametersPromises).then(()=>t.apply(this,arguments)).finally(()=>{this.setParametersPromises=[]}):t.apply(this,arguments)}}"use strict";e(E,"shimOnTrack",()=>I),e(E,"shimPeerConnection",()=>M),e(E,"shimSenderGetStats",()=>O),e(E,"shimReceiverGetStats",()=>L),e(E,"shimRemoveStream",()=>A),e(E,"shimRTCDataChannel",()=>j),e(E,"shimAddTransceiver",()=>B),e(E,"shimGetParameters",()=>U),e(E,"shimCreateOffer",()=>F),e(E,"shimCreateAnswer",()=>N),e(E,"shimGetUserMedia",()=>x),e(E,"shimGetDisplayMedia",()=>D);var z={};function $(e){if("object"==typeof e&&e.RTCPeerConnection){if("getLocalStreams"in e.RTCPeerConnection.prototype||(e.RTCPeerConnection.prototype.getLocalStreams=function(){return this._localStreams||(this._localStreams=[]),this._localStreams}),!("addStream"in e.RTCPeerConnection.prototype)){let t=e.RTCPeerConnection.prototype.addTrack;e.RTCPeerConnection.prototype.addStream=function(e){this._localStreams||(this._localStreams=[]),this._localStreams.includes(e)||this._localStreams.push(e),e.getAudioTracks().forEach(n=>t.call(this,n,e)),e.getVideoTracks().forEach(n=>t.call(this,n,e))},e.RTCPeerConnection.prototype.addTrack=function(e,...n){return n&&n.forEach(e=>{this._localStreams?this._localStreams.includes(e)||this._localStreams.push(e):this._localStreams=[e]}),t.apply(this,arguments)}}"removeStream"in e.RTCPeerConnection.prototype||(e.RTCPeerConnection.prototype.removeStream=function(e){this._localStreams||(this._localStreams=[]);let t=this._localStreams.indexOf(e);if(-1===t)return;this._localStreams.splice(t,1);let n=e.getTracks();this.getSenders().forEach(e=>{n.includes(e.track)&&this.removeTrack(e)})})}}function V(e){if("object"==typeof e&&e.RTCPeerConnection&&("getRemoteStreams"in e.RTCPeerConnection.prototype||(e.RTCPeerConnection.prototype.getRemoteStreams=function(){return this._remoteStreams?this._remoteStreams:[]}),!("onaddstream"in e.RTCPeerConnection.prototype))){Object.defineProperty(e.RTCPeerConnection.prototype,"onaddstream",{get(){return this._onaddstream},set(e){this._onaddstream&&(this.removeEventListener("addstream",this._onaddstream),this.removeEventListener("track",this._onaddstreampoly)),this.addEventListener("addstream",this._onaddstream=e),this.addEventListener("track",this._onaddstreampoly=e=>{e.streams.forEach(e=>{if(this._remoteStreams||(this._remoteStreams=[]),this._remoteStreams.includes(e))return;this._remoteStreams.push(e);let t=new Event("addstream");t.stream=e,this.dispatchEvent(t)})})}});let t=e.RTCPeerConnection.prototype.setRemoteDescription;e.RTCPeerConnection.prototype.setRemoteDescription=function(){let e=this;return this._onaddstreampoly||this.addEventListener("track",this._onaddstreampoly=function(t){t.streams.forEach(t=>{if(e._remoteStreams||(e._remoteStreams=[]),e._remoteStreams.indexOf(t)>=0)return;e._remoteStreams.push(t);let n=new Event("addstream");n.stream=t,e.dispatchEvent(n)})}),t.apply(e,arguments)}}}function G(e){if("object"!=typeof e||!e.RTCPeerConnection)return;let t=e.RTCPeerConnection.prototype,n=t.createOffer,r=t.createAnswer,i=t.setLocalDescription,s=t.setRemoteDescription,o=t.addIceCandidate;t.createOffer=function(e,t){let r=arguments.length>=2?arguments[2]:arguments[0],i=n.apply(this,[r]);return t?(i.then(e,t),Promise.resolve()):i},t.createAnswer=function(e,t){let n=arguments.length>=2?arguments[2]:arguments[0],i=r.apply(this,[n]);return t?(i.then(e,t),Promise.resolve()):i};let a=function(e,t,n){let r=i.apply(this,[e]);return n?(r.then(t,n),Promise.resolve()):r};t.setLocalDescription=a,t.setRemoteDescription=a=function(e,t,n){let r=s.apply(this,[e]);return n?(r.then(t,n),Promise.resolve()):r},t.addIceCandidate=function(e,t,n){let r=o.apply(this,[e]);return n?(r.then(t,n),Promise.resolve()):r}}function J(e){let t=e&&e.navigator;if(t.mediaDevices&&t.mediaDevices.getUserMedia){let e=t.mediaDevices,n=e.getUserMedia.bind(e);t.mediaDevices.getUserMedia=e=>n(W(e))}!t.getUserMedia&&t.mediaDevices&&t.mediaDevices.getUserMedia&&(t.getUserMedia=(function(e,n,r){t.mediaDevices.getUserMedia(e).then(n,r)}).bind(t))}function W(e){return e&&void 0!==e.video?Object.assign({},e,{video:function e(t){return _(t)?Object.keys(t).reduce(function(n,r){let i=_(t[r]),s=i?e(t[r]):t[r],o=i&&!Object.keys(s).length;return void 0===s||o?n:Object.assign(n,{[r]:s})},{}):t}(e.video)}):e}function Y(e){if(!e.RTCPeerConnection)return;let t=e.RTCPeerConnection;e.RTCPeerConnection=function(e,n){if(e&&e.iceServers){let t=[];for(let n=0;n<e.iceServers.length;n++){let r=e.iceServers[n];void 0===r.urls&&r.url?(m("RTCIceServer.url","RTCIceServer.urls"),(r=JSON.parse(JSON.stringify(r))).urls=r.url,delete r.url,t.push(r)):t.push(e.iceServers[n])}e.iceServers=t}return new t(e,n)},e.RTCPeerConnection.prototype=t.prototype,"generateCertificate"in t&&Object.defineProperty(e.RTCPeerConnection,"generateCertificate",{get:()=>t.generateCertificate})}function H(e){"object"==typeof e&&e.RTCTrackEvent&&"receiver"in e.RTCTrackEvent.prototype&&!("transceiver"in e.RTCTrackEvent.prototype)&&Object.defineProperty(e.RTCTrackEvent.prototype,"transceiver",{get(){return{receiver:this.receiver}}})}function K(e){let t=e.RTCPeerConnection.prototype.createOffer;e.RTCPeerConnection.prototype.createOffer=function(e){if(e){void 0!==e.offerToReceiveAudio&&(e.offerToReceiveAudio=!!e.offerToReceiveAudio);let t=this.getTransceivers().find(e=>"audio"===e.receiver.track.kind);!1===e.offerToReceiveAudio&&t?"sendrecv"===t.direction?t.setDirection?t.setDirection("sendonly"):t.direction="sendonly":"recvonly"===t.direction&&(t.setDirection?t.setDirection("inactive"):t.direction="inactive"):!0!==e.offerToReceiveAudio||t||this.addTransceiver("audio",{direction:"recvonly"}),void 0!==e.offerToReceiveVideo&&(e.offerToReceiveVideo=!!e.offerToReceiveVideo);let n=this.getTransceivers().find(e=>"video"===e.receiver.track.kind);!1===e.offerToReceiveVideo&&n?"sendrecv"===n.direction?n.setDirection?n.setDirection("sendonly"):n.direction="sendonly":"recvonly"===n.direction&&(n.setDirection?n.setDirection("inactive"):n.direction="inactive"):!0!==e.offerToReceiveVideo||n||this.addTransceiver("video",{direction:"recvonly"})}return t.apply(this,arguments)}}function X(e){"object"!=typeof e||e.AudioContext||(e.AudioContext=e.webkitAudioContext)}e(z,"shimLocalStreamsAPI",()=>$),e(z,"shimRemoteStreamsAPI",()=>V),e(z,"shimCallbacksAPI",()=>G),e(z,"shimGetUserMedia",()=>J),e(z,"shimConstraints",()=>W),e(z,"shimRTCIceServerUrls",()=>Y),e(z,"shimTrackEventTransceiver",()=>H),e(z,"shimCreateOfferLegacy",()=>K),e(z,"shimAudioContext",()=>X);var Q={};"use strict";e(Q,"shimRTCIceCandidate",()=>ee),e(Q,"shimRTCIceCandidateRelayProtocol",()=>et),e(Q,"shimMaxMessageSize",()=>en),e(Q,"shimSendThrowTypeError",()=>er),e(Q,"shimConnectionState",()=>ei),e(Q,"removeExtmapAllowMixed",()=>es),e(Q,"shimAddIceCandidateNullOrEmpty",()=>eo),e(Q,"shimParameterlessSetLocalDescription",()=>ea);var q={};"use strict";let Z={};function ee(e){if(!e.RTCIceCandidate||e.RTCIceCandidate&&"foundation"in e.RTCIceCandidate.prototype)return;let n=e.RTCIceCandidate;e.RTCIceCandidate=function(e){if("object"==typeof e&&e.candidate&&0===e.candidate.indexOf("a=")&&((e=JSON.parse(JSON.stringify(e))).candidate=e.candidate.substring(2)),e.candidate&&e.candidate.length){let r=new n(e),i=t(q).parseCandidate(e.candidate);for(let e in i)e in r||Object.defineProperty(r,e,{value:i[e]});return r.toJSON=function(){return{candidate:r.candidate,sdpMid:r.sdpMid,sdpMLineIndex:r.sdpMLineIndex,usernameFragment:r.usernameFragment}},r}return new n(e)},e.RTCIceCandidate.prototype=n.prototype,l(e,"icecandidate",t=>(t.candidate&&Object.defineProperty(t,"candidate",{value:new e.RTCIceCandidate(t.candidate),writable:"false"}),t))}function et(e){!e.RTCIceCandidate||e.RTCIceCandidate&&"relayProtocol"in e.RTCIceCandidate.prototype||l(e,"icecandidate",e=>{if(e.candidate){let n=t(q).parseCandidate(e.candidate.candidate);"relay"===n.type&&(e.candidate.relayProtocol=({0:"tls",1:"tcp",2:"udp"})[n.priority>>24])}return e})}function en(e,n){if(!e.RTCPeerConnection)return;"sctp"in e.RTCPeerConnection.prototype||Object.defineProperty(e.RTCPeerConnection.prototype,"sctp",{get(){return void 0===this._sctp?null:this._sctp}});let r=function(e){if(!e||!e.sdp)return!1;let n=t(q).splitSections(e.sdp);return n.shift(),n.some(e=>{let n=t(q).parseMLine(e);return n&&"application"===n.kind&&-1!==n.protocol.indexOf("SCTP")})},i=function(e){let t=e.sdp.match(/mozilla...THIS_IS_SDPARTA-(\d+)/);if(null===t||t.length<2)return -1;let n=parseInt(t[1],10);return n!=n?-1:n},s=function(e){let t=65536;return"firefox"===n.browser&&(t=n.version<57?-1===e?16384:0x7ffffff5:n.version<60?57===n.version?65535:65536:0x7ffffff5),t},o=function(e,r){let i=65536;"firefox"===n.browser&&57===n.version&&(i=65535);let s=t(q).matchPrefix(e.sdp,"a=max-message-size:");return s.length>0?i=parseInt(s[0].substring(19),10):"firefox"===n.browser&&-1!==r&&(i=0x7ffffff5),i},a=e.RTCPeerConnection.prototype.setRemoteDescription;e.RTCPeerConnection.prototype.setRemoteDescription=function(){if(this._sctp=null,"chrome"===n.browser&&n.version>=76){let{sdpSemantics:e}=this.getConfiguration();"plan-b"===e&&Object.defineProperty(this,"sctp",{get(){return void 0===this._sctp?null:this._sctp},enumerable:!0,configurable:!0})}if(r(arguments[0])){let e,t=i(arguments[0]),n=s(t),r=o(arguments[0],t);e=0===n&&0===r?Number.POSITIVE_INFINITY:0===n||0===r?Math.max(n,r):Math.min(n,r);let a={};Object.defineProperty(a,"maxMessageSize",{get:()=>e}),this._sctp=a}return a.apply(this,arguments)}}function er(e){if(!(e.RTCPeerConnection&&"createDataChannel"in e.RTCPeerConnection.prototype))return;function t(e,t){let n=e.send;e.send=function(){let r=arguments[0],i=r.length||r.size||r.byteLength;if("open"===e.readyState&&t.sctp&&i>t.sctp.maxMessageSize)throw TypeError("Message too large (can send a maximum of "+t.sctp.maxMessageSize+" bytes)");return n.apply(e,arguments)}}let n=e.RTCPeerConnection.prototype.createDataChannel;e.RTCPeerConnection.prototype.createDataChannel=function(){let e=n.apply(this,arguments);return t(e,this),e},l(e,"datachannel",e=>(t(e.channel,e.target),e))}function ei(e){if(!e.RTCPeerConnection||"connectionState"in e.RTCPeerConnection.prototype)return;let t=e.RTCPeerConnection.prototype;Object.defineProperty(t,"connectionState",{get(){return({completed:"connected",checking:"connecting"})[this.iceConnectionState]||this.iceConnectionState},enumerable:!0,configurable:!0}),Object.defineProperty(t,"onconnectionstatechange",{get(){return this._onconnectionstatechange||null},set(e){this._onconnectionstatechange&&(this.removeEventListener("connectionstatechange",this._onconnectionstatechange),delete this._onconnectionstatechange),e&&this.addEventListener("connectionstatechange",this._onconnectionstatechange=e)},enumerable:!0,configurable:!0}),["setLocalDescription","setRemoteDescription"].forEach(e=>{let n=t[e];t[e]=function(){return this._connectionstatechangepoly||(this._connectionstatechangepoly=e=>{let t=e.target;if(t._lastConnectionState!==t.connectionState){t._lastConnectionState=t.connectionState;let n=new Event("connectionstatechange",e);t.dispatchEvent(n)}return e},this.addEventListener("iceconnectionstatechange",this._connectionstatechangepoly)),n.apply(this,arguments)}})}function es(e,t){if(!e.RTCPeerConnection||"chrome"===t.browser&&t.version>=71||"safari"===t.browser&&t.version>=605)return;let n=e.RTCPeerConnection.prototype.setRemoteDescription;e.RTCPeerConnection.prototype.setRemoteDescription=function(t){if(t&&t.sdp&&-1!==t.sdp.indexOf("\na=extmap-allow-mixed")){let n=t.sdp.split("\n").filter(e=>"a=extmap-allow-mixed"!==e.trim()).join("\n");e.RTCSessionDescription&&t instanceof e.RTCSessionDescription?arguments[0]=new e.RTCSessionDescription({type:t.type,sdp:n}):t.sdp=n}return n.apply(this,arguments)}}function eo(e,t){if(!(e.RTCPeerConnection&&e.RTCPeerConnection.prototype))return;let n=e.RTCPeerConnection.prototype.addIceCandidate;n&&0!==n.length&&(e.RTCPeerConnection.prototype.addIceCandidate=function(){return arguments[0]?("chrome"===t.browser&&t.version<78||"firefox"===t.browser&&t.version<68||"safari"===t.browser)&&arguments[0]&&""===arguments[0].candidate?Promise.resolve():n.apply(this,arguments):(arguments[1]&&arguments[1].apply(null),Promise.resolve())})}function ea(e,t){if(!(e.RTCPeerConnection&&e.RTCPeerConnection.prototype))return;let n=e.RTCPeerConnection.prototype.setLocalDescription;n&&0!==n.length&&(e.RTCPeerConnection.prototype.setLocalDescription=function(){let e=arguments[0]||{};if("object"!=typeof e||e.type&&e.sdp)return n.apply(this,arguments);if(!(e={type:e.type,sdp:e.sdp}).type)switch(this.signalingState){case"stable":case"have-local-offer":case"have-remote-pranswer":e.type="offer";break;default:e.type="answer"}return e.sdp||"offer"!==e.type&&"answer"!==e.type?n.apply(this,[e]):("offer"===e.type?this.createOffer:this.createAnswer).apply(this).then(e=>n.apply(this,[e]))})}"use strict";Z.generateIdentifier=function(){return Math.random().toString(36).substring(2,12)},Z.localCName=Z.generateIdentifier(),Z.splitLines=function(e){return e.trim().split("\n").map(e=>e.trim())},Z.splitSections=function(e){return e.split("\nm=").map((e,t)=>(t>0?"m="+e:e).trim()+"\r\n")},Z.getDescription=function(e){let t=Z.splitSections(e);return t&&t[0]},Z.getMediaSections=function(e){let t=Z.splitSections(e);return t.shift(),t},Z.matchPrefix=function(e,t){return Z.splitLines(e).filter(e=>0===e.indexOf(t))},Z.parseCandidate=function(e){let t,n={foundation:(t=0===e.indexOf("a=candidate:")?e.substring(12).split(" "):e.substring(10).split(" "))[0],component:{1:"rtp",2:"rtcp"}[t[1]]||t[1],protocol:t[2].toLowerCase(),priority:parseInt(t[3],10),ip:t[4],address:t[4],port:parseInt(t[5],10),type:t[7]};for(let e=8;e<t.length;e+=2)switch(t[e]){case"raddr":n.relatedAddress=t[e+1];break;case"rport":n.relatedPort=parseInt(t[e+1],10);break;case"tcptype":n.tcpType=t[e+1];break;case"ufrag":n.ufrag=t[e+1],n.usernameFragment=t[e+1];break;default:void 0===n[t[e]]&&(n[t[e]]=t[e+1])}return n},Z.writeCandidate=function(e){let t=[];t.push(e.foundation);let n=e.component;"rtp"===n?t.push(1):"rtcp"===n?t.push(2):t.push(n),t.push(e.protocol.toUpperCase()),t.push(e.priority),t.push(e.address||e.ip),t.push(e.port);let r=e.type;return t.push("typ"),t.push(r),"host"!==r&&e.relatedAddress&&e.relatedPort&&(t.push("raddr"),t.push(e.relatedAddress),t.push("rport"),t.push(e.relatedPort)),e.tcpType&&"tcp"===e.protocol.toLowerCase()&&(t.push("tcptype"),t.push(e.tcpType)),(e.usernameFragment||e.ufrag)&&(t.push("ufrag"),t.push(e.usernameFragment||e.ufrag)),"candidate:"+t.join(" ")},Z.parseIceOptions=function(e){return e.substring(14).split(" ")},Z.parseRtpMap=function(e){let t=e.substring(9).split(" "),n={payloadType:parseInt(t.shift(),10)};return n.name=(t=t[0].split("/"))[0],n.clockRate=parseInt(t[1],10),n.channels=3===t.length?parseInt(t[2],10):1,n.numChannels=n.channels,n},Z.writeRtpMap=function(e){let t=e.payloadType;void 0!==e.preferredPayloadType&&(t=e.preferredPayloadType);let n=e.channels||e.numChannels||1;return"a=rtpmap:"+t+" "+e.name+"/"+e.clockRate+(1!==n?"/"+n:"")+"\r\n"},Z.parseExtmap=function(e){let t=e.substring(9).split(" ");return{id:parseInt(t[0],10),direction:t[0].indexOf("/")>0?t[0].split("/")[1]:"sendrecv",uri:t[1],attributes:t.slice(2).join(" ")}},Z.writeExtmap=function(e){return"a=extmap:"+(e.id||e.preferredId)+(e.direction&&"sendrecv"!==e.direction?"/"+e.direction:"")+" "+e.uri+(e.attributes?" "+e.attributes:"")+"\r\n"},Z.parseFmtp=function(e){let t,n={},r=e.substring(e.indexOf(" ")+1).split(";");for(let e=0;e<r.length;e++)n[(t=r[e].trim().split("="))[0].trim()]=t[1];return n},Z.writeFmtp=function(e){let t="",n=e.payloadType;if(void 0!==e.preferredPayloadType&&(n=e.preferredPayloadType),e.parameters&&Object.keys(e.parameters).length){let r=[];Object.keys(e.parameters).forEach(t=>{void 0!==e.parameters[t]?r.push(t+"="+e.parameters[t]):r.push(t)}),t+="a=fmtp:"+n+" "+r.join(";")+"\r\n"}return t},Z.parseRtcpFb=function(e){let t=e.substring(e.indexOf(" ")+1).split(" ");return{type:t.shift(),parameter:t.join(" ")}},Z.writeRtcpFb=function(e){let t="",n=e.payloadType;return void 0!==e.preferredPayloadType&&(n=e.preferredPayloadType),e.rtcpFeedback&&e.rtcpFeedback.length&&e.rtcpFeedback.forEach(e=>{t+="a=rtcp-fb:"+n+" "+e.type+(e.parameter&&e.parameter.length?" "+e.parameter:"")+"\r\n"}),t},Z.parseSsrcMedia=function(e){let t=e.indexOf(" "),n={ssrc:parseInt(e.substring(7,t),10)},r=e.indexOf(":",t);return r>-1?(n.attribute=e.substring(t+1,r),n.value=e.substring(r+1)):n.attribute=e.substring(t+1),n},Z.parseSsrcGroup=function(e){let t=e.substring(13).split(" ");return{semantics:t.shift(),ssrcs:t.map(e=>parseInt(e,10))}},Z.getMid=function(e){let t=Z.matchPrefix(e,"a=mid:")[0];if(t)return t.substring(6)},Z.parseFingerprint=function(e){let t=e.substring(14).split(" ");return{algorithm:t[0].toLowerCase(),value:t[1].toUpperCase()}},Z.getDtlsParameters=function(e,t){return{role:"auto",fingerprints:Z.matchPrefix(e+t,"a=fingerprint:").map(Z.parseFingerprint)}},Z.writeDtlsParameters=function(e,t){let n="a=setup:"+t+"\r\n";return e.fingerprints.forEach(e=>{n+="a=fingerprint:"+e.algorithm+" "+e.value+"\r\n"}),n},Z.parseCryptoLine=function(e){let t=e.substring(9).split(" ");return{tag:parseInt(t[0],10),cryptoSuite:t[1],keyParams:t[2],sessionParams:t.slice(3)}},Z.writeCryptoLine=function(e){return"a=crypto:"+e.tag+" "+e.cryptoSuite+" "+("object"==typeof e.keyParams?Z.writeCryptoKeyParams(e.keyParams):e.keyParams)+(e.sessionParams?" "+e.sessionParams.join(" "):"")+"\r\n"},Z.parseCryptoKeyParams=function(e){if(0!==e.indexOf("inline:"))return null;let t=e.substring(7).split("|");return{keyMethod:"inline",keySalt:t[0],lifeTime:t[1],mkiValue:t[2]?t[2].split(":")[0]:void 0,mkiLength:t[2]?t[2].split(":")[1]:void 0}},Z.writeCryptoKeyParams=function(e){return e.keyMethod+":"+e.keySalt+(e.lifeTime?"|"+e.lifeTime:"")+(e.mkiValue&&e.mkiLength?"|"+e.mkiValue+":"+e.mkiLength:"")},Z.getCryptoParameters=function(e,t){return Z.matchPrefix(e+t,"a=crypto:").map(Z.parseCryptoLine)},Z.getIceParameters=function(e,t){let n=Z.matchPrefix(e+t,"a=ice-ufrag:")[0],r=Z.matchPrefix(e+t,"a=ice-pwd:")[0];return n&&r?{usernameFragment:n.substring(12),password:r.substring(10)}:null},Z.writeIceParameters=function(e){let t="a=ice-ufrag:"+e.usernameFragment+"\r\na=ice-pwd:"+e.password+"\r\n";return e.iceLite&&(t+="a=ice-lite\r\n"),t},Z.parseRtpParameters=function(e){let t={codecs:[],headerExtensions:[],fecMechanisms:[],rtcp:[]},n=Z.splitLines(e)[0].split(" ");t.profile=n[2];for(let r=3;r<n.length;r++){let i=n[r],s=Z.matchPrefix(e,"a=rtpmap:"+i+" ")[0];if(s){let n=Z.parseRtpMap(s),r=Z.matchPrefix(e,"a=fmtp:"+i+" ");switch(n.parameters=r.length?Z.parseFmtp(r[0]):{},n.rtcpFeedback=Z.matchPrefix(e,"a=rtcp-fb:"+i+" ").map(Z.parseRtcpFb),t.codecs.push(n),n.name.toUpperCase()){case"RED":case"ULPFEC":t.fecMechanisms.push(n.name.toUpperCase())}}}Z.matchPrefix(e,"a=extmap:").forEach(e=>{t.headerExtensions.push(Z.parseExtmap(e))});let r=Z.matchPrefix(e,"a=rtcp-fb:* ").map(Z.parseRtcpFb);return t.codecs.forEach(e=>{r.forEach(t=>{e.rtcpFeedback.find(e=>e.type===t.type&&e.parameter===t.parameter)||e.rtcpFeedback.push(t)})}),t},Z.writeRtpDescription=function(e,t){let n="";n+="m="+e+" ",n+=t.codecs.length>0?"9":"0",n+=" "+(t.profile||"UDP/TLS/RTP/SAVPF")+" ",n+=t.codecs.map(e=>void 0!==e.preferredPayloadType?e.preferredPayloadType:e.payloadType).join(" ")+"\r\n",n+="c=IN IP4 0.0.0.0\r\n",n+="a=rtcp:9 IN IP4 0.0.0.0\r\n",t.codecs.forEach(e=>{n+=Z.writeRtpMap(e),n+=Z.writeFmtp(e),n+=Z.writeRtcpFb(e)});let r=0;return t.codecs.forEach(e=>{e.maxptime>r&&(r=e.maxptime)}),r>0&&(n+="a=maxptime:"+r+"\r\n"),t.headerExtensions&&t.headerExtensions.forEach(e=>{n+=Z.writeExtmap(e)}),n},Z.parseRtpEncodingParameters=function(e){let t,n=[],r=Z.parseRtpParameters(e),i=-1!==r.fecMechanisms.indexOf("RED"),s=-1!==r.fecMechanisms.indexOf("ULPFEC"),o=Z.matchPrefix(e,"a=ssrc:").map(e=>Z.parseSsrcMedia(e)).filter(e=>"cname"===e.attribute),a=o.length>0&&o[0].ssrc,c=Z.matchPrefix(e,"a=ssrc-group:FID").map(e=>e.substring(17).split(" ").map(e=>parseInt(e,10)));c.length>0&&c[0].length>1&&c[0][0]===a&&(t=c[0][1]),r.codecs.forEach(e=>{if("RTX"===e.name.toUpperCase()&&e.parameters.apt){let r={ssrc:a,codecPayloadType:parseInt(e.parameters.apt,10)};a&&t&&(r.rtx={ssrc:t}),n.push(r),i&&((r=JSON.parse(JSON.stringify(r))).fec={ssrc:a,mechanism:s?"red+ulpfec":"red"},n.push(r))}}),0===n.length&&a&&n.push({ssrc:a});let p=Z.matchPrefix(e,"b=");return p.length&&(p=0===p[0].indexOf("b=TIAS:")?parseInt(p[0].substring(7),10):0===p[0].indexOf("b=AS:")?950*parseInt(p[0].substring(5),10)-16e3:void 0,n.forEach(e=>{e.maxBitrate=p})),n},Z.parseRtcpParameters=function(e){let t={},n=Z.matchPrefix(e,"a=ssrc:").map(e=>Z.parseSsrcMedia(e)).filter(e=>"cname"===e.attribute)[0];n&&(t.cname=n.value,t.ssrc=n.ssrc);let r=Z.matchPrefix(e,"a=rtcp-rsize");return t.reducedSize=r.length>0,t.compound=0===r.length,t.mux=Z.matchPrefix(e,"a=rtcp-mux").length>0,t},Z.writeRtcpParameters=function(e){let t="";return e.reducedSize&&(t+="a=rtcp-rsize\r\n"),e.mux&&(t+="a=rtcp-mux\r\n"),void 0!==e.ssrc&&e.cname&&(t+="a=ssrc:"+e.ssrc+" cname:"+e.cname+"\r\n"),t},Z.parseMsid=function(e){let t,n=Z.matchPrefix(e,"a=msid:");if(1===n.length)return{stream:(t=n[0].substring(7).split(" "))[0],track:t[1]};let r=Z.matchPrefix(e,"a=ssrc:").map(e=>Z.parseSsrcMedia(e)).filter(e=>"msid"===e.attribute);if(r.length>0)return{stream:(t=r[0].value.split(" "))[0],track:t[1]}},Z.parseSctpDescription=function(e){let t,n=Z.parseMLine(e),r=Z.matchPrefix(e,"a=max-message-size:");r.length>0&&(t=parseInt(r[0].substring(19),10)),isNaN(t)&&(t=65536);let i=Z.matchPrefix(e,"a=sctp-port:");if(i.length>0)return{port:parseInt(i[0].substring(12),10),protocol:n.fmt,maxMessageSize:t};let s=Z.matchPrefix(e,"a=sctpmap:");if(s.length>0){let e=s[0].substring(10).split(" ");return{port:parseInt(e[0],10),protocol:e[1],maxMessageSize:t}}},Z.writeSctpDescription=function(e,t){let n=[];return n="DTLS/SCTP"!==e.protocol?["m="+e.kind+" 9 "+e.protocol+" "+t.protocol+"\r\n","c=IN IP4 0.0.0.0\r\n","a=sctp-port:"+t.port+"\r\n"]:["m="+e.kind+" 9 "+e.protocol+" "+t.port+"\r\n","c=IN IP4 0.0.0.0\r\n","a=sctpmap:"+t.port+" "+t.protocol+" 65535\r\n"],void 0!==t.maxMessageSize&&n.push("a=max-message-size:"+t.maxMessageSize+"\r\n"),n.join("")},Z.generateSessionId=function(){return Math.random().toString().substr(2,22)},Z.writeSessionBoilerplate=function(e,t,n){return"v=0\r\no="+(n||"thisisadapterortc")+" "+(e||Z.generateSessionId())+" "+(void 0!==t?t:2)+" IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\n"},Z.getDirection=function(e,t){let n=Z.splitLines(e);for(let e=0;e<n.length;e++)switch(n[e]){case"a=sendrecv":case"a=sendonly":case"a=recvonly":case"a=inactive":return n[e].substring(2)}return t?Z.getDirection(t):"sendrecv"},Z.getKind=function(e){return Z.splitLines(e)[0].split(" ")[0].substring(2)},Z.isRejected=function(e){return"0"===e.split(" ",2)[1]},Z.parseMLine=function(e){let t=Z.splitLines(e)[0].substring(2).split(" ");return{kind:t[0],port:parseInt(t[1],10),protocol:t[2],fmt:t.slice(3).join(" ")}},Z.parseOLine=function(e){let t=Z.matchPrefix(e,"o=")[0].substring(2).split(" ");return{username:t[0],sessionId:t[1],sessionVersion:parseInt(t[2],10),netType:t[3],addressType:t[4],address:t[5]}},Z.isValidSDP=function(e){if("string"!=typeof e||0===e.length)return!1;let t=Z.splitLines(e);for(let e=0;e<t.length;e++)if(t[e].length<2||"="!==t[e].charAt(1))return!1;return!0},q=Z;let ec=function({window:e}={},t={shimChrome:!0,shimFirefox:!0,shimSafari:!0}){let n=function(e){let t={browser:null,version:null};if(void 0===e||!e.navigator||!e.navigator.userAgent)return t.browser="Not a browser.",t;let{navigator:n}=e;if(n.userAgentData&&n.userAgentData.brands){let e=n.userAgentData.brands.find(e=>"Chromium"===e.brand);if(e)return{browser:"chrome",version:parseInt(e.version,10)}}return n.mozGetUserMedia?(t.browser="firefox",t.version=d(n.userAgent,/Firefox\/(\d+)\./,1)):n.webkitGetUserMedia||!1===e.isSecureContext&&e.webkitRTCPeerConnection?(t.browser="chrome",t.version=d(n.userAgent,/Chrom(e|ium)\/(\d+)\./,2)):e.RTCPeerConnection&&n.userAgent.match(/AppleWebKit\/(\d+)\./)?(t.browser="safari",t.version=d(n.userAgent,/AppleWebKit\/(\d+)\./,1),t.supportsUnifiedPlan=e.RTCRtpTransceiver&&"currentDirection"in e.RTCRtpTransceiver.prototype):t.browser="Not a supported browser.",t}(e),r={browserDetails:n,commonShim:Q,extractVersion:d,disableLog:h,disableWarnings:u,sdp:q};switch(n.browser){case"chrome":if(!y||!y.shimPeerConnection||!t.shimChrome){f("Chrome shim is not included in this adapter release.");break}if(null===n.version){f("Chrome shim can not determine version, not shimming.");break}f("adapter.js shimming chrome."),r.browserShim=y,eo(e,n),ea(e,n),y.shimGetUserMedia(e,n),y.shimMediaStream(e,n),y.shimPeerConnection(e,n),y.shimOnTrack(e,n),y.shimAddTrackRemoveTrack(e,n),y.shimGetSendersWithDtmf(e,n),y.shimSenderReceiverGetStats(e,n),y.fixNegotiationNeeded(e,n),ee(e,n),et(e,n),ei(e,n),en(e,n),er(e,n),es(e,n);break;case"firefox":if(!E||!E.shimPeerConnection||!t.shimFirefox){f("Firefox shim is not included in this adapter release.");break}f("adapter.js shimming firefox."),r.browserShim=E,eo(e,n),ea(e,n),E.shimGetUserMedia(e,n),E.shimPeerConnection(e,n),E.shimOnTrack(e,n),E.shimRemoveStream(e,n),E.shimSenderGetStats(e,n),E.shimReceiverGetStats(e,n),E.shimRTCDataChannel(e,n),E.shimAddTransceiver(e,n),E.shimGetParameters(e,n),E.shimCreateOffer(e,n),E.shimCreateAnswer(e,n),ee(e,n),ei(e,n),en(e,n),er(e,n);break;case"safari":if(!z||!t.shimSafari){f("Safari shim is not included in this adapter release.");break}f("adapter.js shimming safari."),r.browserShim=z,eo(e,n),ea(e,n),z.shimRTCIceServerUrls(e,n),z.shimCreateOfferLegacy(e,n),z.shimCallbacksAPI(e,n),z.shimLocalStreamsAPI(e,n),z.shimRemoteStreamsAPI(e,n),z.shimTrackEventTransceiver(e,n),z.shimGetUserMedia(e,n),z.shimAudioContext(e,n),ee(e,n),et(e,n),en(e,n),er(e,n),es(e,n);break;default:f("Unsupported browser!")}return r}({window:"undefined"==typeof window?void 0:window}),ep=ec.default||ec,ed=new class{isWebRTCSupported(){return"undefined"!=typeof RTCPeerConnection}isBrowserSupported(){let e=this.getBrowser(),t=this.getVersion();return!!this.supportedBrowsers.includes(e)&&("chrome"===e?t>=this.minChromeVersion:"firefox"===e?t>=this.minFirefoxVersion:"safari"===e&&!this.isIOS&&t>=this.minSafariVersion)}getBrowser(){return ep.browserDetails.browser}getVersion(){return ep.browserDetails.version||0}isUnifiedPlanSupported(){let e,t=this.getBrowser(),n=ep.browserDetails.version||0;if("chrome"===t&&n<this.minChromeVersion)return!1;if("firefox"===t&&n>=this.minFirefoxVersion)return!0;if(!window.RTCRtpTransceiver||!("currentDirection"in RTCRtpTransceiver.prototype))return!1;let r=!1;try{(e=new RTCPeerConnection).addTransceiver("audio"),r=!0}catch(e){}finally{e&&e.close()}return r}toString(){return`Supports:
+    browser:${this.getBrowser()}
+    version:${this.getVersion()}
+    isIOS:${this.isIOS}
+    isWebRTCSupported:${this.isWebRTCSupported()}
+    isBrowserSupported:${this.isBrowserSupported()}
+    isUnifiedPlanSupported:${this.isUnifiedPlanSupported()}`}constructor(){this.isIOS="undefined"!=typeof navigator&&["iPad","iPhone","iPod"].includes(navigator.platform),this.supportedBrowsers=["firefox","chrome","safari"],this.minFirefoxVersion=59,this.minChromeVersion=72,this.minSafariVersion=605}},el=e=>!e||/^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/.test(e),eh=()=>Math.random().toString(36).slice(2),eu={iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:["turn:eu-0.turn.peerjs.com:3478","turn:us-0.turn.peerjs.com:3478"],username:"peerjs",credential:"peerjsp"}],sdpSemantics:"unified-plan"},ef=new class extends n{noop(){}blobToArrayBuffer(e,t){let n=new FileReader;return n.onload=function(e){e.target&&t(e.target.result)},n.readAsArrayBuffer(e),n}binaryStringToArrayBuffer(e){let t=new Uint8Array(e.length);for(let n=0;n<e.length;n++)t[n]=255&e.charCodeAt(n);return t.buffer}isSecure(){return"https:"===location.protocol}constructor(...e){super(...e),this.CLOUD_HOST="0.peerjs.com",this.CLOUD_PORT=443,this.chunkedBrowsers={Chrome:1,chrome:1},this.defaultConfig=eu,this.browser=ed.getBrowser(),this.browserVersion=ed.getVersion(),this.pack=s,this.unpack=i,this.supports=function(){let e,t={browser:ed.isBrowserSupported(),webRTC:ed.isWebRTCSupported(),audioVideo:!1,data:!1,binaryBlob:!1,reliable:!1};if(!t.webRTC)return t;try{let n;e=new RTCPeerConnection(eu),t.audioVideo=!0;try{n=e.createDataChannel("_PEERJSTEST",{ordered:!0}),t.data=!0,t.reliable=!!n.ordered;try{n.binaryType="blob",t.binaryBlob=!ed.isIOS}catch(e){}}catch(e){}finally{n&&n.close()}}catch(e){}finally{e&&e.close()}return t}(),this.validateId=el,this.randomToken=eh}};"use strict";var em=new class{get logLevel(){return this._logLevel}set logLevel(e){this._logLevel=e}log(...e){this._logLevel>=3&&this._print(3,...e)}warn(...e){this._logLevel>=2&&this._print(2,...e)}error(...e){this._logLevel>=1&&this._print(1,...e)}setLogFunction(e){this._print=e}_print(e,...t){let n=["PeerJS: ",...t];for(let e in n)n[e]instanceof Error&&(n[e]="("+n[e].name+") "+n[e].message);e>=3?console.log(...n):e>=2?console.warn("WARNING",...n):e>=1&&console.error("ERROR",...n)}constructor(){this._logLevel=0}},e_={},eg=Object.prototype.hasOwnProperty,ey="~";function eC(){}function ev(e,t,n){this.fn=e,this.context=t,this.once=n||!1}function eb(e,t,n,r,i){if("function"!=typeof n)throw TypeError("The listener must be a function");var s=new ev(n,r||e,i),o=ey?ey+t:t;return e._events[o]?e._events[o].fn?e._events[o]=[e._events[o],s]:e._events[o].push(s):(e._events[o]=s,e._eventsCount++),e}function eT(e,t){0==--e._eventsCount?e._events=new eC:delete e._events[t]}function eS(){this._events=new eC,this._eventsCount=0}Object.create&&(eC.prototype=Object.create(null),new eC().__proto__||(ey=!1)),eS.prototype.eventNames=function(){var e,t,n=[];if(0===this._eventsCount)return n;for(t in e=this._events)eg.call(e,t)&&n.push(ey?t.slice(1):t);return Object.getOwnPropertySymbols?n.concat(Object.getOwnPropertySymbols(e)):n},eS.prototype.listeners=function(e){var t=ey?ey+e:e,n=this._events[t];if(!n)return[];if(n.fn)return[n.fn];for(var r=0,i=n.length,s=Array(i);r<i;r++)s[r]=n[r].fn;return s},eS.prototype.listenerCount=function(e){var t=ey?ey+e:e,n=this._events[t];return n?n.fn?1:n.length:0},eS.prototype.emit=function(e,t,n,r,i,s){var o=ey?ey+e:e;if(!this._events[o])return!1;var a,c,p=this._events[o],d=arguments.length;if(p.fn){switch(p.once&&this.removeListener(e,p.fn,void 0,!0),d){case 1:return p.fn.call(p.context),!0;case 2:return p.fn.call(p.context,t),!0;case 3:return p.fn.call(p.context,t,n),!0;case 4:return p.fn.call(p.context,t,n,r),!0;case 5:return p.fn.call(p.context,t,n,r,i),!0;case 6:return p.fn.call(p.context,t,n,r,i,s),!0}for(c=1,a=Array(d-1);c<d;c++)a[c-1]=arguments[c];p.fn.apply(p.context,a)}else{var l,h=p.length;for(c=0;c<h;c++)switch(p[c].once&&this.removeListener(e,p[c].fn,void 0,!0),d){case 1:p[c].fn.call(p[c].context);break;case 2:p[c].fn.call(p[c].context,t);break;case 3:p[c].fn.call(p[c].context,t,n);break;case 4:p[c].fn.call(p[c].context,t,n,r);break;default:if(!a)for(l=1,a=Array(d-1);l<d;l++)a[l-1]=arguments[l];p[c].fn.apply(p[c].context,a)}}return!0},eS.prototype.on=function(e,t,n){return eb(this,e,t,n,!1)},eS.prototype.once=function(e,t,n){return eb(this,e,t,n,!0)},eS.prototype.removeListener=function(e,t,n,r){var i=ey?ey+e:e;if(!this._events[i])return this;if(!t)return eT(this,i),this;var s=this._events[i];if(s.fn)s.fn!==t||r&&!s.once||n&&s.context!==n||eT(this,i);else{for(var o=0,a=[],c=s.length;o<c;o++)(s[o].fn!==t||r&&!s[o].once||n&&s[o].context!==n)&&a.push(s[o]);a.length?this._events[i]=1===a.length?a[0]:a:eT(this,i)}return this},eS.prototype.removeAllListeners=function(e){var t;return e?(t=ey?ey+e:e,this._events[t]&&eT(this,t)):(this._events=new eC,this._eventsCount=0),this},eS.prototype.off=eS.prototype.removeListener,eS.prototype.addListener=eS.prototype.on,eS.prefixed=ey,eS.EventEmitter=eS,e_=eS;var ek=function(e){return e.Data="data",e.Media="media",e}({}),eR=function(e){return e.BrowserIncompatible="browser-incompatible",e.Disconnected="disconnected",e.InvalidID="invalid-id",e.InvalidKey="invalid-key",e.Network="network",e.PeerUnavailable="peer-unavailable",e.SslUnavailable="ssl-unavailable",e.ServerError="server-error",e.SocketError="socket-error",e.SocketClosed="socket-closed",e.UnavailableID="unavailable-id",e.WebRTC="webrtc",e}({}),eP=function(e){return e.NegotiationFailed="negotiation-failed",e.ConnectionClosed="connection-closed",e}({}),ew=function(e){return e.NotOpenYet="not-open-yet",e.MessageToBig="message-too-big",e}({}),eE=function(e){return e.Binary="binary",e.BinaryUTF8="binary-utf8",e.JSON="json",e.None="raw",e}({}),ex=function(e){return e.Message="message",e.Disconnected="disconnected",e.Error="error",e.Close="close",e}({}),eD=function(e){return e.Heartbeat="HEARTBEAT",e.Candidate="CANDIDATE",e.Offer="OFFER",e.Answer="ANSWER",e.Open="OPEN",e.Error="ERROR",e.IdTaken="ID-TAKEN",e.InvalidKey="INVALID-KEY",e.Leave="LEAVE",e.Expire="EXPIRE",e}({});let eI="1.5.5";class eM extends e_.EventEmitter{start(e,t){this._id=e;let n=`${this._baseUrl}&id=${e}&token=${t}`;!this._socket&&this._disconnected&&(this._socket=new WebSocket(n+"&version="+eI),this._disconnected=!1,this._socket.onmessage=e=>{let t;try{t=JSON.parse(e.data),em.log("Server message received:",t)}catch(t){em.log("Invalid server message",e.data);return}this.emit(ex.Message,t)},this._socket.onclose=e=>{this._disconnected||(em.log("Socket closed.",e),this._cleanup(),this._disconnected=!0,this.emit(ex.Disconnected))},this._socket.onopen=()=>{this._disconnected||(this._sendQueuedMessages(),em.log("Socket open"),this._scheduleHeartbeat())})}_scheduleHeartbeat(){this._wsPingTimer=setTimeout(()=>{this._sendHeartbeat()},this.pingInterval)}_sendHeartbeat(){if(!this._wsOpen())return void em.log("Cannot send heartbeat, because socket closed");let e=JSON.stringify({type:eD.Heartbeat});this._socket.send(e),this._scheduleHeartbeat()}_wsOpen(){return!!this._socket&&1===this._socket.readyState}_sendQueuedMessages(){let e=[...this._messagesQueue];for(let t of(this._messagesQueue=[],e))this.send(t)}send(e){if(this._disconnected)return;if(!this._id)return void this._messagesQueue.push(e);if(!e.type)return void this.emit(ex.Error,"Invalid message");if(!this._wsOpen())return;let t=JSON.stringify(e);this._socket.send(t)}close(){this._disconnected||(this._cleanup(),this._disconnected=!0)}_cleanup(){this._socket&&(this._socket.onopen=this._socket.onmessage=this._socket.onclose=null,this._socket.close(),this._socket=void 0),clearTimeout(this._wsPingTimer)}constructor(e,t,n,r,i,s=5e3){super(),this.pingInterval=s,this._disconnected=!0,this._messagesQueue=[],this._baseUrl=(e?"wss://":"ws://")+t+":"+n+r+"peerjs?key="+i}}class eO{startConnection(e){let t=this._startPeerConnection();if(this.connection.peerConnection=t,this.connection.type===ek.Media&&e._stream&&this._addTracksToConnection(e._stream,t),e.originator){let n=this.connection,r={ordered:!!e.reliable},i=t.createDataChannel(n.label,r);n._initializeDataChannel(i),this._makeOffer()}else this.handleSDP("OFFER",e.sdp)}_startPeerConnection(){em.log("Creating RTCPeerConnection.");let e=new RTCPeerConnection(this.connection.provider.options.config);return this._setupListeners(e),e}_setupListeners(e){let t=this.connection.peer,n=this.connection.connectionId,r=this.connection.type,i=this.connection.provider;em.log("Listening for ICE candidates."),e.onicecandidate=e=>{e.candidate&&e.candidate.candidate&&(em.log(`Received ICE candidates for ${t}:`,e.candidate),i.socket.send({type:eD.Candidate,payload:{candidate:e.candidate,type:r,connectionId:n},dst:t}))},e.oniceconnectionstatechange=()=>{switch(e.iceConnectionState){case"failed":em.log("iceConnectionState is failed, closing connections to "+t),this.connection.emitError(eP.NegotiationFailed,"Negotiation of connection to "+t+" failed."),this.connection.close();break;case"closed":em.log("iceConnectionState is closed, closing connections to "+t),this.connection.emitError(eP.ConnectionClosed,"Connection to "+t+" closed."),this.connection.close();break;case"disconnected":em.log("iceConnectionState changed to disconnected on the connection with "+t);break;case"completed":e.onicecandidate=()=>{}}this.connection.emit("iceStateChanged",e.iceConnectionState)},em.log("Listening for data channel"),e.ondatachannel=e=>{em.log("Received data channel");let r=e.channel;i.getConnection(t,n)._initializeDataChannel(r)},em.log("Listening for remote stream"),e.ontrack=e=>{em.log("Received remote stream");let r=e.streams[0],s=i.getConnection(t,n);s.type===ek.Media&&this._addStreamToMediaConnection(r,s)}}cleanup(){em.log("Cleaning up PeerConnection to "+this.connection.peer);let e=this.connection.peerConnection;if(!e)return;this.connection.peerConnection=null,e.onicecandidate=e.oniceconnectionstatechange=e.ondatachannel=e.ontrack=()=>{};let t="closed"!==e.signalingState,n=!1,r=this.connection.dataChannel;r&&(n=!!r.readyState&&"closed"!==r.readyState),(t||n)&&e.close()}async _makeOffer(){let e=this.connection.peerConnection,t=this.connection.provider;try{let n=await e.createOffer(this.connection.options.constraints);em.log("Created offer."),this.connection.options.sdpTransform&&"function"==typeof this.connection.options.sdpTransform&&(n.sdp=this.connection.options.sdpTransform(n.sdp)||n.sdp);try{await e.setLocalDescription(n),em.log("Set localDescription:",n,`for:${this.connection.peer}`);let r={sdp:n,type:this.connection.type,connectionId:this.connection.connectionId,metadata:this.connection.metadata};if(this.connection.type===ek.Data){let e=this.connection;r={...r,label:e.label,reliable:e.reliable,serialization:e.serialization}}t.socket.send({type:eD.Offer,payload:r,dst:this.connection.peer})}catch(e){"OperationError: Failed to set local offer sdp: Called in wrong state: kHaveRemoteOffer"!=e&&(t.emitError(eR.WebRTC,e),em.log("Failed to setLocalDescription, ",e))}}catch(e){t.emitError(eR.WebRTC,e),em.log("Failed to createOffer, ",e)}}async _makeAnswer(){let e=this.connection.peerConnection,t=this.connection.provider;try{let n=await e.createAnswer();em.log("Created answer."),this.connection.options.sdpTransform&&"function"==typeof this.connection.options.sdpTransform&&(n.sdp=this.connection.options.sdpTransform(n.sdp)||n.sdp);try{await e.setLocalDescription(n),em.log("Set localDescription:",n,`for:${this.connection.peer}`),t.socket.send({type:eD.Answer,payload:{sdp:n,type:this.connection.type,connectionId:this.connection.connectionId},dst:this.connection.peer})}catch(e){t.emitError(eR.WebRTC,e),em.log("Failed to setLocalDescription, ",e)}}catch(e){t.emitError(eR.WebRTC,e),em.log("Failed to create answer, ",e)}}async handleSDP(e,t){t=new RTCSessionDescription(t);let n=this.connection.peerConnection,r=this.connection.provider;em.log("Setting remote description",t);try{await n.setRemoteDescription(t),em.log(`Set remoteDescription:${e} for:${this.connection.peer}`),"OFFER"===e&&await this._makeAnswer()}catch(e){r.emitError(eR.WebRTC,e),em.log("Failed to setRemoteDescription, ",e)}}async handleCandidate(e){em.log("handleCandidate:",e);try{await this.connection.peerConnection.addIceCandidate(e),em.log(`Added ICE candidate for:${this.connection.peer}`)}catch(e){this.connection.provider.emitError(eR.WebRTC,e),em.log("Failed to handleCandidate, ",e)}}_addTracksToConnection(e,t){if(em.log(`add tracks from stream ${e.id} to peer connection`),!t.addTrack)return em.error("Your browser does't support RTCPeerConnection#addTrack. Ignored.");e.getTracks().forEach(n=>{t.addTrack(n,e)})}_addStreamToMediaConnection(e,t){em.log(`add stream ${e.id} to media connection ${t.connectionId}`),t.addStream(e)}constructor(e){this.connection=e}}class eL extends e_.EventEmitter{emitError(e,t){em.error("Error:",t),this.emit("error",new eA(`${e}`,t))}}class eA extends Error{constructor(e,t){"string"==typeof t?super(t):(super(),Object.assign(this,t)),this.type=e}}class ej extends eL{get open(){return this._open}constructor(e,t,n){super(),this.peer=e,this.provider=t,this.options=n,this._open=!1,this.metadata=n.metadata}}class eB extends ej{get type(){return ek.Media}get localStream(){return this._localStream}get remoteStream(){return this._remoteStream}_initializeDataChannel(e){this.dataChannel=e,this.dataChannel.onopen=()=>{em.log(`DC#${this.connectionId} dc connection success`),this.emit("willCloseOnRemote")},this.dataChannel.onclose=()=>{em.log(`DC#${this.connectionId} dc closed for:`,this.peer),this.close()}}addStream(e){em.log("Receiving stream",e),this._remoteStream=e,super.emit("stream",e)}handleMessage(e){let t=e.type,n=e.payload;switch(e.type){case eD.Answer:this._negotiator.handleSDP(t,n.sdp),this._open=!0;break;case eD.Candidate:this._negotiator.handleCandidate(n.candidate);break;default:em.warn(`Unrecognized message type:${t} from peer:${this.peer}`)}}answer(e,t={}){if(this._localStream)return void em.warn("Local stream already exists on this MediaConnection. Are you answering a call twice?");for(let n of(this._localStream=e,t&&t.sdpTransform&&(this.options.sdpTransform=t.sdpTransform),this._negotiator.startConnection({...this.options._payload,_stream:e}),this.provider._getMessages(this.connectionId)))this.handleMessage(n);this._open=!0}close(){this._negotiator&&(this._negotiator.cleanup(),this._negotiator=null),this._localStream=null,this._remoteStream=null,this.provider&&(this.provider._removeConnection(this),this.provider=null),this.options&&this.options._stream&&(this.options._stream=null),this.open&&(this._open=!1,super.emit("close"))}constructor(e,t,n){super(e,t,n),this._localStream=this.options._stream,this.connectionId=this.options.connectionId||eB.ID_PREFIX+ef.randomToken(),this._negotiator=new eO(this),this._localStream&&this._negotiator.startConnection({_stream:this._localStream,originator:!0})}}eB.ID_PREFIX="mc_";class eU{_buildRequest(e){let t=this._options.secure?"https":"http",{host:n,port:r,path:i,key:s}=this._options,o=new URL(`${t}://${n}:${r}${i}${s}/${e}`);return o.searchParams.set("ts",`${Date.now()}${Math.random()}`),o.searchParams.set("version",eI),fetch(o.href,{referrerPolicy:this._options.referrerPolicy})}async retrieveId(){try{let e=await this._buildRequest("id");if(200!==e.status)throw Error(`Error. Status:${e.status}`);return e.text()}catch(t){em.error("Error retrieving ID",t);let e="";throw"/"===this._options.path&&this._options.host!==ef.CLOUD_HOST&&(e=" If you passed in a `path` to your self-hosted PeerServer, you'll also need to pass in that same path when creating a new Peer."),Error("Could not get an ID from the server."+e)}}async listAllPeers(){try{let e=await this._buildRequest("peers");if(200!==e.status){if(401===e.status){let e="";throw e=this._options.host===ef.CLOUD_HOST?"It looks like you're using the cloud server. You can email team@peerjs.com to enable peer listing for your API key.":"You need to enable `allow_discovery` on your self-hosted PeerServer to use this feature.",Error("It doesn't look like you have permission to list peers IDs. "+e)}throw Error(`Error. Status:${e.status}`)}return e.json()}catch(e){throw em.error("Error retrieving list peers",e),Error("Could not get list peers from the server."+e)}}constructor(e){this._options=e}}class eF extends ej{get type(){return ek.Data}_initializeDataChannel(e){this.dataChannel=e,this.dataChannel.onopen=()=>{em.log(`DC#${this.connectionId} dc connection success`),this._open=!0,this.emit("open")},this.dataChannel.onmessage=e=>{em.log(`DC#${this.connectionId} dc onmessage:`,e.data)},this.dataChannel.onclose=()=>{em.log(`DC#${this.connectionId} dc closed for:`,this.peer),this.close()}}close(e){if(e?.flush)return void this.send({__peerData:{type:"close"}});this._negotiator&&(this._negotiator.cleanup(),this._negotiator=null),this.provider&&(this.provider._removeConnection(this),this.provider=null),this.dataChannel&&(this.dataChannel.onopen=null,this.dataChannel.onmessage=null,this.dataChannel.onclose=null,this.dataChannel=null),this.open&&(this._open=!1,super.emit("close"))}send(e,t=!1){return this.open?this._send(e,t):void this.emitError(ew.NotOpenYet,"Connection is not open. You should listen for the `open` event before sending messages.")}async handleMessage(e){let t=e.payload;switch(e.type){case eD.Answer:await this._negotiator.handleSDP(e.type,t.sdp);break;case eD.Candidate:await this._negotiator.handleCandidate(t.candidate);break;default:em.warn("Unrecognized message type:",e.type,"from peer:",this.peer)}}constructor(e,t,n){super(e,t,n),this.connectionId=this.options.connectionId||eF.ID_PREFIX+eh(),this.label=this.options.label||this.connectionId,this.reliable=!!this.options.reliable,this._negotiator=new eO(this),this._negotiator.startConnection(this.options._payload||{originator:!0,reliable:this.reliable})}}eF.ID_PREFIX="dc_",eF.MAX_BUFFERED_AMOUNT=8388608;class eN extends eF{get bufferSize(){return this._bufferSize}_initializeDataChannel(e){super._initializeDataChannel(e),this.dataChannel.binaryType="arraybuffer",this.dataChannel.addEventListener("message",e=>this._handleDataMessage(e))}_bufferedSend(e){(this._buffering||!this._trySend(e))&&(this._buffer.push(e),this._bufferSize=this._buffer.length)}_trySend(e){if(!this.open)return!1;if(this.dataChannel.bufferedAmount>eF.MAX_BUFFERED_AMOUNT)return this._buffering=!0,setTimeout(()=>{this._buffering=!1,this._tryBuffer()},50),!1;try{this.dataChannel.send(e)}catch(e){return em.error(`DC#:${this.connectionId} Error when sending:`,e),this._buffering=!0,this.close(),!1}return!0}_tryBuffer(){if(!this.open||0===this._buffer.length)return;let e=this._buffer[0];this._trySend(e)&&(this._buffer.shift(),this._bufferSize=this._buffer.length,this._tryBuffer())}close(e){if(e?.flush)return void this.send({__peerData:{type:"close"}});this._buffer=[],this._bufferSize=0,super.close()}constructor(...e){super(...e),this._buffer=[],this._bufferSize=0,this._buffering=!1}}class ez extends eN{close(e){super.close(e),this._chunkedData={}}_handleDataMessage({data:e}){let t=i(e),n=t.__peerData;if(n)return"close"===n.type?void this.close():void this._handleChunk(t);this.emit("data",t)}_handleChunk(e){let t=e.__peerData,n=this._chunkedData[t]||{data:[],count:0,total:e.total};if(n.data[e.n]=new Uint8Array(e.data),n.count++,this._chunkedData[t]=n,n.total===n.count){delete this._chunkedData[t];let e=function(e){let t=0;for(let n of e)t+=n.byteLength;let n=new Uint8Array(t),r=0;for(let t of e)n.set(t,r),r+=t.byteLength;return n}(n.data);this._handleDataMessage({data:e})}}_send(e,t){let n=s(e);return n instanceof Promise?this._send_blob(n):!t&&n.byteLength>this.chunker.chunkedMTU?void this._sendChunks(n):void this._bufferedSend(n)}async _send_blob(e){let t=await e;if(t.byteLength>this.chunker.chunkedMTU)return void this._sendChunks(t);this._bufferedSend(t)}_sendChunks(e){let t=this.chunker.chunk(e);for(let e of(em.log(`DC#${this.connectionId} Try to send ${t.length} chunks...`),t))this.send(e,!0)}constructor(e,t,r){super(e,t,r),this.chunker=new n,this.serialization=eE.Binary,this._chunkedData={}}}class e$ extends eN{_handleDataMessage({data:e}){super.emit("data",e)}_send(e,t){this._bufferedSend(e)}constructor(...e){super(...e),this.serialization=eE.None}}class eV extends eN{_handleDataMessage({data:e}){let t=this.parse(this.decoder.decode(e)),n=t.__peerData;if(n&&"close"===n.type)return void this.close();this.emit("data",t)}_send(e,t){let n=this.encoder.encode(this.stringify(e));if(n.byteLength>=ef.chunkedMTU)return void this.emitError(ew.MessageToBig,"Message too big for JSON channel");this._bufferedSend(n)}constructor(...e){super(...e),this.serialization=eE.JSON,this.encoder=new TextEncoder,this.decoder=new TextDecoder,this.stringify=JSON.stringify,this.parse=JSON.parse}}class eG extends eL{get id(){return this._id}get options(){return this._options}get open(){return this._open}get socket(){return this._socket}get connections(){let e=Object.create(null);for(let[t,n]of this._connections)e[t]=n;return e}get destroyed(){return this._destroyed}get disconnected(){return this._disconnected}_createServerConnection(){let e=new eM(this._options.secure,this._options.host,this._options.port,this._options.path,this._options.key,this._options.pingInterval);return e.on(ex.Message,e=>{this._handleMessage(e)}),e.on(ex.Error,e=>{this._abort(eR.SocketError,e)}),e.on(ex.Disconnected,()=>{this.disconnected||(this.emitError(eR.Network,"Lost connection to server."),this.disconnect())}),e.on(ex.Close,()=>{this.disconnected||this._abort(eR.SocketClosed,"Underlying socket is already closed.")}),e}_initialize(e){this._id=e,this.socket.start(e,this._options.token)}_handleMessage(e){let t=e.type,n=e.payload,r=e.src;switch(t){case eD.Open:this._lastServerId=this.id,this._open=!0,this.emit("open",this.id);break;case eD.Error:this._abort(eR.ServerError,n.msg);break;case eD.IdTaken:this._abort(eR.UnavailableID,`ID "${this.id}" is taken`);break;case eD.InvalidKey:this._abort(eR.InvalidKey,`API KEY "${this._options.key}" is invalid`);break;case eD.Leave:em.log(`Received leave message from ${r}`),this._cleanupPeer(r),this._connections.delete(r);break;case eD.Expire:this.emitError(eR.PeerUnavailable,`Could not connect to peer ${r}`);break;case eD.Offer:{let e=n.connectionId,t=this.getConnection(r,e);if(t&&(t.close(),em.warn(`Offer received for existing Connection ID:${e}`)),n.type===ek.Media){let i=new eB(r,this,{connectionId:e,_payload:n,metadata:n.metadata});t=i,this._addConnection(r,t),this.emit("call",i)}else{if(n.type!==ek.Data)return void em.warn(`Received malformed connection type:${n.type}`);let i=new this._serializers[n.serialization](r,this,{connectionId:e,_payload:n,metadata:n.metadata,label:n.label,serialization:n.serialization,reliable:n.reliable});t=i,this._addConnection(r,t),this.emit("connection",i)}for(let n of this._getMessages(e))t.handleMessage(n);break}default:{if(!n)return void em.warn(`You received a malformed message from ${r} of type ${t}`);let i=n.connectionId,s=this.getConnection(r,i);s&&s.peerConnection?s.handleMessage(e):i?this._storeMessage(i,e):em.warn("You received an unrecognized message:",e)}}}_storeMessage(e,t){this._lostMessages.has(e)||this._lostMessages.set(e,[]),this._lostMessages.get(e).push(t)}_getMessages(e){let t=this._lostMessages.get(e);return t?(this._lostMessages.delete(e),t):[]}connect(e,t={}){if(t={serialization:"default",...t},this.disconnected){em.warn("You cannot connect to a new Peer because you called .disconnect() on this Peer and ended your connection with the server. You can create a new Peer to reconnect, or call reconnect on this peer if you believe its ID to still be available."),this.emitError(eR.Disconnected,"Cannot connect to new Peer after disconnecting from server.");return}let n=new this._serializers[t.serialization](e,this,t);return this._addConnection(e,n),n}call(e,t,n={}){if(this.disconnected){em.warn("You cannot connect to a new Peer because you called .disconnect() on this Peer and ended your connection with the server. You can create a new Peer to reconnect."),this.emitError(eR.Disconnected,"Cannot connect to new Peer after disconnecting from server.");return}if(!t)return void em.error("To call a peer, you must provide a stream from your browser's `getUserMedia`.");let r=new eB(e,this,{...n,_stream:t});return this._addConnection(e,r),r}_addConnection(e,t){em.log(`add connection ${t.type}:${t.connectionId} to peerId:${e}`),this._connections.has(e)||this._connections.set(e,[]),this._connections.get(e).push(t)}_removeConnection(e){let t=this._connections.get(e.peer);if(t){let n=t.indexOf(e);-1!==n&&t.splice(n,1)}this._lostMessages.delete(e.connectionId)}getConnection(e,t){let n=this._connections.get(e);if(!n)return null;for(let e of n)if(e.connectionId===t)return e;return null}_delayedAbort(e,t){setTimeout(()=>{this._abort(e,t)},0)}_abort(e,t){em.error("Aborting!"),this.emitError(e,t),this._lastServerId?this.disconnect():this.destroy()}destroy(){this.destroyed||(em.log(`Destroy peer with ID:${this.id}`),this.disconnect(),this._cleanup(),this._destroyed=!0,this.emit("close"))}_cleanup(){for(let e of this._connections.keys())this._cleanupPeer(e),this._connections.delete(e);this.socket.removeAllListeners()}_cleanupPeer(e){let t=this._connections.get(e);if(t)for(let e of t)e.close()}disconnect(){if(this.disconnected)return;let e=this.id;em.log(`Disconnect peer with ID:${e}`),this._disconnected=!0,this._open=!1,this.socket.close(),this._lastServerId=e,this._id=null,this.emit("disconnected",e)}reconnect(){if(this.disconnected&&!this.destroyed)em.log(`Attempting reconnection to server with ID ${this._lastServerId}`),this._disconnected=!1,this._initialize(this._lastServerId);else if(this.destroyed)throw Error("This peer cannot reconnect to the server. It has already been destroyed.");else if(this.disconnected||this.open)throw Error(`Peer ${this.id} cannot reconnect because it is not disconnected from the server!`);else em.error("In a hurry? We're still trying to make the initial connection!")}listAllPeers(e=e=>{}){this._api.listAllPeers().then(t=>e(t)).catch(e=>this._abort(eR.ServerError,e))}constructor(e,t){let n;if(super(),this._serializers={raw:e$,json:eV,binary:ez,"binary-utf8":ez,default:ez},this._id=null,this._lastServerId=null,this._destroyed=!1,this._disconnected=!1,this._open=!1,this._connections=new Map,this._lostMessages=new Map,e&&e.constructor==Object?t=e:e&&(n=e.toString()),t={debug:0,host:ef.CLOUD_HOST,port:ef.CLOUD_PORT,path:"/",key:eG.DEFAULT_KEY,token:ef.randomToken(),config:ef.defaultConfig,referrerPolicy:"strict-origin-when-cross-origin",serializers:{},...t},this._options=t,this._serializers={...this._serializers,...this.options.serializers},"/"===this._options.host&&(this._options.host=window.location.hostname),this._options.path&&("/"!==this._options.path[0]&&(this._options.path="/"+this._options.path),"/"!==this._options.path[this._options.path.length-1]&&(this._options.path+="/")),void 0===this._options.secure&&this._options.host!==ef.CLOUD_HOST?this._options.secure=ef.isSecure():this._options.host==ef.CLOUD_HOST&&(this._options.secure=!0),this._options.logFunction&&em.setLogFunction(this._options.logFunction),em.logLevel=this._options.debug||0,this._api=new eU(t),this._socket=this._createServerConnection(),!ef.supports.audioVideo&&!ef.supports.data)return void this._delayedAbort(eR.BrowserIncompatible,"The current browser does not support WebRTC");if(n&&!ef.validateId(n))return void this._delayedAbort(eR.InvalidID,`ID "${n}" is invalid`);n?this._initialize(n):this._api.retrieveId().then(e=>this._initialize(e)).catch(e=>this._abort(eR.ServerError,e))}}eG.DEFAULT_KEY="peerjs",window.peerjs={Peer:eG,util:ef},window.Peer=eG})();
+//# sourceMappingURL=peerjs.min.js.map
+
+</script>
+<script>
+/* ═══════════ ראש בראש — מאגר שאלות ═══════════
+   lists: קטגוריות "השלם רשימה". items: [קנוני, ...כינויים]
+   mc: שאלות אמריקאיות. c = אינדקס תשובה נכונה, d = קושי 1-3 */
+"use strict";
+
+const QDB = {
+lists: [
+{ id:"presidents", d:2, t:"מנו את נשיאי מדינת ישראל", items:[
+  ["חיים ויצמן","חיים וייצמן"],
+  ["יצחק בן-צבי","בן צבי","יצחק בן צבי"],
+  ["זלמן שזר","שזר"],
+  ["אפרים קציר","קציר"],
+  ["יצחק נבון","נבון"],
+  ["חיים הרצוג"],
+  ["עזר ויצמן","עזר וייצמן"],
+  ["משה קצב","קצב"],
+  ["שמעון פרס","פרס"],
+  ["ראובן ריבלין","ריבלין","רובי ריבלין"],
+  ["יצחק הרצוג","בוזי","בוז'י","בוזי הרצוג"]
+]},
+{ id:"pms", d:2, t:"מנו את ראשי הממשלה של ישראל", items:[
+  ["דוד בן-גוריון","בן גוריון","דוד בן גוריון"],
+  ["משה שרת","שרת"],
+  ["לוי אשכול","אשכול"],
+  ["גולדה מאיר","גולדה"],
+  ["יצחק רבין","רבין"],
+  ["מנחם בגין","בגין"],
+  ["יצחק שמיר","שמיר"],
+  ["שמעון פרס","פרס"],
+  ["בנימין נתניהו","נתניהו","ביבי"],
+  ["אהוד ברק","ברק"],
+  ["אריאל שרון","שרון","אריק שרון"],
+  ["אהוד אולמרט","אולמרט"],
+  ["נפתלי בנט","בנט"],
+  ["יאיר לפיד","לפיד"]
+]},
+{ id:"planets", d:1, t:"מנו את כוכבי הלכת במערכת השמש", items:[
+  ["כוכב חמה","חמה","מרקורי"],
+  ["נוגה","ונוס"],
+  ["כדור הארץ","הארץ","ארץ"],
+  ["מאדים","מרס"],
+  ["צדק","יופיטר"],
+  ["שבתאי","סטורן"],
+  ["אורנוס","אוראנוס"],
+  ["נפטון"]
+]},
+{ id:"rainbow", d:1, t:"מנו את צבעי הקשת", items:[
+  ["אדום"],["כתום"],["צהוב"],["ירוק"],["תכלת"],["כחול"],["סגול"]
+]},
+{ id:"zodiac", d:1, t:"מנו את שנים עשר המזלות", items:[
+  ["טלה"],["שור"],["תאומים"],["סרטן"],["אריה"],["בתולה"],
+  ["מאזניים","מאזנים"],["עקרב"],["קשת"],["גדי"],["דלי"],["דגים"]
+]},
+{ id:"hebmonths", d:1, t:"מנו את החודשים העבריים", items:[
+  ["תשרי"],["חשוון","חשון","מרחשוון"],["כסלו"],["טבת"],["שבט"],["אדר"],
+  ["ניסן"],["אייר"],["סיוון","סיון"],["תמוז"],["אב","מנחם אב"],["אלול"]
+]},
+{ id:"tribes", d:2, t:"מנו את שנים עשר שבטי ישראל", items:[
+  ["ראובן"],["שמעון"],["לוי"],["יהודה"],["יששכר"],["זבולון"],
+  ["דן"],["נפתלי"],["גד"],["אשר"],["יוסף"],["בנימין"]
+]},
+{ id:"plagues", d:1, t:"מנו את עשר מכות מצרים", items:[
+  ["דם"],["צפרדע","צפרדעים"],["כינים","כנים"],["ערוב"],["דבר"],
+  ["שחין"],["ברד"],["ארבה"],["חושך","חשך"],["מכת בכורות","בכורות"]
+]},
+{ id:"torah", d:1, t:"מנו את חמשת חומשי התורה", items:[
+  ["בראשית"],["שמות"],["ויקרא"],["במדבר"],["דברים"]
+]},
+{ id:"continents", d:1, t:"מנו את היבשות", items:[
+  ["אסיה"],["אפריקה"],["אירופה"],["צפון אמריקה"],["דרום אמריקה"],
+  ["אוקיאניה","אוסטרליה"],["אנטארקטיקה","אנטרקטיקה"]
+]},
+{ id:"oceans", d:2, t:"מנו את האוקיינוסים", items:[
+  ["האוקיינוס השקט","השקט"],
+  ["האוקיינוס האטלנטי","אטלנטי","האטלנטי"],
+  ["האוקיינוס ההודי","הודי","ההודי"],
+  ["האוקיינוס הארקטי","ארקטי","הארקטי","הקרח הצפוני","הצפוני"],
+  ["האוקיינוס הדרומי","הדרומי","אנטארקטי"]
+]},
+{ id:"neighbors", d:1, t:"מנו את המדינות הגובלות בישראל", items:[
+  ["מצרים"],["ירדן"],["לבנון"],["סוריה"]
+]},
+{ id:"cities10", d:2, t:"מנו את עשר הערים הגדולות בישראל", items:[
+  ["ירושלים"],["תל אביב","תל אביב-יפו","תל-אביב"],["חיפה"],
+  ["ראשון לציון","ראשון"],["פתח תקווה","פתח תקוה"],["אשדוד"],
+  ["נתניה"],["באר שבע"],["בני ברק"],["חולון"]
+]},
+{ id:"southamerica", d:2, t:"מנו מדינות בדרום אמריקה", items:[
+  ["ברזיל"],["ארגנטינה"],["צ'ילה","צילה"],["אורוגוואי","אורוגואי"],
+  ["פרגוואי","פרגואי"],["בוליביה"],["פרו"],["אקוודור","אקואדור"],
+  ["קולומביה"],["ונצואלה"],["גיאנה"],["סורינאם","סורינם"]
+]},
+{ id:"nordic", d:2, t:"מנו את המדינות הנורדיות", items:[
+  ["דנמרק"],["שוודיה","שבדיה"],["נורווגיה","נורבגיה"],["פינלנד"],["איסלנד"]
+]},
+{ id:"gulf", d:3, t:"מנו את מדינות המפרץ (GCC)", items:[
+  ["ערב הסעודית","סעודיה"],["כווית"],["בחריין"],["קטר","קטאר"],
+  ["איחוד האמירויות","האמירויות","איחוד האמירויות הערביות"],["עומאן","עומן"]
+]},
+{ id:"eucapitals", d:2, t:"מנו ערי בירה באירופה", items:[
+  ["לונדון"],["פריז","פאריז"],["ברלין"],["רומא"],["מדריד"],["ליסבון"],
+  ["אמסטרדם"],["בריסל"],["וינה"],["ברן"],["אוסלו"],["שטוקהולם"],
+  ["קופנהגן"],["הלסינקי"],["רייקיאוויק","רייקיוויק"],["דבלין"],["ורשה"],
+  ["פראג"],["ברטיסלבה"],["בודפשט"],["בוקרשט"],["סופיה"],["אתונה"],
+  ["אנקרה"],["מוסקבה"],["קייב"],["מינסק"],["ריגה"],["וילנה","וילנא"],
+  ["טאלין","טלין"],["לובליאנה"],["זאגרב"],["סרייבו"],["בלגרד"],
+  ["פודגוריצה"],["סקופיה"],["טירנה"],["פרישטינה"],["קישינב","קישינוב"],
+  ["לוקסמבורג"],["מונקו"],["אנדורה לה וולה","אנדורה"],["סן מרינו"],
+  ["ולטה"],["ניקוסיה"],["ואדוץ"]
+]},
+{ id:"asia", d:2, t:"מנו מדינות באסיה", items:[
+  ["ישראל"],["לבנון"],["סוריה"],["ירדן"],["טורקיה","תורכיה"],["קפריסין"],
+  ["גאורגיה","גרוזיה"],["ארמניה"],["אזרבייג'ן","אזרבייגן"],["עיראק"],
+  ["איראן"],["ערב הסעודית","סעודיה"],["תימן"],["עומאן","עומן"],
+  ["איחוד האמירויות","האמירויות"],["קטר","קטאר"],["בחריין"],["כווית"],
+  ["אפגניסטן"],["פקיסטן"],["הודו"],["נפאל"],["בהוטן","בוטן"],
+  ["בנגלדש"],["סרי לנקה"],["המלדיביים","מלדיביים"],["קזחסטן"],
+  ["אוזבקיסטן"],["טורקמניסטן"],["קירגיזסטן"],["טג'יקיסטן","טגיקיסטן"],
+  ["מונגוליה"],["סין"],["יפן"],["צפון קוריאה"],["דרום קוריאה"],
+  ["טאיוואן","טיוואן"],["וייטנאם","ויטנאם"],["לאוס"],["קמבודיה"],
+  ["תאילנד"],["מיאנמר","בורמה"],["מלזיה"],["סינגפור"],["אינדונזיה"],
+  ["ברוניי"],["הפיליפינים","פיליפינים"],["מזרח טימור","טימור"]
+]},
+{ id:"africa", d:3, t:"מנו מדינות באפריקה", items:[
+  ["מצרים"],["לוב"],["תוניסיה"],["אלג'יריה","אלגיריה"],["מרוקו"],
+  ["סודאן","סודן"],["דרום סודאן","דרום סודן"],["אתיופיה"],["אריתריאה"],
+  ["ג'יבוטי","גיבוטי"],["סומליה"],["קניה"],["אוגנדה"],["טנזניה"],
+  ["רואנדה"],["בורונדי"],["קונגו","הרפובליקה הדמוקרטית של קונגו"],
+  ["הרפובליקה של קונגו","קונגו ברזוויל"],["גבון"],["גינאה המשוונית"],
+  ["קמרון"],["ניגריה"],["ניז'ר","ניגר"],["צ'אד","צאד"],["מאלי"],
+  ["מאוריטניה"],["סנגל"],["גמביה"],["גינאה ביסאו"],["גינאה"],
+  ["סיירה לאון"],["ליבריה"],["חוף השנהב"],["גאנה"],["טוגו"],["בנין"],
+  ["בורקינה פאסו"],["כף ורדה"],["סאו טומה ופרינסיפה","סאו טומה"],
+  ["אנגולה"],["זמביה"],["זימבבואה"],["מלאווי"],["מוזמביק"],["מדגסקר"],
+  ["קומורו"],["סיישל"],["מאוריציוס"],["בוטסואנה"],["נמיביה"],
+  ["דרום אפריקה"],["לסוטו"],["אסוואטיני","סווזילנד"],
+  ["הרפובליקה המרכז-אפריקאית","מרכז אפריקה"]
+]},
+{ id:"europe", d:1, t:"מנו מדינות באירופה", items:[
+  ["אלבניה"],["אנדורה"],["אוסטריה"],["בלארוס","בלרוס"],["בלגיה"],
+  ["בוסניה והרצגובינה","בוסניה"],["בולגריה"],["קרואטיה"],["צ'כיה","צכיה"],
+  ["דנמרק"],["אסטוניה"],["פינלנד"],["צרפת"],["גרמניה"],["יוון"],
+  ["הונגריה"],["איסלנד"],["אירלנד"],["איטליה"],["לטביה"],["ליכטנשטיין"],
+  ["ליטא"],["לוקסמבורג"],["מלטה"],["מולדובה"],["מונקו"],["מונטנגרו"],
+  ["הולנד"],["מקדוניה הצפונית","מקדוניה"],["נורווגיה","נורבגיה"],
+  ["פולין"],["פורטוגל"],["רומניה"],["רוסיה"],["סן מרינו"],["סרביה"],
+  ["סלובקיה"],["סלובניה"],["ספרד"],["שוודיה","שבדיה"],["שווייץ","שוויץ"],
+  ["אוקראינה"],["בריטניה","אנגליה","הממלכה המאוחדת"],["הוותיקן","ותיקן"],
+  ["קוסובו"]
+]},
+{ id:"worldcup", d:2, t:"מנו מדינות שזכו במונדיאל (עד 2022)", items:[
+  ["אורוגוואי","אורוגואי"],["איטליה"],["גרמניה"],["ברזיל"],
+  ["אנגליה"],["ארגנטינה"],["צרפת"],["ספרד"]
+]},
+{ id:"greek", d:3, t:"מנו אותיות באלפבית היווני", items:[
+  ["אלפא"],["בטא","ביתא"],["גמא","גאמא"],["דלתא","דלתה"],["אפסילון"],
+  ["זטא","זיתא"],["אטא","איתא"],["תטא","טיתא"],["יוטא","יותא"],
+  ["קפא","קאפא"],["למדא","למבדא","למדה"],["מיו","מו"],["ניו","נו"],
+  ["קסי","כסי"],["אומיקרון"],["פאי"],["רו"],["סיגמא","סיגמה"],
+  ["טאו"],["אופסילון","איפסילון"],["פי"],["חי","כי"],["פסי"],
+  ["אומגה","אומגא"]
+]},
+{ id:"sheva", d:1, t:"מנו את שבעת המינים", items:[
+  ["חיטה","חטה"],["שעורה"],["גפן","ענבים"],["תאנה","תאנים"],
+  ["רימון","רמון"],["זית","זיתים"],["תמר","תמרים","דבש"]
+]},
+{ id:"avot", d:1, t:"מנו את האבות והאמהות", items:[
+  ["אברהם"],["יצחק"],["יעקב"],["שרה"],["רבקה"],["רחל"],["לאה"]
+]},
+{ id:"seasons", d:1, t:"מנו את עונות השנה", items:[
+  ["קיץ"],["סתיו","סתו"],["חורף"],["אביב"]
+]},
+{ id:"solfege", d:1, t:"מנו את צלילי הסולם המוזיקלי", items:[
+  ["דו"],["רה"],["מי"],["פה","פא"],["סול"],["לה"],["סי"]
+]},
+{ id:"wonders", d:3, t:"מנו את שבעת פלאי העולם העתיק", items:[
+  ["הפירמידה הגדולה בגיזה","הפירמידות","הפירמידה בגיזה","פירמידת גיזה","פירמידה"],
+  ["הגנים התלויים בבבל","הגנים התלויים"],
+  ["פסל זאוס באולימפיה","פסל זאוס","זאוס"],
+  ["מקדש ארטמיס באפסוס","מקדש ארטמיס","ארטמיס"],
+  ["המאוזוליאום בהליקרנסוס","מאוזוליאום"],
+  ["הקולוסוס מרודוס","קולוסוס"],
+  ["המגדלור באלכסנדריה","מגדלור אלכסנדריה","המגדלור"]
+]},
+{ id:"chess", d:1, t:"מנו את כלי השחמט", items:[
+  ["מלך"],["מלכה"],["צריח"],["רץ"],["פרש"],["רגלי","חייל","פיון"]
+]},
+{ id:"arbaa", d:1, t:"מנו את ארבעת המינים", items:[
+  ["לולב"],["אתרוג"],["הדס","הדסים"],["ערבה","ערבות"]
+]},
+{ id:"g7", d:2, t:"מנו את מדינות ה-G7", items:[
+  ["ארצות הברית","ארהב","אמריקה"],["קנדה"],["בריטניה","אנגליה"],
+  ["צרפת"],["גרמניה"],["איטליה"],["יפן"]
+]},
+{ id:"unlang", d:2, t:"מנו את השפות הרשמיות של האו\"ם", items:[
+  ["אנגלית"],["צרפתית"],["ספרדית"],["רוסית"],
+  ["סינית","מנדרינית"],["ערבית"]
+]},
+{ id:"eurovision", d:2, t:"מנו זוכים ישראלים באירוויזיון", items:[
+  ["יזהר כהן"],["גלי עטרי","חלב ודבש","גלי עטרי וחלב ודבש"],
+  ["דנה אינטרנשיונל","דנה"],["נטע ברזילי","נטע"]
+]},
+{ id:"islands", d:3, t:"מנו את חמשת האיים הגדולים בעולם", items:[
+  ["גרינלנד"],["גינאה החדשה","ניו גיני"],["בורנאו","בורניאו"],
+  ["מדגסקר"],["אי באפין","באפין"]
+]},
+{ id:"atom", d:1, t:"מנו את החלקיקים באטום", items:[
+  ["פרוטון","פרוטונים"],["נויטרון","ניוטרון","נויטרונים"],["אלקטרון","אלקטרונים"]
+]},
+{ id:"matter", d:1, t:"מנו את מצבי הצבירה", items:[
+  ["מוצק"],["נוזל"],["גז"],["פלזמה","פלסמה"]
+]},
+{ id:"tastes", d:2, t:"מנו את חמשת הטעמים הבסיסיים", items:[
+  ["מתוק"],["מלוח"],["חמוץ"],["מר"],["אוממי","אומאמי"]
+]},
+{ id:"strings", d:2, t:"מנו את כלי הקשת בתזמורת", items:[
+  ["כינור"],["ויולה"],["צ'לו","צלו"],["קונטרבס","קונטרה בס"]
+]},
+{ id:"fingers", d:1, t:"מנו את אצבעות כף היד", items:[
+  ["אגודל"],["אצבע"],["אמה"],["קמיצה"],["זרת"]
+]},
+{ id:"senses", d:1, t:"מנו את חמשת החושים", items:[
+  ["ראייה","ראיה"],["שמיעה"],["ריח","הרחה"],["טעם"],["מישוש","מגע"]
+]},
+{ id:"tishrei", d:1, t:"מנו את חגי חודש תשרי", items:[
+  ["ראש השנה"],["יום כיפור","יום הכיפורים","כיפור"],
+  ["סוכות","חג הסוכות"],["שמחת תורה","שמיני עצרת"]
+]},
+{ id:"kings", d:1, t:"מנו את מלכי ישראל המאוחדת", items:[
+  ["שאול"],["דוד"],["שלמה"]
+]}
+],
+
+mc: [
+/* ─── גיאוגרפיה ─── */
+{q:"מהי בירת צרפת?", o:["ליון","פריז","מרסיי","ניס"], c:1, d:1},
+{q:"מהי בירת יפן?", o:["טוקיו","קיוטו","אוסקה","סיאול"], c:0, d:1},
+{q:"מהי בירת אוסטרליה?", o:["סידני","מלבורן","קנברה","פרת'"], c:2, d:2},
+{q:"מהי בירת קנדה?", o:["טורונטו","ונקובר","מונטריאול","אוטווה"], c:3, d:2},
+{q:"מהי בירת ברזיל?", o:["ריו דה ז'ניירו","סאו פאולו","ברזיליה","סלבדור"], c:2, d:2},
+{q:"מהי בירת שווייץ?", o:["ציריך","ז'נבה","ברן","באזל"], c:2, d:2},
+{q:"מהי בירת טורקיה?", o:["איסטנבול","אנקרה","איזמיר","אנטליה"], c:1, d:2},
+{q:"מהו הנהר הארוך ביותר באפריקה?", o:["הקונגו","הזמבזי","הניז'ר","הנילוס"], c:3, d:1},
+{q:"מהו ההר הגבוה בעולם?", o:["K2","אוורסט","קילימנג'רו","מון בלאן"], c:1, d:1},
+{q:"מהו המדבר החם הגדול ביותר בעולם?", o:["סהרה","גובי","קלהארי","הנגב"], c:0, d:2},
+{q:"מהי היבשת הגדולה ביותר?", o:["אפריקה","אמריקה הצפונית","אסיה","אירופה"], c:2, d:1},
+{q:"מהי המדינה הגדולה בעולם בשטחה?", o:["קנדה","סין","ארצות הברית","רוסיה"], c:3, d:1},
+{q:"מהי המדינה המאוכלסת ביותר בעולם כיום?", o:["סין","הודו","אינדונזיה","ארצות הברית"], c:1, d:2},
+{q:"באיזו יבשת נמצאת מצרים?", o:["אסיה","אפריקה","אירופה","אוקיאניה"], c:1, d:1},
+{q:"מהי בירת ספרד?", o:["ברצלונה","סביליה","מדריד","ולנסיה"], c:2, d:1},
+{q:"איזה ים הוא המלוח ביותר בעולם?", o:["הים האדום","הים התיכון","ים המלח","הים השחור"], c:2, d:1},
+{q:"הכנרת היא בעצם…", o:["ים","אגם","נהר","מפרץ"], c:1, d:1},
+{q:"באיזו מדינה נמצא מגדל אייפל?", o:["איטליה","בלגיה","צרפת","שווייץ"], c:2, d:1},
+{q:"באיזו עיר נמצא הקולוסיאום?", o:["אתונה","רומא","פריז","איסטנבול"], c:1, d:1},
+{q:"איזו מדינה מכונה \"ארץ השמש העולה\"?", o:["סין","תאילנד","דרום קוריאה","יפן"], c:3, d:1},
+{q:"מהי המדינה הקטנה ביותר בעולם?", o:["מונקו","קריית הוותיקן","סן מרינו","ליכטנשטיין"], c:1, d:2},
+{q:"מהו האוקיינוס הגדול ביותר?", o:["האטלנטי","ההודי","השקט","הארקטי"], c:2, d:1},
+{q:"הרי האלפים נמצאים ביבשת…", o:["אסיה","אירופה","אמריקה הדרומית","אפריקה"], c:1, d:1},
+{q:"באיזו מדינה נמצאת העיר ונציה?", o:["ספרד","יוון","איטליה","קרואטיה"], c:2, d:1},
+{q:"מהי בירת ארצות הברית?", o:["ניו יורק","לוס אנג'לס","שיקגו","וושינגטון"], c:3, d:1},
+{q:"באיזו מדינה זורם נהר הגנגס?", o:["סין","הודו","תאילנד","מצרים"], c:1, d:2},
+{q:"מהי בירת רוסיה?", o:["סנט פטרבורג","קייב","מוסקבה","מינסק"], c:2, d:1},
+{q:"איזו תעלה מחברת בין הים התיכון לים סוף?", o:["תעלת פנמה","תעלת סואץ","תעלת המנש","תעלת קיל"], c:1, d:2},
+{q:"הר הגעש וזוב נמצא ב…", o:["יוון","ספרד","איטליה","טורקיה"], c:2, d:2},
+{q:"מהי בירת יוון?", o:["סלוניקי","אתונה","ספרטה","רודוס"], c:1, d:1},
+{q:"לאיזו מדינה שייך האי גרינלנד?", o:["קנדה","נורווגיה","איסלנד","דנמרק"], c:3, d:3},
+{q:"מהי בירת ארגנטינה?", o:["בואנוס איירס","סנטיאגו","מונטווידאו","לימה"], c:0, d:2},
+{q:"באיזו מדינה נמצאת העיר מכה?", o:["ירדן","ערב הסעודית","מצרים","איחוד האמירויות"], c:1, d:2},
+{q:"מהי הנקודה היבשתית הנמוכה ביותר בעולם?", o:["עמק המוות","ים המלח","הים הכספי","עמק הירדן"], c:1, d:2},
+{q:"מהי בירת גרמניה?", o:["מינכן","פרנקפורט","ברלין","המבורג"], c:2, d:1},
+
+/* ─── ישראל ─── */
+{q:"באיזו שנה הוקמה מדינת ישראל?", o:["1945","1948","1950","1947"], c:1, d:1},
+{q:"מי היה ראש הממשלה הראשון של ישראל?", o:["חיים ויצמן","משה שרת","דוד בן-גוריון","מנחם בגין"], c:2, d:1},
+{q:"מי היה הנשיא הראשון של מדינת ישראל?", o:["דוד בן-גוריון","חיים ויצמן","יצחק בן-צבי","זלמן שזר"], c:1, d:2},
+{q:"איזה ים נמצא ממערב לישראל?", o:["ים סוף","ים המלח","הים התיכון","הכנרת"], c:2, d:1},
+{q:"מי הייתה האישה היחידה שכיהנה כראש ממשלת ישראל?", o:["גולדה מאיר","ציפי לבני","שולמית אלוני","דליה איציק"], c:0, d:1},
+{q:"באיזו שנה פרצה מלחמת ששת הימים?", o:["1956","1967","1973","1982"], c:1, d:2},
+{q:"באיזו שנה פרצה מלחמת יום כיפור?", o:["1967","1970","1973","1977"], c:2, d:2},
+{q:"מהו המטבע הרשמי של ישראל?", o:["לירה","דינר","שקל חדש","אגורה"], c:2, d:1},
+{q:"איזו עיר ישראלית מכונה \"העיר הלבנה\"?", o:["ירושלים","חיפה","תל אביב","אשדוד"], c:2, d:2},
+{q:"מדבר הנגב נמצא באיזה חלק של ישראל?", o:["צפון","מרכז","דרום","מערב"], c:2, d:1},
+{q:"מהו ההר הגבוה ביותר בשליטת ישראל?", o:["הר מירון","הר החרמון","הר תבור","הר הכרמל"], c:1, d:2},
+{q:"מי כתב את מילות \"התקווה\"?", o:["חיים נחמן ביאליק","נפתלי הרץ אימבר","שאול טשרניחובסקי","נעמי שמר"], c:1, d:3},
+{q:"כמה חברי כנסת יש בישראל?", o:["100","110","120","130"], c:2, d:1},
+{q:"מי היה חוזה מדינת היהודים?", o:["דוד בן-גוריון","בנימין זאב הרצל","זאב ז'בוטינסקי","אחד העם"], c:1, d:1},
+{q:"מהו הנהר הארוך ביותר בישראל?", o:["הירקון","הקישון","הירדן","נחל הבשור"], c:2, d:1},
+{q:"באיזו עיר נמצא הכותל המערבי?", o:["חברון","צפת","טבריה","ירושלים"], c:3, d:1},
+{q:"ליד איזה ים נמצאת מצדה?", o:["הים התיכון","ים המלח","ים סוף","הכנרת"], c:1, d:2},
+{q:"מה היה שמו הרשמי של מבצע החילוץ באנטבה (1976)?", o:["מבצע אנטבה","מבצע יונתן","מבצע שלמה","מבצע משה"], c:1, d:3},
+{q:"באיזו שנה נחתם הסכם השלום בין ישראל למצרים?", o:["1973","1977","1979","1982"], c:2, d:2},
+{q:"עם איזו מדינה חתמה ישראל על הסכם שלום ב-1994?", o:["מצרים","סוריה","לבנון","ירדן"], c:3, d:2},
+{q:"מהי העיר הגבוהה ביותר בישראל?", o:["ירושלים","צפת","מצפה רמון","כרמיאל"], c:1, d:3},
+{q:"מי היה ראש הממשלה שנרצח בשנת 1995?", o:["יצחק שמיר","יצחק רבין","שמעון פרס","מנחם בגין"], c:1, d:1},
+{q:"מהו שמו של ארגון המודיעין החיצוני של ישראל?", o:["השב\"כ","אמ\"ן","המוסד","המשטרה"], c:2, d:1},
+{q:"מהו הפרח הלאומי של ישראל?", o:["חצב","כלנית","נרקיס","רקפת"], c:1, d:2},
+{q:"באיזו עיר נמצא הטכניון?", o:["תל אביב","באר שבע","ירושלים","חיפה"], c:3, d:1},
+{q:"איזה אגם הוא מקור המים המתוקים הגדול בישראל?", o:["ים המלח","הכנרת","אגם החולה","המכתש הגדול"], c:1, d:1},
+{q:"מהי עיר הבירה של מחוז הדרום ומכונה \"בירת הנגב\"?", o:["אילת","דימונה","באר שבע","ערד"], c:2, d:1},
+{q:"איזו חברה ישראלית פיתחה את אפליקציית הניווט Waze?", o:["וויז","מובילאיי","צ'ק פוינט","וויקס"], c:0, d:1},
+
+/* ─── מדע וטבע ─── */
+{q:"מהי הנוסחה הכימית של מים?", o:["CO2","H2O","O2","NaCl"], c:1, d:1},
+{q:"כמה עצמות יש בגוף אדם בוגר?", o:["106","206","306","150"], c:1, d:2},
+{q:"מהו כוכב הלכת הקרוב ביותר לשמש?", o:["נוגה","מאדים","כוכב חמה","כדור הארץ"], c:2, d:1},
+{q:"מהו כוכב הלכת הגדול ביותר במערכת השמש?", o:["שבתאי","צדק","נפטון","אורנוס"], c:1, d:1},
+{q:"איזה גז חיוני לנשימת האדם?", o:["חנקן","פחמן דו-חמצני","מימן","חמצן"], c:3, d:1},
+{q:"מהי מהירות האור בקירוב?", o:["300 אלף ק\"מ בשנייה","3,000 ק\"מ בשנייה","300 מיליון ק\"מ בשנייה","30 אלף ק\"מ בשנייה"], c:0, d:2},
+{q:"מי פיתח את תורת היחסות?", o:["אייזק ניוטון","אלברט איינשטיין","סטיבן הוקינג","גלילאו גליליי"], c:1, d:1},
+{q:"איזה איבר מזרים את הדם בגוף?", o:["הריאות","הכבד","הלב","הכליות"], c:2, d:1},
+{q:"מהו החומר הטבעי הקשה ביותר?", o:["ברזל","גרניט","יהלום","טיטניום"], c:2, d:1},
+{q:"כמה כרומוזומים יש בתא אדם תקין?", o:["23","44","46","48"], c:2, d:2},
+{q:"מהו הסימן הכימי של זהב?", o:["Go","Au","Ag","Gd"], c:1, d:2},
+{q:"איזה כוכב לכת מכונה \"הכוכב האדום\"?", o:["נוגה","צדק","שבתאי","מאדים"], c:3, d:1},
+{q:"מי גילה את הפניצילין?", o:["לואי פסטר","אלכסנדר פלמינג","מארי קירי","רוברט קוך"], c:1, d:2},
+{q:"מהי יחידת המדידה של זרם חשמלי?", o:["וולט","ואט","אמפר","אוהם"], c:2, d:2},
+{q:"כמה זמן לוקח לכדור הארץ להקיף את השמש?", o:["יום","חודש","שנה","עשר שנים"], c:2, d:1},
+{q:"באיזה חלק של התא נמצא ה-DNA?", o:["בקרום","בגרעין","במיטוכונדריה","בציטופלזמה"], c:1, d:2},
+{q:"מהו הגז הנפוץ ביותר באטמוספירת כדור הארץ?", o:["חמצן","פחמן דו-חמצני","חנקן","מימן"], c:2, d:2},
+{q:"מהו בעל החיים הגדול ביותר שחי כיום?", o:["פיל אפריקאי","לווייתן כחול","כריש לבן","ג'ירפה"], c:1, d:1},
+{q:"כמה רגליים יש לעכביש?", o:["6","8","10","12"], c:1, d:1},
+{q:"באיזו טמפרטורה מים קופאים (בצלזיוס)?", o:["10-","0","4","32"], c:1, d:1},
+{q:"מי ניסח את חוק הכבידה האוניברסלי?", o:["איינשטיין","גלילאו","ניוטון","קפלר"], c:2, d:1},
+{q:"איזה ויטמין מיוצר בגוף בעזרת אור שמש?", o:["ויטמין A","ויטמין B12","ויטמין C","ויטמין D"], c:3, d:1},
+{q:"מהו היונק היחיד המסוגל לעוף באמת?", o:["סנאי מעופף","עטלף","דאון","יען"], c:1, d:2},
+{q:"מהו האיבר הגדול ביותר בגוף האדם?", o:["הכבד","המוח","העור","הריאות"], c:2, d:2},
+{q:"איך נקרא התהליך שבו צמחים מייצרים מזון מאור השמש?", o:["נשימה","פוטוסינתזה","דיות","הפריה"], c:1, d:1},
+{q:"מהו ערך ה-pH של תמיסה ניטרלית?", o:["0","5","7","14"], c:2, d:2},
+{q:"איזה כוכב לכת מפורסם בטבעות שלו?", o:["מאדים","צדק","שבתאי","נפטון"], c:2, d:1},
+{q:"מה מודד מכשיר הסייסמוגרף?", o:["טמפרטורה","רעידות אדמה","לחץ אוויר","קרינה"], c:1, d:2},
+{q:"מהו התהליך שבו קרח הופך ישירות לאד?", o:["התכה","אידוי","המראה","עיבוי"], c:2, d:3},
+{q:"איזה חלק במוח אחראי על שיווי המשקל?", o:["הצרבלום (מוחון)","ההיפוקמפוס","האמיגדלה","גזע המוח"], c:0, d:3},
+
+/* ─── היסטוריה ועולם ─── */
+{q:"באיזו שנה הסתיימה מלחמת העולם השנייה?", o:["1943","1944","1945","1946"], c:2, d:1},
+{q:"מי היה מנהיג גרמניה הנאצית?", o:["מוסוליני","היטלר","סטלין","פרנקו"], c:1, d:1},
+{q:"באיזו שנה נחת האדם על הירח לראשונה?", o:["1959","1965","1969","1972"], c:2, d:1},
+{q:"מי היה האדם הראשון שדרך על הירח?", o:["באז אולדרין","יורי גגרין","ניל ארמסטרונג","ג'ון גלן"], c:2, d:1},
+{q:"באיזו מדינה החלה המהפכה התעשייתית?", o:["צרפת","גרמניה","ארצות הברית","בריטניה"], c:3, d:2},
+{q:"מי הגיע לאמריקה בשנת 1492?", o:["מגלן","קולומבוס","וסקו דה גאמה","קוק"], c:1, d:1},
+{q:"איזו אימפריה בנתה את הקולוסיאום?", o:["היוונית","הרומית","העות'מאנית","הפרסית"], c:1, d:1},
+{q:"מי היה נשיא ארה\"ב בזמן מלחמת האזרחים?", o:["ג'ורג' וושינגטון","תומאס ג'פרסון","אברהם לינקולן","תיאודור רוזוולט"], c:2, d:2},
+{q:"באיזו שנה נפלה חומת ברלין?", o:["1985","1989","1991","1993"], c:1, d:2},
+{q:"מי הייתה המלכה המפורסמת של מצרים העתיקה?", o:["נפרטיטי","קלאופטרה","חתשפסות","אליזבת"], c:1, d:1},
+{q:"איזו מדינה שלטה בהודו עד 1947?", o:["צרפת","פורטוגל","בריטניה","הולנד"], c:2, d:2},
+{q:"מי צייר את המונה ליזה?", o:["מיכלאנג'לו","רפאל","ואן גוך","לאונרדו דה וינצ'י"], c:3, d:1},
+{q:"באיזו עיר נרצח יוליוס קיסר?", o:["אתונה","רומא","אלכסנדריה","קרתגו"], c:1, d:2},
+{q:"מאיזה אזור הגיעו הוויקינגים?", o:["סקנדינביה","מונגוליה","גרמניה","רוסיה"], c:0, d:1},
+{q:"באיזו שנה פרצה מלחמת העולם הראשונה?", o:["1905","1914","1918","1920"], c:1, d:2},
+{q:"מי הנהיג את ברית המועצות במלחמת העולם השנייה?", o:["לנין","טרוצקי","סטלין","חרושצ'וב"], c:2, d:2},
+{q:"לשם מה נבנו הפירמידות במצרים?", o:["מקדשים","קברים למלכים","מחסני תבואה","מגדלי תצפית"], c:1, d:1},
+{q:"מי היה המצביא הצרפתי שהכתיר את עצמו לקיסר?", o:["לואי ה-14","נפוליאון בונפרטה","שארל דה גול","רובספייר"], c:1, d:1},
+{q:"מי מכונה \"אבי הרפואה\"?", o:["אריסטו","גלנוס","היפוקרטס","אבן סינא"], c:2, d:2},
+{q:"באיזו שנה טבעה הטיטאניק?", o:["1905","1912","1920","1931"], c:1, d:2},
+{q:"מי המציא את הטלפון?", o:["תומאס אדיסון","ניקולה טסלה","אלכסנדר גרהם בל","גוליילמו מרקוני"], c:2, d:2},
+{q:"מי נחשב לממציא הנורה החשמלית המסחרית?", o:["תומאס אדיסון","ניקולה טסלה","בנג'מין פרנקלין","ג'יימס ואט"], c:0, d:1},
+{q:"מה המציא יוהאן גוטנברג?", o:["המצפן","מכונת הדפוס","הטלסקופ","השעון המכני"], c:1, d:2},
+{q:"מי הנהיג את מאבק העצמאות הלא-אלים בהודו?", o:["נהרו","מהטמה גנדי","בודהה","טאגור"], c:1, d:1},
+{q:"איזו ספינה מפורסמת הביאה מתיישבים לאמריקה ב-1620?", o:["סנטה מריה","מייפלאואר","ויקטוריה","אנדוור"], c:1, d:3},
+
+/* ─── ספורט ─── */
+{q:"כמה שחקנים יש בקבוצת כדורגל על המגרש?", o:["9","10","11","12"], c:2, d:1},
+{q:"כמה שחקנים יש בקבוצת כדורסל על המגרש?", o:["5","6","7","4"], c:0, d:1},
+{q:"באיזו מדינה נולדו המשחקים האולימפיים?", o:["רומא","יוון","מצרים","סין"], c:1, d:1},
+{q:"מי מכונה \"מלך הכדורגל\" הברזילאי?", o:["מראדונה","רונאלדו","פלה","נימאר"], c:2, d:1},
+{q:"באיזה ענף ספורט משתמשים בכדור נוצה?", o:["טניס","סקווש","בדמינטון","פאדל"], c:2, d:1},
+{q:"כל כמה שנים מתקיים המונדיאל?", o:["שנתיים","3 שנים","4 שנים","5 שנים"], c:2, d:1},
+{q:"איזו נבחרת זכתה במונדיאל 2022?", o:["צרפת","ברזיל","ארגנטינה","גרמניה"], c:2, d:2},
+{q:"באיזה ענף ספורט התפרסם מייקל ג'ורדן?", o:["בייסבול","כדורסל","פוטבול","גולף"], c:1, d:1},
+{q:"בטניס, איך נקרא מצב של שוויון 40:40?", o:["דוס","טאי-ברייק","אדוונטג'","סט"], c:0, d:2},
+{q:"כמה טבעות יש בסמל האולימפי?", o:["4","5","6","7"], c:1, d:1},
+{q:"איזו קבוצה ספרדית מכונה \"הבלאנקוס\" (הלבנים)?", o:["ברצלונה","אתלטיקו מדריד","ריאל מדריד","סביליה"], c:2, d:2},
+{q:"באיזה ענף התפרסם האצן אוסיין בולט?", o:["ריצות מרתון","ריצות קצרות","קפיצה לרוחק","משוכות"], c:1, d:1},
+{q:"בשחמט, איזה כלי נע באלכסון בלבד?", o:["צריח","פרש","רץ","מלכה"], c:2, d:2},
+{q:"כמה נקודות שווה קליעה מחוץ לקשת בכדורסל?", o:["1","2","3","4"], c:2, d:1},
+{q:"איזו מדינה אירחה את מונדיאל 2022?", o:["רוסיה","קטר","ברזיל","ארצות הברית"], c:1, d:2},
+
+/* ─── תרבות ומוזיקה ─── */
+{q:"מי כתב את \"רומיאו ויוליה\"?", o:["צ'רלס דיקנס","ויליאם שייקספיר","מולייר","גתה"], c:1, d:1},
+{q:"מי הלחין את הסימפוניה החמישית המפורסמת?", o:["מוצרט","באך","בטהובן","שופן"], c:2, d:2},
+{q:"איזו להקה ביצעה את השיר \"Hey Jude\"?", o:["הרולינג סטונז","הביטלס","קווין","אבבא"], c:1, d:1},
+{q:"איזו דמות מפורסמת יצר וולט דיסני?", o:["באגס באני","מיקי מאוס","טום החתול","סופרמן"], c:1, d:1},
+{q:"כמה מיתרים יש לכינור?", o:["3","4","5","6"], c:1, d:2},
+{q:"מי צייר את \"ליל כוכבים\"?", o:["פיקאסו","מונה","וינסנט ואן גוך","דאלי"], c:2, d:2},
+{q:"באיזה בית ספר לומד הארי פוטר?", o:["הוגוורטס","דרמסטרנג","בובאטון","אילברמורני"], c:0, d:1},
+{q:"מהי יצירתו של הומרוס על מלחמת טרויה?", o:["האודיסאה","האיליאדה","האינאיס","המטמורפוזות"], c:1, d:3},
+{q:"איזה צבע מתקבל מערבוב כחול וצהוב?", o:["כתום","סגול","ירוק","חום"], c:2, d:1},
+{q:"כמה קלפים יש בחפיסה רגילה (ללא ג'וקרים)?", o:["48","50","52","54"], c:2, d:1},
+{q:"מהי השפה עם הכי הרבה דוברים כשפת אם?", o:["אנגלית","ספרדית","סינית מנדרינית","הינדי"], c:2, d:2},
+{q:"כמה אותיות יש באלף-בית העברי?", o:["20","22","24","26"], c:1, d:1},
+{q:"כמה שניות יש בשעה אחת?", o:["360","600","3,600","6,000"], c:2, d:2},
+{q:"מהו הספר הנפוץ והמודפס ביותר בעולם?", o:["הקוראן","התנ\"ך","דון קיחוטה","הארי פוטר"], c:1, d:1},
+{q:"מאיזו מדינה היה הצייר פבלו פיקאסו?", o:["צרפת","איטליה","ספרד","מקסיקו"], c:2, d:2},
+{q:"מי כתבה את השיר \"ירושלים של זהב\"?", o:["שולי נתן","נעמי שמר","חוה אלברשטיין","אהובה עוזרי"], c:1, d:2},
+{q:"איזה חג יהודי מכונה גם \"חג האורים\"?", o:["פורים","סוכות","חנוכה","פסח"], c:2, d:1},
+{q:"כמה נרות מדליקים בסך הכל בכל ימי החנוכה (כולל השמש)?", o:["36","40","44","48"], c:2, d:3},
+{q:"איזה חג חל בט\"ו בשבט?", o:["חג הביכורים","ראש השנה לאילנות","חג האסיף","ל\"ג בעומר"], c:1, d:1},
+{q:"בכמה שפות רשמיות משתמש האו\"ם?", o:["4","5","6","7"], c:2, d:3},
+
+/* ─── תנ"ך ─── */
+{q:"מי בנה את התיבה לקראת המבול?", o:["אברהם","משה","נח","יונה"], c:2, d:1},
+{q:"מי קיבל את לוחות הברית בהר סיני?", o:["אהרן","משה","יהושע","דוד"], c:1, d:1},
+{q:"איזה מלך בנה את בית המקדש הראשון?", o:["דוד","שאול","שלמה","חזקיהו"], c:2, d:1},
+{q:"מי ניצח את גוליית הפלישתי?", o:["שמשון","דוד","שאול","גדעון"], c:1, d:1},
+{q:"מי נמכר על ידי אחיו לעבדות במצרים?", o:["בנימין","ראובן","יהודה","יוסף"], c:3, d:1},
+{q:"כמה ימים ולילות ירד גשם המבול?", o:["7","30","40","100"], c:2, d:1},
+{q:"מי הייתה אשתו הראשונה של יעקב?", o:["רחל","לאה","רבקה","בלהה"], c:1, d:2},
+{q:"איזה נביא נבלע על ידי דג גדול?", o:["אליהו","ירמיהו","יונה","יחזקאל"], c:2, d:1},
+{q:"מי היה המלך בסיפור מגילת אסתר?", o:["נבוכדנצר","אחשוורוש","כורש","פרעה"], c:1, d:1},
+{q:"מה גרם לשמשון לאבד את כוחו?", o:["שתיית יין","גזיזת שערו","שבירת נדר","מחלה"], c:1, d:1},
+{q:"מי עלה בסערה השמיימה במרכבת אש?", o:["אלישע","אליהו","חנוך","משה"], c:1, d:2},
+{q:"באיזה הר ניתנה התורה לעם ישראל?", o:["הר המוריה","הר הכרמל","הר סיני","הר נבו"], c:2, d:1},
+
+/* ─── חשבון והיגיון ─── */
+{q:"כמה זה 7 כפול 8?", o:["54","56","58","64"], c:1, d:1},
+{q:"מהו השורש הריבועי של 144?", o:["11","12","13","14"], c:1, d:1},
+{q:"כמה מעלות יש בסכום זוויות של משולש?", o:["90","180","270","360"], c:1, d:1},
+{q:"מהו מספר ראשוני?", o:["מספר שמתחלק רק ב-1 ובעצמו","מספר זוגי","מספר גדול מ-100","מספר שמתחלק ב-3"], c:0, d:2},
+{q:"כמה צלעות יש למשושה?", o:["5","6","7","8"], c:1, d:1},
+{q:"מהו הערך המקורב של פאי (π)?", o:["2.14","3.14","4.13","3.41"], c:1, d:1},
+{q:"כמה אפסים יש במיליון?", o:["5","6","7","9"], c:1, d:1},
+{q:"כמה זה רבע מ-200?", o:["25","40","50","75"], c:2, d:1},
+{q:"כמה זה 15% מ-200?", o:["15","20","30","45"], c:2, d:2},
+{q:"בסדרה 2, 4, 8, 16 — מהו המספר הבא?", o:["18","24","32","64"], c:2, d:1},
+
+/* ─── טכנולוגיה ─── */
+{q:"מי ייסד את חברת מיקרוסופט?", o:["סטיב ג'ובס","ביל גייטס","מארק צוקרברג","ג'ף בזוס"], c:1, d:1},
+{q:"מי ייסד את אפל יחד עם סטיב ווזניאק?", o:["ביל גייטס","אילון מאסק","סטיב ג'ובס","לארי פייג'"], c:2, d:1},
+{q:"מה פירוש ראשי התיבות WWW?", o:["World Wide Web","Web World Wide","Wide World Web","World Web Wide"], c:0, d:2},
+{q:"איזו חברה מפתחת את מערכת ההפעלה אנדרואיד?", o:["אפל","מיקרוסופט","גוגל","סמסונג"], c:2, d:1},
+{q:"מי מנהל את חברות טסלה וספייס-X?", o:["ג'ף בזוס","אילון מאסק","מארק צוקרברג","סם אלטמן"], c:1, d:1},
+{q:"כמה ביטים יש בבייט אחד?", o:["4","8","16","32"], c:1, d:2},
+{q:"מהו שם הרכב הרובוטי שנאס\"א הנחיתה על מאדים ב-2021?", o:["קיוריוסיטי","אופורטיוניטי","פרסבירנס","ספיריט"], c:2, d:3},
+{q:"איזו רשת חברתית מזוהה עם \"ציוצים\"?", o:["פייסבוק","אינסטגרם","טוויטר (X)","טיקטוק"], c:2, d:1},
+{q:"מהו המונח לתוכנה זדונית שדורשת כופר?", o:["וירוס","תולעת","כופרה (Ransomware)","פישינג"], c:2, d:2},
+{q:"באיזו מדינה הומצאה משחקיית הנינטנדו?", o:["סין","דרום קוריאה","יפן","ארצות הברית"], c:2, d:2}
+]
+};
+
+</script>
+<script>
+/* ═══════════ ראש בראש — לוגיקה ═══════════ */
+"use strict";
+
+/* ─── הגדרות ─── */
+const CFG = {
+  START_BAL: 20000, START_EN: 100, MAX_EN: 100, GAME_EN: 2,
+  EN_REGEN_MS: 5 * 60 * 1000,
+  LEAGUES: {
+    beg: { name: "מתחיל",  icon: "🥉", fee: 50 },
+    adv: { name: "מתקדם",  icon: "🥈", fee: 125 },
+    pro: { name: "מקצוען", icon: "🥇", fee: 500 }
+  },
+  LIST_ROUNDS: 3, MC_ROUNDS: 3,
+  LIST_TURN_S: 20, MC_S: 15, GRACE_MS: 1500, BANNER_MS: 1200,
+  PREFIX: "rbr26il-", V: 1
+};
+const SALT = "rbr!family!edition!7391";
+const AVATARS = ["🦁","🐯","🦊","🐼","🐨","🦄","🐸","🐙","🦉","🦅","🐬","🦈","👑","🔥","⚡","🌟","🎯","🚀","😎","🤓","👻","🤖","🥷","🧙"];
+
+/* ─── כלים ─── */
+const $ = id => document.getElementById(id);
+const fmt = n => Math.round(n).toLocaleString("he-IL");
+const now = () => Date.now();
+function rid(n = 8) {
+  const A = "abcdefghijklmnopqrstuvwxyz0123456789"; let s = "";
+  const buf = new Uint32Array(n);
+  (window.crypto || {}).getRandomValues ? crypto.getRandomValues(buf) : buf.forEach((_, i) => buf[i] = Math.random() * 1e9);
+  for (let i = 0; i < n; i++) s += A[buf[i] % A.length];
+  return s;
+}
+function makeCode() {
+  const A = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; let s = "";
+  for (let i = 0; i < 4; i++) s += A[Math.floor(Math.random() * A.length)];
+  return s;
+}
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function fnv(str, seed) { let h = seed >>> 0; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h >>> 0; }
+function hash(str) { return fnv(str, 2166136261).toString(36) + "." + fnv(str, 401864677).toString(36); }
+
+/* ─── נירמול עברית והתאמת תשובות ─── */
+function norm(s) {
+  s = String(s || "").trim().toLowerCase();
+  s = s.normalize("NFKD").replace(/[֑-ׇ]/g, "");
+  s = s.replace(/['"`’‘”“׳״\-–—_.,:;!?()\[\]{}\/\\]/g, " ");
+  s = s.replace(/ך/g, "כ").replace(/ם/g, "מ").replace(/ן/g, "נ").replace(/ף/g, "פ").replace(/ץ/g, "צ");
+  return s.replace(/\s+/g, " ").trim();
+}
+function variants(s) {
+  const n = norm(s), out = new Set([n]);
+  if (n.startsWith("ה") && n.length > 2) out.add(n.slice(1));
+  out.add(n.replace(/(^| )ה/g, "$1").replace(/\s+/g, " ").trim());
+  return [...out].filter(Boolean);
+}
+function lev(a, b, max = 1) {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  const m = a.length, n = b.length;
+  let prev = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) {
+    const cur = [i]; let best = i;
+    for (let j = 1; j <= n; j++) {
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      best = Math.min(best, cur[j]);
+    }
+    if (best > max) return max + 1;
+    prev = cur;
+  }
+  return prev[n];
+}
+/* בונה אינדקס לקטגוריה: לכל פריט — כל צורות הקבלה המנורמלות */
+function buildListIndex(cat) {
+  return cat.items.map((forms, idx) => {
+    const acc = new Set();
+    forms.forEach(f => variants(f).forEach(v => acc.add(v)));
+    return { idx, canon: forms[0], acc: [...acc] };
+  });
+}
+/* שיפוט תשובה: מחזיר index פריט או -1 ; קודם התאמה מדויקת, אח"כ סלחנית */
+function judgeAgainst(indexArr, saidSet, text) {
+  const t = norm(text);
+  if (!t) return { hit: -1 };
+  for (const it of indexArr) if (it.acc.includes(t)) return { hit: it.idx, dup: saidSet.has(it.idx) };
+  if (t.length >= 4) {
+    for (const it of indexArr) for (const a of it.acc) {
+      if (a.length >= 4 && lev(t, a, 1) <= 1) return { hit: it.idx, dup: saidSet.has(it.idx) };
+    }
+  }
+  return { hit: -1 };
+}
+/* השלמה אוטומטית: פריט יחיד שטרם נאמר שמתחיל בטקסט */
+function completeText(indexArr, saidSet, text) {
+  const t = norm(text);
+  if (t.length < 2) return null;
+  let found = null;
+  for (const it of indexArr) {
+    if (saidSet.has(it.idx)) continue;
+    const v = it.acc.find(a => a.startsWith(t));
+    if (v) { if (found && found.idx !== it.idx) return null; found = { idx: it.idx, canon: it.canon }; }
+  }
+  return found;
+}
+
+/* ─── מצב מקומי (localStorage + חתימה) ─── */
+const PROF = new URLSearchParams(location.search).get("p") || "";
+const K_S = "rbr_s" + PROF, K_SIG = "rbr_sig" + PROF;
+/* בטלפונים שפותחים את הקובץ ישירות מוואטסאפ (content://) האחסון חסום — נופלים לזיכרון */
+const store = (() => {
+  try { const k = "__rbr_t"; localStorage.setItem(k, "1"); localStorage.removeItem(k); return localStorage; }
+  catch {
+    const m = {};
+    return { volatile: true, getItem: k => (k in m ? m[k] : null), setItem: (k, v) => { m[k] = String(v); }, removeItem: k => { delete m[k]; } };
+  }
+})();
+let S = null;
+function defState() {
+  return { pid: rid(10), name: "", avatar: "🦁", bal: CFG.START_BAL, en: CFG.START_EN,
+    enTs: now(), w: 0, l: 0, t: 0, lg: "beg", muted: false, hist: [], ledger: [], recentL: [], recentM: [] };
+}
+function save() { const j = JSON.stringify(S); store.setItem(K_S, j); store.setItem(K_SIG, hash(j + SALT)); }
+function load() {
+  try {
+    const j = store.getItem(K_S);
+    if (!j) return null;
+    if (store.getItem(K_SIG) !== hash(j + SALT)) { setTimeout(() => toast("⚠️ זוהתה עריכה ידנית של הנתונים — החשבון אופס", "err", 5000), 600); return null; }
+    const s = JSON.parse(j);
+    return (s && s.pid && typeof s.bal === "number") ? Object.assign(defState(), s) : null;
+  } catch { return null; }
+}
+
+/* ─── אנרגיה ─── */
+function tickEnergy() {
+  if (!S) return;
+  if (S.en >= CFG.MAX_EN) { S.enTs = now(); }
+  else {
+    const gain = Math.floor((now() - S.enTs) / CFG.EN_REGEN_MS);
+    if (gain > 0) { S.en = Math.min(CFG.MAX_EN, S.en + gain); S.enTs = S.en >= CFG.MAX_EN ? now() : S.enTs + gain * CFG.EN_REGEN_MS; save(); }
+  }
+  renderWallet();
+}
+setInterval(tickEnergy, 1000);
+
+/* ─── סאונד ─── */
+let AC = null;
+function ac() { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch {} } return AC; }
+function tone(f, dur = .12, type = "sine", g = .14, delay = 0) {
+  if (!S || S.muted) return;
+  const c = ac(); if (!c) return;
+  try {
+    const o = c.createOscillator(), gn = c.createGain();
+    o.type = type; o.frequency.value = f;
+    gn.gain.setValueAtTime(g, c.currentTime + delay);
+    gn.gain.exponentialRampToValueAtTime(.001, c.currentTime + delay + dur);
+    o.connect(gn); gn.connect(c.destination);
+    o.start(c.currentTime + delay); o.stop(c.currentTime + delay + dur + .05);
+  } catch {}
+}
+const sClick = () => tone(700, .05, "sine", .08);
+const sGood = () => { tone(660, .09); tone(880, .12, "sine", .14, .09); };
+const sBad = () => tone(170, .28, "sawtooth", .12);
+const sTick = () => tone(1050, .04, "square", .05);
+const sCoin = () => { tone(1319, .07, "triangle", .12); tone(1760, .12, "triangle", .12, .07); };
+const sWin = () => [523, 659, 784, 1047].forEach((f, i) => tone(f, .16, "triangle", .16, i * .13));
+const sLose = () => { tone(330, .2, "sine", .12); tone(220, .35, "sine", .12, .18); };
+
+/* ─── קונפטי ─── */
+const CV = $("confetti"), CX = CV.getContext("2d");
+let confParts = [], confRun = false;
+function confetti() {
+  CV.width = innerWidth; CV.height = innerHeight;
+  confParts = Array.from({ length: 160 }, () => ({
+    x: Math.random() * CV.width, y: -20 - Math.random() * CV.height * .5,
+    vx: (Math.random() - .5) * 2.4, vy: 2 + Math.random() * 3.5,
+    s: 5 + Math.random() * 7, r: Math.random() * Math.PI,
+    c: ["#ffd166", "#7c6cf0", "#3ddc84", "#ff5470", "#4cc9f0", "#fff"][Math.floor(Math.random() * 6)]
+  }));
+  if (!confRun) { confRun = true; confLoop(); }
+  setTimeout(() => { confParts = []; }, 4200);
+}
+function confLoop() {
+  CX.clearRect(0, 0, CV.width, CV.height);
+  confParts.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.r += .08;
+    CX.save(); CX.translate(p.x, p.y); CX.rotate(p.r);
+    CX.fillStyle = p.c; CX.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * .6); CX.restore();
+  });
+  confParts = confParts.filter(p => p.y < CV.height + 30);
+  if (confParts.length) requestAnimationFrame(confLoop); else { confRun = false; CX.clearRect(0, 0, CV.width, CV.height); }
+}
+
+/* ─── טוסטים ומודאל ─── */
+function toast(msg, cls = "", ms = 2600) {
+  const d = document.createElement("div");
+  d.className = "toast " + cls; d.textContent = msg;
+  $("toasts").appendChild(d);
+  setTimeout(() => { d.classList.add("out"); setTimeout(() => d.remove(), 450); }, ms);
+}
+function openModal(html) { $("modal-box").innerHTML = html; $("modal").hidden = false; return $("modal-box"); }
+function closeModal() { $("modal").hidden = true; $("modal-box").innerHTML = ""; }
+
+/* ─── מסכים ─── */
+function show(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("on"));
+  $(id).classList.add("on");
+}
+
+/* ─── רינדור ארנק ובית ─── */
+function renderWallet() {
+  if (!S) return;
+  $("home-bal").textContent = fmt(S.bal);
+  $("home-energy").textContent = S.en;
+  const t = $("energy-timer");
+  if (S.en >= CFG.MAX_EN) t.textContent = "";
+  else {
+    const left = CFG.EN_REGEN_MS - (now() - S.enTs);
+    const m = Math.floor(left / 60000), s = Math.floor((left % 60000) / 1000);
+    t.textContent = `· +1 בעוד ${m}:${String(s).padStart(2, "0")}`;
+  }
+}
+function renderHome() {
+  $("home-avatar").textContent = S.avatar;
+  $("home-name").textContent = S.name;
+  $("home-record").textContent = `🏆 ${S.w} נצחונות · ${S.l} הפסדים · ${S.t} תיקו`;
+  document.querySelectorAll(".league-card").forEach(c => c.classList.toggle("sel", c.dataset.league === S.lg));
+  $("btn-mute").textContent = S.muted ? "🔇" : "🔊";
+  renderWallet(); renderHist();
+}
+function renderHist() {
+  const el = $("hist-list"); el.innerHTML = "";
+  if (!S.hist.length) { el.innerHTML = `<div class="hist-empty">עוד לא שיחקת… צור חדר ותתחיל! 🎮</div>`; return; }
+  S.hist.slice(0, 12).forEach(h => {
+    const d = document.createElement("div"); d.className = "hist-item";
+    const when = new Date(h.ts).toLocaleDateString("he-IL", { day: "numeric", month: "numeric" });
+    if (h.k === "t") {
+      d.innerHTML = `<span>💸 ${h.dir === "in" ? "קיבלת מ" : "העברת ל"}${h.opp}</span>
+        <span class="h-res ${h.dir === "in" ? "h-win" : "h-lose"}">${h.dir === "in" ? "+" : "-"}${fmt(h.amt)} ₪</span><span class="dim">${when}</span>`;
+    } else {
+      const res = h.d > 0 ? ["ניצחון 🏆", "h-win", "+" + fmt(h.d)] : h.d < 0 ? ["הפסד", "h-lose", "-" + fmt(-h.d)] : ["תיקו", "h-tie", "±0"];
+      d.innerHTML = `<span>${res[0]} מול ${h.opp} <span class="dim">(${CFG.LEAGUES[h.lg].name} · ${h.my}:${h.op})</span></span>
+        <span class="h-res ${res[1]}">${res[2]} ₪</span><span class="dim">${when}</span>`;
+    }
+    el.appendChild(d);
+  });
+}
+
+/* ═══════════ רשת P2P ═══════════ */
+const NET = { peer: null, conn: null, isHost: false, code: "", open: false };
+let PH = "idle"; // idle | room | match | result
+let OPP = null;  // {pid, name, avatar}
+let ROOM = { league: "beg", meReady: false, opReady: false, rem: { me: false, op: false } };
+
+const MSG_FIELDS = {
+  hello: ["pid", "name", "avatar"], ready: [], start: ["mid", "league", "first", "plan"],
+  r_start: ["i", "kind"], l_input: ["text"], l_ok: ["by", "word", "next"], l_bad: ["by", "reason"],
+  l_end: ["win", "reason", "scores"], mc_ans: ["i"], mc_picked: ["by"], mc_end: ["correct", "picks", "scores"],
+  m_end: ["scores", "win"], rematch: [], transfer_req: ["id", "amount"], transfer_ok: ["id"], transfer_no: ["id"], bye: [],
+  ping: [], pong: []
+};
+const HOST_ONLY_RX = new Set(["l_input", "mc_ans"]);   // רק המארח מקבל
+const GUEST_ONLY_RX = new Set(["start", "r_start", "l_ok", "l_bad", "l_end", "mc_end", "m_end"]); // רק האורח מקבל
+
+function netSend(t, p = {}) { if (NET.open && NET.conn) { try { NET.conn.send(JSON.stringify(Object.assign({ t }, p))); } catch {} } }
+function netReset() {
+  try { NET.conn && NET.conn.close(); } catch {}
+  try { NET.peer && NET.peer.destroy(); } catch {}
+  NET.peer = NET.conn = null; NET.open = false; NET.isHost = false; NET.code = "";
+  OPP = null; ROOM = { league: S ? S.lg : "beg", meReady: false, opReady: false, rem: { me: false, op: false } };
+}
+
+function hostRoom(attempt = 0) {
+  netReset(); NET.isHost = true; NET.code = makeCode(); ROOM.league = S.lg; PH = "room";
+  renderRoom(); show("screen-room");
+  $("room-status").innerHTML = 'פותח חדר…<span class="dots"></span>';
+  const peer = new Peer(CFG.PREFIX + NET.code, { debug: 0 });
+  NET.peer = peer;
+  peer.on("open", () => {
+    if (peer !== NET.peer) return;
+    $("room-status").innerHTML = 'ממתין ליריב…<span class="dots"></span>';
+  });
+  peer.on("connection", c => {
+    if (NET.conn) { try { c.close(); } catch {} return; }
+    bindConn(c);
+  });
+  peer.on("error", e => {
+    if (peer !== NET.peer) return;
+    if (e.type === "unavailable-id" && attempt < 3) { hostRoom(attempt + 1); return; }
+    roomError(e);
+  });
+}
+function joinRoom(code) {
+  netReset(); NET.isHost = false; NET.code = code; PH = "room";
+  const peer = new Peer({ debug: 0 });
+  NET.peer = peer;
+  let done = false;
+  peer.on("open", () => {
+    if (peer !== NET.peer) return;
+    const c = peer.connect(CFG.PREFIX + code, { reliable: true });
+    bindConn(c);
+    setTimeout(() => { if (!done && !NET.open && peer === NET.peer) { joinFail("לא הצלחתי להתחבר — בדוק את הקוד ואת האינטרנט"); } }, 12000);
+  });
+  peer.on("error", e => {
+    if (peer !== NET.peer) return;
+    if (e.type === "peer-unavailable") joinFail("חדר לא נמצא 🤔 בדוק שהקוד נכון ושהחבר עדיין בחדר");
+    else if (!done) joinFail(netErrText(e));
+  });
+  NET._joinDone = () => { done = true; };
+}
+function joinFail(msg) { netReset(); PH = "idle"; $("join-err").textContent = msg; show("screen-join"); }
+function netErrText(e) {
+  if (!navigator.onLine) return "אין חיבור לאינטרנט 📡";
+  return "שגיאת רשת (" + (e && e.type || "?") + ") — נסה שוב";
+}
+function roomError(e) { toast(netErrText(e), "err", 4000); goHome(); }
+
+function bindConn(c) {
+  NET.conn = c;
+  c.on("open", () => {
+    NET.open = true; NET.lastRx = now(); NET._joinDone && NET._joinDone();
+    netSend("hello", { pid: S.pid, name: S.name, avatar: S.avatar, v: CFG.V });
+  });
+  c.on("data", raw => { try { onMsg(raw); } catch (err) { console.error(err); } });
+  c.on("close", onConnClosed);
+  c.on("error", () => {});
+}
+
+/* ולידציית הודעות */
+function onMsg(raw) {
+  let m; try { m = JSON.parse(String(raw)); } catch { return; }
+  if (!m || typeof m.t !== "string" || !(m.t in MSG_FIELDS)) return;
+  for (const f of MSG_FIELDS[m.t]) if (!(f in m)) return;
+  if (NET.isHost && GUEST_ONLY_RX.has(m.t)) return;
+  if (!NET.isHost && HOST_ONLY_RX.has(m.t)) return;
+  NET.lastRx = now();
+  const H = RX[m.t]; if (H) H(m);
+}
+
+/* דופק חיים — זיהוי ניתוק אמין (PeerJS לא תמיד מזהה סגירה פתאומית) */
+setInterval(() => {
+  if (!NET.open || !NET.conn) return;
+  netSend("ping");
+  if (now() - (NET.lastRx || now()) > 12000) {
+    NET.open = false;
+    if (PH === "match") startDisconnectWin();
+    else if (PH === "room") handleOppGone("היריב התנתק");
+    else if (PH === "result") { $("btn-rematch").disabled = true; $("rematch-status").textContent = "היריב התנתק"; toast("היריב התנתק 👋"); }
+  }
+}, 3500);
+
+/* ═══════════ חדר ═══════════ */
+function renderRoom() {
+  const L = CFG.LEAGUES[ROOM.league];
+  $("room-league").textContent = `${L.icon} ליגת ${L.name} · ${fmt(L.fee)} ₪ כניסה`;
+  $("room-code-wrap").style.display = NET.isHost ? "" : "none";
+  $("room-code").textContent = NET.code;
+  $("room-me").innerHTML = `<span class="vp-avatar">${S.avatar}</span>${S.name}`;
+  $("room-me").classList.toggle("ready", ROOM.meReady);
+  const opp = $("room-opp");
+  if (OPP) { opp.classList.remove("empty"); opp.innerHTML = `<span class="vp-avatar">${OPP.avatar}</span>${OPP.name}`; }
+  else { opp.classList.add("empty"); opp.textContent = "?"; }
+  opp.classList.toggle("ready", ROOM.opReady);
+  $("room-fee-line").textContent = `דמי כניסה: ${fmt(L.fee)} ₪ לשחקן · עלות: ⚡2 אנרגיה · הזוכה לוקח ${fmt(L.fee * 2)} ₪`;
+  $("btn-ready").disabled = !OPP || ROOM.meReady;
+  $("btn-ready").textContent = ROOM.meReady ? "ממתין ליריב… ⌛" : "מוכן! ✅";
+  $("btn-transfer").hidden = !OPP;
+}
+
+function canAfford(fee, quiet) {
+  if (S.en < CFG.GAME_EN) { if (!quiet) toast(`אין מספיק אנרגיה ⚡ (צריך ${CFG.GAME_EN})`, "err"); return false; }
+  if (S.bal < fee) { if (!quiet) toast(`אין מספיק כסף 💰 (צריך ${fmt(fee)} ₪)`, "err"); return false; }
+  return true;
+}
+
+const RX = {};
+RX.hello = m => {
+  if (PH !== "room" || OPP) { if (OPP) return; }
+  OPP = { pid: m.pid === S.pid ? m.pid + "x" : m.pid, name: String(m.name).slice(0, 16) || "יריב", avatar: String(m.avatar).slice(0, 4) || "🙂" };
+  if (NET.isHost) netSend("hello", { pid: S.pid, name: S.name, avatar: S.avatar, league: ROOM.league, v: CFG.V });
+  else { ROOM.league = (m.league in CFG.LEAGUES) ? m.league : "beg"; $("room-status").textContent = "מחוברים! לחצו \"מוכן\" כששניכם מוכנים"; }
+  if (NET.isHost) $("room-status").textContent = "יריב התחבר! לחצו \"מוכן\" להתחלה 🎉";
+  sGood(); renderRoom(); show("screen-room");
+};
+RX.ready = () => {
+  if (PH !== "room") return;
+  ROOM.opReady = true; renderRoom();
+  maybeStart();
+};
+function maybeStart() {
+  if (!NET.isHost || PH !== "room" || !ROOM.meReady || !ROOM.opReady) return;
+  hostStartMatch();
+}
+
+/* ═══════════ מנוע משחק ═══════════ */
+let M = null;        // מצב משחק משותף
+let HOST = null;     // מצב שופט (מארח בלבד)
+let tUI = null;      // אינטרוול תצוגת טיימר
+let tHost = null;    // טיימר אכיפה של המארח
+
+function baseMatch(mid, league, first, plan) {
+  const fee = CFG.LEAGUES[league].fee;
+  return { mid, league, fee, plan, i: -1, kind: null,
+    scores: { [S.pid]: 0, [OPP.pid]: 0 }, turn: null, deadline: 0, dur: 0,
+    listIdx: null, said: [], saidSet: new Set(), myPick: -1, starter: first };
+}
+
+function hostStartMatch() {
+  const league = ROOM.league, fee = CFG.LEAGUES[league].fee;
+  if (!canAfford(fee)) return;
+  const plan = hostPickPlan(league);
+  const first = Math.random() < .5 ? S.pid : OPP.pid;
+  const mid = rid(10);
+  HOST = { plan, correct: -1, picks: {}, listIndex: null, remaining: 0 };
+  netSend("start", { mid, league, first, plan: plan.map(r => r.kind) });
+  applyStart({ mid, league, first, plan: plan.map(r => r.kind) });
+  setTimeout(() => hostNextRound(), CFG.BANNER_MS + 600);
+}
+RX.start = m => {   // אורח
+  if (PH !== "room" && PH !== "result") return;
+  if (!(m.league in CFG.LEAGUES)) return;
+  if (!canAfford(CFG.LEAGUES[m.league].fee)) { netSend("bye"); toast("אין לך מספיק כסף/אנרגיה למשחק הזה", "err"); goHome(); return; }
+  applyStart(m);
+};
+function applyStart(m) {
+  const fee = CFG.LEAGUES[m.league].fee;
+  S.bal -= fee; S.en -= CFG.GAME_EN; S.enTs = S.en + 1 >= CFG.MAX_EN ? now() : S.enTs; save();
+  M = baseMatch(m.mid, m.league, m.first, m.plan);
+  PH = "match"; ROOM.meReady = ROOM.opReady = false; ROOM.rem = { me: false, op: false };
+  $("g-pot").textContent = `💰 קופה: ${fmt(fee * 2)} ₪`;
+  renderScores();
+  show("screen-game");
+  $("g-list").hidden = true; $("g-mc").hidden = true;
+  banner(`${CFG.LEAGUES[m.league].icon} מתחילים!<div class="b-sub">6 סבבים · ${fmt(fee * 2)} ₪ בקופה · בהצלחה 🍀</div>`, CFG.BANNER_MS + 400);
+  renderWallet();
+}
+function renderScores() {
+  const me = $("g-me"), op = $("g-opp");
+  me.innerHTML = `<span class="gp-avatar">${S.avatar}</span><span>${S.name}</span><span class="gp-score">${M.scores[S.pid]}</span>`;
+  op.innerHTML = `<span class="gp-score">${M.scores[OPP.pid]}</span><span>${OPP.name}</span><span class="gp-avatar">${OPP.avatar}</span>`;
+  me.classList.toggle("turn", M.kind === "list" && M.turn === S.pid);
+  op.classList.toggle("turn", M.kind === "list" && M.turn === OPP.pid);
+}
+
+/* בחירת סבבים (מארח) */
+function pickPool(pool, recent, n, harder) {
+  let p = pool.filter(x => !recent.includes(x.key));
+  if (p.length < n) p = pool.slice();
+  p = shuffle(p);
+  if (harder) p.sort((a, b) => b.d - a.d + (Math.random() - .5));
+  return p.slice(0, n);
+}
+function hostPickPlan(league) {
+  const dOK = league === "beg" ? d => d <= 2 : league === "adv" ? () => true : d => d >= 2;
+  let lists = QDB.lists.map((c, i) => ({ key: c.id, i, d: c.d })).filter(x => dOK(x.d));
+  let mcs = QDB.mc.map((q, i) => ({ key: "m" + i, i, d: q.d })).filter(x => dOK(x.d));
+  if (lists.length < CFG.LIST_ROUNDS) lists = QDB.lists.map((c, i) => ({ key: c.id, i, d: c.d }));
+  if (mcs.length < CFG.MC_ROUNDS) mcs = QDB.mc.map((q, i) => ({ key: "m" + i, i, d: q.d }));
+  const L = pickPool(lists, S.recentL, CFG.LIST_ROUNDS, league === "pro");
+  const Q = pickPool(mcs, S.recentM, CFG.MC_ROUNDS, false);
+  S.recentL = L.map(x => x.key).concat(S.recentL).slice(0, 15);
+  S.recentM = Q.map(x => x.key).concat(S.recentM).slice(0, 60);
+  save();
+  const rounds = shuffle(L.map(x => ({ kind: "list", li: x.i })).concat(Q.map(x => ({ kind: "mc", qi: x.i }))));
+  return rounds;
+}
+
+/* ─── טיימר תצוגה ─── */
+const CIRC = 276.5;
+function startUiTimer(dur, offsetMs = 0) {
+  stopUiTimer();
+  const wrap = document.querySelector(".g-timer-wrap"), arc = $("t-arc"), num = $("g-timer-num");
+  const end = now() + offsetMs + dur * 1000;
+  wrap.classList.remove("hot");
+  const step = () => {
+    const left = Math.max(0, end - now());
+    const sLeft = Math.ceil(left / 1000);
+    num.textContent = sLeft > dur ? dur : sLeft;
+    arc.style.strokeDashoffset = String(CIRC * (1 - Math.min(1, left / (dur * 1000))));
+    if (sLeft <= 5 && left > 300) { wrap.classList.add("hot"); if (M && (M.kind === "mc" ? M.myPick < 0 : M.turn === S.pid)) sTick(); }
+    else wrap.classList.remove("hot");
+    if (left <= 0) stopUiTimer();
+  };
+  step(); tUI = setInterval(step, 1000);
+}
+function stopUiTimer() { if (tUI) { clearInterval(tUI); tUI = null; } }
+
+function banner(html, ms = 1600) {
+  $("g-banner-inner").innerHTML = html;
+  $("g-banner").hidden = false;
+  setTimeout(() => { $("g-banner").hidden = true; }, ms);
+}
+
+/* ─── ניהול סבבים (מארח) ─── */
+function hostNextRound() {
+  if (!NET.isHost || PH !== "match") return;
+  M.i++;
+  if (M.i >= HOST.plan.length) { hostEndMatch(); return; }
+  const r = HOST.plan[M.i];
+  clearTimeout(tHost);
+  if (r.kind === "list") {
+    const cat = QDB.lists[r.li];
+    HOST.listIndex = buildListIndex(cat);
+    HOST.remaining = cat.items.length;
+    M.starter = M.starter === S.pid ? OPP.pid : S.pid; // מתחלפים מי פותח
+    const msg = { i: M.i, kind: "list", li: r.li, turn: M.starter, dur: CFG.LIST_TURN_S };
+    netSend("r_start", msg); applyRoundStart(msg);
+    hostArmListTimer();
+  } else {
+    const q = QDB.mc[r.qi];
+    const order = shuffle([0, 1, 2, 3]);
+    HOST.correct = order.indexOf(q.c);
+    HOST.picks = {};
+    const msg = { i: M.i, kind: "mc", q: q.q, o: order.map(x => q.o[x]), dur: CFG.MC_S };
+    netSend("r_start", msg); applyRoundStart(msg);
+    tHost = setTimeout(hostEndMc, CFG.BANNER_MS + CFG.MC_S * 1000 + CFG.GRACE_MS);
+  }
+}
+function hostArmListTimer() {
+  clearTimeout(tHost);
+  const grace = M.turn === S.pid ? 250 : CFG.GRACE_MS;
+  tHost = setTimeout(() => hostListTimeout(), (M.i === HOST._armedRound ? 0 : CFG.BANNER_MS) + CFG.LIST_TURN_S * 1000 + grace);
+  HOST._armedRound = M.i;
+}
+
+RX.r_start = m => { if (PH === "match") applyRoundStart(m); };
+function applyRoundStart(m) {
+  M.i = m.i; M.kind = m.kind; M.dur = m.dur; M.myPick = -1;
+  M.said = []; M.saidSet = new Set();
+  const kindTxt = m.kind === "list" ? "📝 סבב רשימה" : "🇦 שאלה אמריקאית";
+  $("g-round").textContent = `סבב ${m.i + 1}/6`;
+  banner(`${kindTxt}<div class="b-sub">סבב ${m.i + 1} מתוך 6</div>`, CFG.BANNER_MS);
+  if (m.kind === "list") {
+    const cat = QDB.lists[m.li]; M.li = m.li; M.turn = m.turn;
+    M.clientIndex = buildListIndex(cat);
+    $("g-mc").hidden = true; $("g-list").hidden = false;
+    $("g-cat").textContent = cat.t;
+    $("g-said").innerHTML = "";
+    $("g-input").value = ""; $("g-ghost").textContent = "";
+    renderTurn();
+  } else {
+    M.q = m.q; M.o = m.o;
+    $("g-list").hidden = true; $("g-mc").hidden = false;
+    $("g-q").textContent = m.q;
+    const box = $("g-opts"); box.innerHTML = "";
+    m.o.forEach((opt, i) => {
+      const b = document.createElement("button");
+      b.className = "opt-btn"; b.textContent = opt;
+      b.onclick = () => pickMc(i, b);
+      box.appendChild(b);
+    });
+    $("g-mc-status").textContent = "בחר תשובה 👇";
+  }
+  renderScores();
+  startUiTimer(m.dur, CFG.BANNER_MS);
+}
+function renderTurn() {
+  const el = $("g-turn"), mine = M.turn === S.pid;
+  el.textContent = mine ? "✍️ התור שלך!" : `⏳ התור של ${OPP.name}…`;
+  el.className = "g-turn " + (mine ? "mine" : "theirs");
+  $("g-input").disabled = !mine; $("g-send").disabled = !mine;
+  if (mine) setTimeout(() => $("g-input").focus(), 60);
+  renderScores();
+}
+
+/* ─── סבב רשימה: קלט ─── */
+function submitList() {
+  if (!M || M.kind !== "list" || M.turn !== S.pid) return;
+  const inp = $("g-input");
+  let text = inp.value.trim();
+  if (!text) return;
+  const comp = completeText(M.clientIndex, M.saidSet, text);
+  const exact = judgeAgainst(M.clientIndex, M.saidSet, text);
+  if (exact.hit < 0 && comp) text = comp.canon;   // השלמה אוטומטית
+  sClick();
+  if (NET.isHost) hostJudge(S.pid, text);
+  else { netSend("l_input", { text }); inp.disabled = true; setTimeout(() => { if (M && M.turn === S.pid) inp.disabled = false; }, 2500); }
+}
+RX.l_input = m => { // מארח מקבל מהאורח
+  if (PH !== "match" || !M || M.kind !== "list" || M.turn !== OPP.pid) return;
+  hostJudge(OPP.pid, String(m.text).slice(0, 60));
+};
+function hostJudge(by, text) {
+  const res = judgeAgainst(HOST.listIndex, M.saidSet, text);
+  if (res.hit >= 0 && !res.dup) {
+    const word = HOST.listIndex[res.hit].canon;
+    M.saidSet.add(res.hit); HOST.remaining--;
+    const next = by === S.pid ? OPP.pid : S.pid;
+    const msg = { by, word, next, hi: res.hit };
+    netSend("l_ok", msg); applyListOk(msg);
+    if (HOST.remaining <= 0) {
+      clearTimeout(tHost);
+      M.scores[S.pid]++; M.scores[OPP.pid]++;
+      const em = { win: null, reason: "exhausted", scores: M.scores, missed: [] };
+      netSend("l_end", em); applyListEnd(em);
+      setTimeout(hostNextRound, 2600);
+    } else {
+      M.turn = next; hostArmListTimer();
+    }
+  } else {
+    const msg = { by, reason: res.hit >= 0 ? "dup" : "wrong" };
+    netSend("l_bad", msg); applyListBad(msg);
+  }
+}
+function hostListTimeout() {
+  if (PH !== "match" || !M || M.kind !== "list") return;
+  const loser = M.turn, win = loser === S.pid ? OPP.pid : S.pid;
+  M.scores[win]++;
+  const missed = HOST.listIndex.filter(it => !M.saidSet.has(it.idx)).slice(0, 6).map(it => it.canon);
+  const more = HOST.remaining - missed.length;
+  const em = { win, reason: "timeout", scores: M.scores, missed, more: Math.max(0, more) };
+  netSend("l_end", em); applyListEnd(em);
+  setTimeout(hostNextRound, 3000);
+}
+RX.l_ok = m => { if (PH === "match" && M && M.kind === "list") applyListOk(m); };
+RX.l_bad = m => { if (PH === "match" && M && M.kind === "list") applyListBad(m); };
+RX.l_end = m => { if (PH === "match" && M && M.kind === "list") applyListEnd(m); };
+
+function applyListOk(m) {
+  M.saidSet.add(m.hi);
+  const chip = document.createElement("span");
+  chip.className = "said-chip" + (m.by === S.pid ? "" : " op");
+  chip.textContent = m.word;
+  $("g-said").appendChild(chip);
+  M.turn = m.next;
+  if (m.by === S.pid) { sGood(); $("g-input").value = ""; $("g-ghost").textContent = ""; }
+  $("g-input").disabled = M.turn !== S.pid;
+  renderTurn();
+  startUiTimer(M.dur, 0);
+}
+function applyListBad(m) {
+  if (m.by === S.pid) {
+    sBad();
+    const inp = $("g-input");
+    inp.disabled = M.turn !== S.pid;
+    inp.classList.add("shake"); setTimeout(() => inp.classList.remove("shake"), 400);
+    toast(m.reason === "dup" ? "כבר נאמר! 🙃" : "לא נכון… נסה שוב", "err", 1400);
+    inp.select && inp.select();
+  }
+}
+function applyListEnd(m) {
+  stopUiTimer(); M.scores = m.scores;
+  (m.missed || []).forEach(w => {
+    const chip = document.createElement("span");
+    chip.className = "said-chip missed"; chip.textContent = w;
+    $("g-said").appendChild(chip);
+  });
+  if (m.more) {
+    const chip = document.createElement("span");
+    chip.className = "said-chip missed"; chip.textContent = `ועוד ${m.more}…`;
+    $("g-said").appendChild(chip);
+  }
+  $("g-input").disabled = true; $("g-send").disabled = true;
+  let html;
+  if (m.win === null) { html = `🤝 תיקו!<div class="b-sub">כל התשובות נאמרו — נקודה לכל אחד</div>`; sGood(); }
+  else if (m.win === S.pid) { html = `🎉 נקודה לך!<div class="b-sub">${OPP.name} לא ענה בזמן</div>`; sWin(); }
+  else { html = `😬 נקודה ל${OPP.name}<div class="b-sub">לא ענית בזמן</div>`; sLose(); }
+  banner(html, 2300);
+  renderScores();
+}
+
+/* ─── שאלה אמריקאית ─── */
+function pickMc(i, btn) {
+  if (!M || M.kind !== "mc" || M.myPick >= 0) return;
+  M.myPick = i; sClick();
+  document.querySelectorAll(".opt-btn").forEach(b => b.disabled = true);
+  btn.classList.add("picked");
+  $("g-mc-status").textContent = "ממתין ליריב…";
+  if (NET.isHost) hostMcPick(S.pid, i);
+  else netSend("mc_ans", { i });
+}
+RX.mc_ans = m => { if (PH === "match" && M && M.kind === "mc") hostMcPick(OPP.pid, m.i | 0); };
+RX.mc_picked = m => {
+  if (PH !== "match" || !M || M.kind !== "mc") return;
+  if (m.by === OPP.pid && M.myPick < 0) $("g-mc-status").textContent = `${OPP.name} כבר ענה! ⏰`;
+};
+function hostMcPick(by, i) {
+  if (!(by in M.scores) || by in HOST.picks) return;
+  if (typeof i !== "number" || i < 0 || i > 3) i = -1;
+  HOST.picks[by] = i;
+  netSend("mc_picked", { by });
+  if (S.pid in HOST.picks && OPP.pid in HOST.picks) { clearTimeout(tHost); hostEndMc(); }
+}
+function hostEndMc() {
+  if (PH !== "match" || !M || M.kind !== "mc") return;
+  if (!(S.pid in HOST.picks)) HOST.picks[S.pid] = -1;
+  if (!(OPP.pid in HOST.picks)) HOST.picks[OPP.pid] = -1;
+  if (HOST.picks[S.pid] === HOST.correct) M.scores[S.pid]++;
+  if (HOST.picks[OPP.pid] === HOST.correct) M.scores[OPP.pid]++;
+  const em = { correct: HOST.correct, picks: HOST.picks, scores: M.scores };
+  netSend("mc_end", em); applyMcEnd(em);
+  setTimeout(hostNextRound, 2800);
+}
+RX.mc_end = m => { if (PH === "match" && M && M.kind === "mc") applyMcEnd(m); };
+function applyMcEnd(m) {
+  stopUiTimer(); M.scores = m.scores;
+  const btns = document.querySelectorAll(".opt-btn");
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === m.correct) b.classList.add("correct");
+    else if (i === m.picks[S.pid]) b.classList.add("wrong");
+  });
+  const meOk = m.picks[S.pid] === m.correct, opOk = m.picks[OPP.pid] === m.correct;
+  $("g-mc-status").textContent =
+    meOk && opOk ? "שניכם צדקתם! נקודה לכל אחד 🎯" :
+    meOk ? "צדקת! נקודה לך 🎉" :
+    opOk ? `${OPP.name} צדק — נקודה לו 😬` : "אף אחד לא צדק 🙈";
+  meOk ? sGood() : sBad();
+  renderScores();
+}
+
+/* ─── סוף משחק ─── */
+function hostEndMatch() {
+  const my = M.scores[S.pid], op = M.scores[OPP.pid];
+  const win = my > op ? S.pid : op > my ? OPP.pid : null;
+  const em = { scores: M.scores, win };
+  netSend("m_end", em); applyMatchEnd(em);
+}
+RX.m_end = m => { if (PH === "match" && M) applyMatchEnd(m); };
+function applyMatchEnd(m) {
+  stopUiTimer(); clearTimeout(tHost);
+  PH = "result"; M.scores = m.scores;
+  const my = M.scores[S.pid], op = M.scores[OPP.pid];
+  const fee = M.fee;
+  let delta;
+  if (m.win === S.pid) { delta = fee; S.bal += fee * 2; S.w++; }
+  else if (m.win === null) { delta = 0; S.bal += fee; S.t++; }
+  else { delta = -fee; S.l++; }
+  S.hist.unshift({ ts: now(), k: "g", opp: OPP.name, lg: M.league, my, op, d: delta });
+  S.hist = S.hist.slice(0, 40); save();
+  $("res-emoji").textContent = m.win === S.pid ? "🏆" : m.win === null ? "🤝" : "😢";
+  $("res-title").textContent = m.win === S.pid ? "ניצחת!" : m.win === null ? "תיקו!" : "הפסדת…";
+  $("res-score").textContent = `${my} : ${op}`;
+  const rm = $("res-money");
+  rm.className = "res-money " + (delta > 0 ? "plus" : delta < 0 ? "minus" : "zero");
+  rm.textContent = delta > 0 ? `+${fmt(delta)} ₪ 💰` : delta < 0 ? `-${fmt(-delta)} ₪` : "דמי הכניסה הוחזרו";
+  $("res-wallet").textContent = `יתרה: ${fmt(S.bal)} ₪ · אנרגיה: ⚡${S.en}`;
+  $("btn-rematch").disabled = false; $("rematch-status").textContent = "";
+  show("screen-result");
+  if (m.win === S.pid) { sWin(); confetti(); }
+  else if (m.win === null) sGood(); else sLose();
+  renderWallet();
+}
+
+/* ─── משחק חוזר ─── */
+function reqRematch() {
+  if (PH !== "result" || !NET.open) { toast("היריב כבר עזב 🤷", "err"); return; }
+  if (!canAfford(M.fee)) return;
+  ROOM.rem.me = true;
+  $("btn-rematch").disabled = true;
+  $("rematch-status").textContent = ROOM.rem.op ? "מתחילים!" : `ממתין ל${OPP.name}…`;
+  netSend("rematch");
+  tryRematch();
+}
+RX.rematch = () => {
+  if (PH !== "result") return;
+  ROOM.rem.op = true;
+  $("rematch-status").textContent = ROOM.rem.me ? "מתחילים!" : `${OPP.name} רוצה משחק חוזר! לחץ גם אתה 🔄`;
+  tryRematch();
+};
+function tryRematch() {
+  if (!ROOM.rem.me || !ROOM.rem.op) return;
+  PH = "room"; ROOM.meReady = ROOM.opReady = true; ROOM.rem = { me: false, op: false };
+  if (NET.isHost) hostStartMatch();
+}
+
+/* ═══════════ העברת כסף ═══════════ */
+let TR = null; // {id, amount, timer}
+function openTransfer() {
+  if (!OPP || !NET.open || PH === "match") return;
+  const box = openModal(`
+    <h3>💸 העברת כסף ל${OPP.name}</h3>
+    <p class="dim">היתרה שלך: ${fmt(S.bal)} ₪</p>
+    <input id="tr-amount" class="txt" type="number" inputmode="numeric" min="1" max="${S.bal}" placeholder="סכום בש״ח">
+    <button id="tr-send" class="btn btn-gold">שלח 💸</button>
+    <button id="tr-cancel" class="btn btn-ghost">ביטול</button>`);
+  box.querySelector("#tr-cancel").onclick = closeModal;
+  box.querySelector("#tr-send").onclick = () => {
+    const amount = Math.floor(Number(box.querySelector("#tr-amount").value));
+    if (!Number.isFinite(amount) || amount < 1) { toast("סכום לא תקין", "err"); return; }
+    if (amount > S.bal) { toast("אין לך מספיק כסף 💰", "err"); return; }
+    TR = { id: rid(12), amount };
+    netSend("transfer_req", { id: TR.id, amount });
+    openModal(`<h3>💸 ממתין לאישור…</h3><p class="dim">${OPP.name} צריך לאשר את קבלת הכסף</p><div class="modal-amount">${fmt(amount)} ₪</div>`);
+    TR.timer = setTimeout(() => { if (TR) { TR = null; closeModal(); toast("ההעברה לא אושרה בזמן", "err"); } }, 25000);
+  };
+}
+RX.transfer_req = m => {
+  if (!OPP || PH === "match") { netSend("transfer_no", { id: m.id }); return; }
+  const amount = Math.floor(Number(m.amount));
+  if (!Number.isFinite(amount) || amount < 1 || amount > 10000000) { netSend("transfer_no", { id: m.id }); return; }
+  if (S.ledger.includes(m.id)) return;
+  const box = openModal(`
+    <h3>💰 ${OPP.name} רוצה להעביר לך כסף!</h3>
+    <div class="modal-amount">${fmt(amount)} ₪</div>
+    <button id="tr-ok" class="btn btn-primary">קבל את הכסף ✅</button>
+    <button id="tr-no" class="btn btn-ghost">דחה</button>`);
+  box.querySelector("#tr-ok").onclick = () => {
+    if (S.ledger.includes(m.id)) { closeModal(); return; }
+    S.bal += amount;
+    S.ledger.push(m.id); S.ledger = S.ledger.slice(-200);
+    S.hist.unshift({ ts: now(), k: "t", opp: OPP.name, amt: amount, dir: "in" });
+    S.hist = S.hist.slice(0, 40); save();
+    netSend("transfer_ok", { id: m.id });
+    closeModal(); sCoin(); confetti();
+    toast(`קיבלת ${fmt(amount)} ₪ מ${OPP.name}! 🎉`, "ok", 3500);
+    renderWallet();
+  };
+  box.querySelector("#tr-no").onclick = () => { netSend("transfer_no", { id: m.id }); closeModal(); };
+};
+RX.transfer_ok = m => {
+  if (!TR || m.id !== TR.id || S.ledger.includes(m.id)) return;
+  clearTimeout(TR.timer);
+  S.bal -= TR.amount;
+  S.ledger.push(TR.id); S.ledger = S.ledger.slice(-200);
+  S.hist.unshift({ ts: now(), k: "t", opp: OPP.name, amt: TR.amount, dir: "out" });
+  S.hist = S.hist.slice(0, 40); save();
+  toast(`העברת ${fmt(TR.amount)} ₪ ל${OPP.name} ✅`, "ok", 3000);
+  TR = null; closeModal(); sCoin(); renderWallet();
+};
+RX.transfer_no = m => {
+  if (!TR || m.id !== TR.id) return;
+  clearTimeout(TR.timer); TR = null; closeModal();
+  toast("ההעברה נדחתה 🤷", "err");
+};
+
+/* ═══════════ ניתוקים ועזיבות ═══════════ */
+RX.bye = () => {
+  NET.open = false;
+  if (PH === "match") startDisconnectWin(true); // עזיבה מכוונת באמצע משחק — ניצחון טכני
+  else if (PH === "room") { handleOppGone("היריב עזב את החדר"); }
+  else if (PH === "result") { toast("היריב עזב 👋"); $("btn-rematch").disabled = true; $("rematch-status").textContent = "היריב עזב את המשחק"; }
+};
+function onConnClosed() {
+  if (!NET.open) return;
+  NET.open = false;
+  if (PH === "match") startDisconnectWin();
+  else if (PH === "room") handleOppGone("היריב התנתק");
+  else if (PH === "result") { toast("היריב התנתק 👋"); $("btn-rematch").disabled = true; $("rematch-status").textContent = "היריב התנתק"; }
+}
+function handleOppGone(msg) {
+  toast(msg, "err");
+  OPP = null; ROOM.meReady = ROOM.opReady = false;
+  if (NET.isHost) { NET.conn = null; renderRoom(); $("room-status").innerHTML = 'ממתין ליריב…<span class="dots"></span>'; }
+  else goHome();
+}
+let discTimer = null;
+function startDisconnectWin(quit = false) {
+  if (discTimer) return;
+  stopUiTimer(); clearTimeout(tHost);
+  let left = quit ? 3 : 30;
+  const render = () => openModal(`
+    <h3>${quit ? "🚪 היריב עזב את המשחק!" : "📡 היריב התנתק!"}</h3>
+    <p class="dim">${quit ? "מקבל ניצחון טכני ואת כל הקופה" : "אם הוא לא יחזור — תקבל ניצחון טכני ואת כל הקופה"}</p>
+    <div class="modal-amount">${left}</div>`);
+  render();
+  discTimer = setInterval(() => {
+    left--;
+    if (left <= 0) {
+      clearInterval(discTimer); discTimer = null; closeModal();
+      PH = "result";
+      S.bal += M.fee * 2; S.w++;
+      S.hist.unshift({ ts: now(), k: "g", opp: OPP ? OPP.name : "יריב", lg: M.league, my: M.scores[S.pid], op: OPP ? M.scores[OPP.pid] : 0, d: M.fee });
+      S.hist = S.hist.slice(0, 40); save();
+      $("res-emoji").textContent = "🏆";
+      $("res-title").textContent = "ניצחון טכני!";
+      $("res-score").textContent = "היריב נטש את המשחק";
+      const rm = $("res-money"); rm.className = "res-money plus"; rm.textContent = `+${fmt(M.fee)} ₪ 💰`;
+      $("res-wallet").textContent = `יתרה: ${fmt(S.bal)} ₪ · אנרגיה: ⚡${S.en}`;
+      $("btn-rematch").disabled = true; $("rematch-status").textContent = "";
+      show("screen-result"); sWin(); confetti(); renderWallet();
+    } else render();
+  }, 1000);
+}
+
+/* ═══════════ ניווט ═══════════ */
+function goHome() {
+  clearInterval(discTimer); discTimer = null; clearTimeout(tHost); stopUiTimer(); closeModal();
+  if (NET.open) netSend("bye");
+  netReset(); PH = "idle"; M = null; HOST = null; TR = null;
+  renderHome(); show("screen-home");
+}
+
+/* ═══════════ אתחול UI ═══════════ */
+function initLogin() {
+  const grid = $("avatar-grid");
+  let chosen = AVATARS[0];
+  AVATARS.forEach((a, i) => {
+    const b = document.createElement("div");
+    b.className = "avatar-opt" + (i === 0 ? " sel" : ""); b.textContent = a;
+    b.onclick = () => { grid.querySelectorAll(".avatar-opt").forEach(x => x.classList.remove("sel")); b.classList.add("sel"); chosen = a; sClick(); };
+    grid.appendChild(b);
+  });
+  $("btn-login").onclick = () => {
+    ac(); // פתיחת אודיו במחווה ראשונה
+    const name = $("login-name").value.trim();
+    if (name.length < 2) { toast("שם עם לפחות 2 תווים 🙂", "err"); return; }
+    S.name = name.slice(0, 14); S.avatar = chosen; save();
+    sGood(); renderHome(); show("screen-home");
+  };
+  $("login-name").addEventListener("keydown", e => { if (e.key === "Enter") $("btn-login").click(); });
+}
+
+function initHome() {
+  document.querySelectorAll(".league-card").forEach(c => {
+    c.onclick = () => { S.lg = c.dataset.league; save(); sClick(); renderHome(); };
+  });
+  $("btn-create").onclick = () => {
+    ac();
+    if (!canAfford(CFG.LEAGUES[S.lg].fee)) return;
+    sClick(); hostRoom();
+  };
+  $("btn-join").onclick = () => { ac(); sClick(); $("join-code").value = ""; $("join-err").textContent = ""; show("screen-join"); setTimeout(() => $("join-code").focus(), 80); };
+  $("btn-mute").onclick = () => { S.muted = !S.muted; save(); renderHome(); };
+}
+
+function initJoin() {
+  $("btn-join-back").onclick = () => { netReset(); show("screen-home"); };
+  const go = () => {
+    const code = $("join-code").value.trim().toUpperCase();
+    if (!/^[A-Z2-9]{4}$/.test(code)) { $("join-err").textContent = "קוד לא תקין — 4 תווים באנגלית/ספרות"; return; }
+    $("join-err").textContent = "";
+    $("btn-join-go").disabled = true;
+    setTimeout(() => $("btn-join-go").disabled = false, 3000);
+    joinRoom(code);
+    $("room-status").innerHTML = 'מתחבר…<span class="dots"></span>';
+    renderRoom(); show("screen-room");
+  };
+  $("btn-join-go").onclick = go;
+  $("join-code").addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+  $("join-code").addEventListener("input", () => { $("join-code").value = $("join-code").value.toUpperCase().replace(/[^A-Z2-9]/g, ""); });
+}
+
+function initRoom() {
+  $("btn-ready").onclick = () => {
+    if (!OPP || ROOM.meReady) return;
+    if (!canAfford(CFG.LEAGUES[ROOM.league].fee)) return;
+    ROOM.meReady = true; sClick(); renderRoom();
+    netSend("ready");
+    maybeStart();
+  };
+  $("btn-leave").onclick = goHome;
+  $("btn-transfer").onclick = openTransfer;
+  $("btn-share-wa").onclick = () => {
+    const isWeb = /^https?:$/.test(location.protocol) && !/^(localhost|127\.)/.test(location.hostname);
+    const open = isWeb ? `היכנס לקישור:\n${location.origin + location.pathname}\n` : `פתח את הקובץ ששלחתי לך, `;
+    const txt = `🧠 בוא נשחק "ראש בראש"!\n${open}לחץ "הצטרף עם קוד" והקלד: ${NET.code}\nמחכה לך! ⚔️`;
+    window.open("https://wa.me/?text=" + encodeURIComponent(txt), "_blank");
+  };
+}
+
+function initGame() {
+  $("g-send").onclick = submitList;
+  $("g-input").addEventListener("keydown", e => { if (e.key === "Enter") submitList(); });
+  $("g-input").addEventListener("input", () => {
+    const inp = $("g-input"), ghost = $("g-ghost");
+    if (!M || M.kind !== "list" || M.turn !== S.pid) { ghost.textContent = ""; return; }
+    const comp = completeText(M.clientIndex, M.saidSet, inp.value);
+    if (comp && norm(comp.canon) !== norm(inp.value)) ghost.textContent = inp.value + "  ← " + comp.canon;
+    else ghost.textContent = "";
+  });
+}
+
+function initResult() {
+  $("btn-rematch").onclick = reqRematch;
+  $("btn-res-home").onclick = goHome;
+}
+
+/* ─── הפעלה ─── */
+window.addEventListener("beforeunload", () => { if (NET.open) netSend("bye"); });
+window.addEventListener("resize", () => { if (confParts.length) { CV.width = innerWidth; CV.height = innerHeight; } });
+
+S = load();
+if (!S) { S = defState(); save(); }
+if (store.volatile) setTimeout(() => toast("⚠️ הדפדפן חוסם שמירה — היתרה תתאפס בסגירה. עדיף לשמור את הקובץ ולפתוח בכרום/ספארי", "err", 7000), 800);
+tickEnergy();
+initLogin(); initHome(); initJoin(); initRoom(); initGame(); initResult();
+if (S.name) { renderHome(); show("screen-home"); } else show("screen-login");
+
+</script>
+</body>
+</html>
