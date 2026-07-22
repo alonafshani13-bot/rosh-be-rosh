@@ -145,6 +145,12 @@ h2 { font-size: 22px; font-weight: 800; }
 .hist-item .h-lose { color: var(--red); }
 .hist-item .h-tie { color: var(--dim); }
 .hist-empty { color: var(--dim); text-align: center; padding: 18px; font-size: 14px; }
+.friends { display: flex; flex-direction: column; gap: 8px; }
+.friend-item { display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: 14px; padding: 10px 12px; }
+.friend-item .fr-av { font-size: 28px; }
+.friend-item .fr-main { flex: 1; }
+.friend-item .fr-main b { font-size: 15px; }
+.friend-item .fr-del { padding: 6px 10px; background: transparent; }
 .home-foot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 24px; }
 
 /* ─── חדר ─── */
@@ -206,7 +212,7 @@ h2 { font-size: 22px; font-weight: 800; }
 .g-turn { text-align: center; font-weight: 800; font-size: 16px; min-height: 24px; }
 .g-turn.mine { color: var(--green); }
 .g-turn.theirs { color: var(--dim); }
-.g-said { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; min-height: 34px; align-content: flex-start; }
+.g-said { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; min-height: 34px; max-height: 32vh; overflow-y: auto; align-content: flex-start; }
 .said-chip {
   background: rgba(61,220,132,.14); border: 1px solid rgba(61,220,132,.4); color: #baf5d4;
   border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 700; animation: pop .25s ease;
@@ -289,6 +295,9 @@ h2 { font-size: 22px; font-weight: 800; }
 /* ─── קונפטי ─── */
 #confetti { position: fixed; inset: 0; z-index: 70; pointer-events: none; }
 
+/* קריטי: hidden חייב לנצח כל display אחר (הכרזות, אזורי משחק) */
+[hidden] { display: none !important; }
+
 @media (max-width: 400px) {
   .room-code { font-size: 46px; letter-spacing: 10px; text-indent: 10px; }
   .avatar-grid { grid-template-columns: repeat(5, 1fr); }
@@ -362,6 +371,9 @@ h2 { font-size: 22px; font-weight: 800; }
     <button id="btn-create" class="btn btn-primary btn-big">🎮 צור חדר</button>
     <button id="btn-join" class="btn btn-ghost btn-big">🔑 הצטרף עם קוד</button>
   </div>
+
+  <h3 class="sec-title">👥 חברים</h3>
+  <div id="friends-list" class="friends"></div>
 
   <h3 class="sec-title">משחקים אחרונים</h3>
   <div id="hist-list" class="hist"></div>
@@ -702,7 +714,41 @@ lists: [
 ]},
 { id:"kings", d:1, t:"מנו את מלכי ישראל המאוחדת", items:[
   ["שאול"],["דוד"],["שלמה"]
-]}
+]},
+
+/* ═══ נושאים פתוחים — כל אחד בתורו אומר משהו מהנושא, בלי רשימה קבועה ═══ */
+{ id:"o_home",   open:true, d:1, t:"חפצים שיש בבית 🏠 — כל אחד בתורו!" },
+{ id:"o_animals",open:true, d:1, t:"בעלי חיים 🐾 — כל אחד בתורו!" },
+{ id:"o_fruit",  open:true, d:1, t:"פירות 🍎 — כל אחד בתורו!" },
+{ id:"o_veg",    open:true, d:1, t:"ירקות 🥕 — כל אחד בתורו!" },
+{ id:"o_jobs",   open:true, d:1, t:"מקצועות 👷 — כל אחד בתורו!" },
+{ id:"o_boys",   open:true, d:1, t:"שמות של בנים 👦 — כל אחד בתורו!" },
+{ id:"o_girls",  open:true, d:1, t:"שמות של בנות 👧 — כל אחד בתורו!" },
+{ id:"o_cities", open:true, d:1, t:"ערים בעולם 🌍 — כל אחד בתורו!" },
+{ id:"o_ilcity", open:true, d:1, t:"ערים בישראל 🇮🇱 — כל אחד בתורו!" },
+{ id:"o_food",   open:true, d:1, t:"מאכלים 🍽️ — כל אחד בתורו!" },
+{ id:"o_kitchen",open:true, d:1, t:"דברים שיש במטבח 🍳 — כל אחד בתורו!" },
+{ id:"o_school", open:true, d:1, t:"דברים שיש בכיתה 🎒 — כל אחד בתורו!" },
+{ id:"o_body",   open:true, d:1, t:"חלקי גוף 🦵 — כל אחד בתורו!" },
+{ id:"o_vehicle",open:true, d:1, t:"כלי תחבורה 🚗 — כל אחד בתורו!" },
+{ id:"o_clothes",open:true, d:1, t:"בגדים 👕 — כל אחד בתורו!" },
+{ id:"o_colors", open:true, d:1, t:"צבעים 🎨 — כל אחד בתורו!" },
+{ id:"o_drinks", open:true, d:1, t:"דברים שאפשר לשתות 🥤 — כל אחד בתורו!" },
+{ id:"o_sweets", open:true, d:1, t:"מתוקים וקינוחים 🍰 — כל אחד בתורו!" },
+{ id:"o_singers",open:true, d:2, t:"זמרים ישראלים 🎤 — כל אחד בתורו!" },
+{ id:"o_sport",  open:true, d:2, t:"סוגי ספורט ⚽ — כל אחד בתורו!" },
+{ id:"o_instr",  open:true, d:2, t:"כלי נגינה 🎸 — כל אחד בתורו!" },
+{ id:"o_flowers",open:true, d:2, t:"פרחים 🌸 — כל אחד בתורו!" },
+{ id:"o_fish",   open:true, d:2, t:"דגים ובעלי חיים בים 🐟 — כל אחד בתורו!" },
+{ id:"o_birds",  open:true, d:2, t:"ציפורים 🐦 — כל אחד בתורו!" },
+{ id:"o_brands", open:true, d:2, t:"מותגים מפורסמים 🏷️ — כל אחד בתורו!" },
+{ id:"o_red",    open:true, d:1, t:"דברים בצבע אדום 🔴 — כל אחד בתורו!" },
+{ id:"o_round",  open:true, d:2, t:"דברים עגולים ⭕ — כל אחד בתורו!" },
+{ id:"o_electric",open:true,d:2, t:"מכשירי חשמל 🔌 — כל אחד בתורו!" },
+{ id:"o_movies", open:true, d:2, t:"סרטים או סדרות 🎬 — כל אחד בתורו!" },
+{ id:"o_games",  open:true, d:1, t:"משחקים 🎲 — כל אחד בתורו!" },
+{ id:"o_country",open:true, d:1, t:"מדינות 🗺️ — כל אחד בתורו!" },
+{ id:"o_beach",  open:true, d:1, t:"דברים שיש בחוף הים 🏖️ — כל אחד בתורו!" }
 ],
 
 mc: [
@@ -907,7 +953,94 @@ mc: [
 {q:"מהו שם הרכב הרובוטי שנאס\"א הנחיתה על מאדים ב-2021?", o:["קיוריוסיטי","אופורטיוניטי","פרסבירנס","ספיריט"], c:2, d:3},
 {q:"איזו רשת חברתית מזוהה עם \"ציוצים\"?", o:["פייסבוק","אינסטגרם","טוויטר (X)","טיקטוק"], c:2, d:1},
 {q:"מהו המונח לתוכנה זדונית שדורשת כופר?", o:["וירוס","תולעת","כופרה (Ransomware)","פישינג"], c:2, d:2},
-{q:"באיזו מדינה הומצאה משחקיית הנינטנדו?", o:["סין","דרום קוריאה","יפן","ארצות הברית"], c:2, d:2}
+{q:"באיזו מדינה הומצאה משחקיית הנינטנדו?", o:["סין","דרום קוריאה","יפן","ארצות הברית"], c:2, d:2},
+
+/* ─── מנה שנייה: עוד ידע כללי ─── */
+{q:"כמה ימים יש בשנה מעוברת?", o:["365","366","367","364"], c:1, d:2},
+{q:"איזה כוכב לכת הוא הרחוק ביותר מהשמש?", o:["אורנוס","שבתאי","נפטון","מאדים"], c:2, d:2},
+{q:"מהי עיר הבירה של איטליה?", o:["מילאנו","ונציה","רומא","נאפולי"], c:2, d:1},
+{q:"כמה צבעים יש בקשת?", o:["5","6","7","8"], c:2, d:1},
+{q:"איזה יונק הוא הגבוה בעולם?", o:["פיל","ג'ירפה","גמל","סוס"], c:1, d:1},
+{q:"מהו הכוכב הקרוב ביותר לכדור הארץ?", o:["הירח","השמש","נוגה","סיריוס"], c:1, d:2},
+{q:"כמה שחקנים יש בקבוצת כדורעף על המגרש?", o:["5","6","7","8"], c:1, d:2},
+{q:"מהי בירת פורטוגל?", o:["פורטו","ליסבון","מדריד","ברצלונה"], c:1, d:2},
+{q:"מי כתב את הספר \"הנסיך הקטן\"?", o:["ז'ול ורן","אנטואן דה סנט-אכזופרי","ויקטור הוגו","אלכסנדר דיומא"], c:1, d:3},
+{q:"מאיזה חומר עשוי היהלום?", o:["סיליקון","פחמן","ברזל","אלומיניום"], c:1, d:2},
+{q:"כמה שיניים יש למבוגר בריא?", o:["28","30","32","34"], c:2, d:2},
+{q:"מהו הים הגדול ביותר בעולם?", o:["הים התיכון","הים הכספי","ים סוף","הים השחור"], c:1, d:3},
+{q:"איזה בעל חיים ידוע כ\"מלך החיות\"?", o:["הנמר","האריה","הפיל","הדוב"], c:1, d:1},
+{q:"כמה זה 12 כפול 12?", o:["124","144","136","148"], c:1, d:1},
+{q:"מהי בירת הולנד?", o:["רוטרדם","האג","אמסטרדם","אוטרכט"], c:2, d:2},
+{q:"איזו יבשת היא הקרה ביותר?", o:["אירופה","אנטארקטיקה","אסיה","אמריקה הצפונית"], c:1, d:1},
+{q:"מהו הצליל שמשמיע צרצר?", o:["נביחה","ציוץ","צרצור","שריקה"], c:2, d:1},
+{q:"כמה רגליים יש לחרק?", o:["4","6","8","10"], c:1, d:2},
+{q:"איזה מתכת נוזלית בטמפרטורת החדר?", o:["ברזל","כספית","נחושת","עופרת"], c:1, d:2},
+{q:"מהי בירת בלגיה?", o:["אנטוורפן","בריסל","גנט","ליאז'"], c:1, d:2},
+{q:"מי היה הצייר של תקרת הקפלה הסיסטינית?", o:["רפאל","דונטלו","מיכלאנג'לו","בוטיצ'לי"], c:2, d:3},
+{q:"כמה מיתרים יש לגיטרה קלאסית?", o:["4","5","6","7"], c:2, d:1},
+{q:"מהי הבירה של דרום קוריאה?", o:["בוסאן","סיאול","פיונגיאנג","טוקיו"], c:1, d:1},
+{q:"איזה איבר בגוף מסנן את הדם?", o:["הלב","הכבד","הכליות","הריאות"], c:2, d:2},
+{q:"מהי החיה המהירה ביותר ביבשה?", o:["נמר","סוס","ברדלס (צ'יטה)","ארנב"], c:2, d:1},
+{q:"כמה שעות יש ביממה?", o:["12","24","36","48"], c:1, d:1},
+{q:"איזה גז צמחים פולטים ביום?", o:["פחמן דו-חמצני","חנקן","חמצן","מימן"], c:2, d:2},
+{q:"מהי בירת מצרים?", o:["אלכסנדריה","קהיר","לוקסור","גיזה"], c:1, d:1},
+{q:"מי המציא את מנורת החשמל?", o:["ניוטון","אדיסון","איינשטיין","גלילאו"], c:1, d:1},
+{q:"כמה זה חצי מ-1,000?", o:["250","500","750","100"], c:1, d:1},
+{q:"מהי השפה הרשמית בברזיל?", o:["ספרדית","פורטוגזית","אנגלית","צרפתית"], c:1, d:2},
+{q:"איזה חג יהודי חוגגים באביב ובו אוכלים מצות?", o:["סוכות","פסח","שבועות","חנוכה"], c:1, d:1},
+{q:"מהו הכוכב שנותן לנו אור ביום?", o:["הירח","השמש","נוגה","מאדים"], c:1, d:1},
+{q:"כמה מדינות חברות באיחוד האירופי (בקירוב)?", o:["17","27","37","47"], c:1, d:3},
+{q:"מי היה המדען שגילה את כוח המשיכה כשנפל תפוח?", o:["איינשטיין","ניוטון","גלילאו","דארווין"], c:1, d:1},
+{q:"מהי בירת שוודיה?", o:["גטבורג","מלמו","שטוקהולם","אוסלו"], c:2, d:2},
+{q:"איזו חיה מטילה ביצים אך היא יונק?", o:["עטלף","ברווזן (פלטיפוס)","דולפין","קנגורו"], c:1, d:3},
+{q:"כמה זה 9 בריבוע?", o:["18","72","81","99"], c:2, d:2},
+{q:"מהי בירת סין?", o:["שנחאי","הונג קונג","בייג'ינג","גואנגז'ואו"], c:2, d:1},
+{q:"מי חיבר את הסדרה \"הארי פוטר\"?", o:["ג'.ר.ר טולקין","ג'יי קיי רולינג","רואלד דאל","סי אס לואיס"], c:1, d:1},
+{q:"איזה חומר נחוץ לצמחים כדי לגדול, מלבד מים ואור?", o:["חנקן","זהב","נפט","פלסטיק"], c:0, d:2},
+{q:"מהי היחידה למדידת טמפרטורה בישראל?", o:["פרנהייט","צלזיוס","קלווין","ניוטון"], c:1, d:1},
+{q:"כמה זמן אור השמש מגיע לכדור הארץ בקירוב?", o:["8 שניות","8 דקות","8 שעות","8 ימים"], c:1, d:3},
+{q:"איזו מדינה ידועה בפירמידות שלה?", o:["יוון","מצרים","איטליה","הודו"], c:1, d:1},
+{q:"מהו האות הראשונה באלף-בית העברי?", o:["בית","אלף","גימל","תו"], c:1, d:1},
+{q:"כמה נגנים בדרך כלל בהרכב רביעייה?", o:["3","4","5","6"], c:1, d:1},
+{q:"מהי הבירה של קנדה?", o:["טורונטו","אוטווה","מונטריאול","ונקובר"], c:1, d:2},
+{q:"איזה פרי צומח על עץ הזית?", o:["תמר","זית","תאנה","רימון"], c:1, d:1},
+{q:"מי היה מלך הפופ?", o:["אלביס פרסלי","מייקל ג'קסון","פרדי מרקורי","פרינס"], c:1, d:2},
+{q:"כמה זה 100 חלקי 4?", o:["20","25","40","50"], c:1, d:1},
+{q:"מהו האוקיינוס שבין אמריקה לאירופה?", o:["השקט","האטלנטי","ההודי","הארקטי"], c:1, d:2},
+{q:"איזה בעל חיים נושא את גוריו בכיס?", o:["דוב","קנגורו","זברה","קוף"], c:1, d:1},
+{q:"מהי בירת יוון?", o:["אתונה","סלוניקי","רודוס","קורפו"], c:0, d:1},
+{q:"כמה צלעות יש למשולש?", o:["2","3","4","5"], c:1, d:1},
+{q:"מי גילה את אמריקה בשנת 1492?", o:["מגלן","קולומבוס","קורטס","דרייק"], c:1, d:1},
+{q:"מהו הצבע שמתקבל מערבוב אדום ולבן?", o:["ורוד","סגול","כתום","חום"], c:0, d:1},
+{q:"איזה כלי נגינה מנגנים בעזרת קשת?", o:["פסנתר","חליל","כינור","תוף"], c:2, d:1},
+{q:"מהי בירת טורקיה?", o:["איסטנבול","אנקרה","איזמיר","בורסה"], c:1, d:2},
+{q:"כמה שחקנים בקבוצת הוקי קרח על הקרח?", o:["5","6","7","8"], c:1, d:3},
+{q:"איזה חומר מרכיב את רוב גוף האדם?", o:["שומן","מים","חלבון","סידן"], c:1, d:1},
+{q:"מהו סמל המדינה של ישראל?", o:["אריה","מנורה","נשר","עוגן"], c:1, d:2},
+{q:"מי כתב את \"אנה קרנינה\"?", o:["דוסטויבסקי","טולסטוי","צ'כוב","גוגול"], c:1, d:3},
+{q:"כמה זה 7 ועוד 8?", o:["14","15","16","13"], c:1, d:1},
+{q:"מהי בירת אירלנד?", o:["בלפאסט","דבלין","קורק","גאלוויי"], c:1, d:2},
+{q:"איזה בעל חיים ידוע כחבר הכי טוב של האדם?", o:["חתול","כלב","סוס","תוכי"], c:1, d:1},
+{q:"מהו כוכב הלכת שעליו אנחנו חיים?", o:["מאדים","נוגה","כדור הארץ","צדק"], c:2, d:1},
+{q:"מי בנה את תיבת נוח לפי התנ\"ך?", o:["אברהם","נוח","משה","דוד"], c:1, d:1},
+{q:"כמה זה 6 כפול 7?", o:["36","42","48","54"], c:1, d:1},
+{q:"מהי הבירה של נורווגיה?", o:["ברגן","אוסלו","טרונדהיים","סטוונגר"], c:1, d:2},
+{q:"איזה חלק מהצמח קולט אור שמש?", o:["השורש","הגבעול","העלה","הפרח"], c:2, d:2},
+{q:"מהי המדינה עם הכי הרבה אוכלוסייה באפריקה?", o:["מצרים","ניגריה","דרום אפריקה","קניה"], c:1, d:3},
+{q:"כמה זה 1,000 פחות 250?", o:["650","750","850","700"], c:1, d:1},
+{q:"מי צייר את הציור \"הצעקה\"?", o:["מונק","מונה","פיקאסו","דגה"], c:0, d:3},
+{q:"איזה משקה מכינים מפולי קקאו?", o:["קפה","תה","שוקו","מיץ"], c:2, d:1},
+{q:"מהי בירת סקוטלנד?", o:["גלזגו","אדינבורו","אברדין","דנדי"], c:1, d:3},
+{q:"כמה חודשים יש בשנה?", o:["10","11","12","13"], c:2, d:1},
+{q:"איזה בעל חיים ישן בעמידה?", o:["חתול","סוס","כלב","דוב"], c:1, d:2},
+{q:"מהו האיבר שאיתו אנחנו שומעים?", o:["האף","העין","האוזן","הלשון"], c:2, d:1},
+{q:"מי היה הקיסר הראשון של רומא?", o:["יוליוס קיסר","אוגוסטוס","נירון","מרקוס אורליוס"], c:1, d:3},
+{q:"כמה זה 15 ועוד 15?", o:["25","30","35","40"], c:1, d:1},
+{q:"מהי בירת פינלנד?", o:["הלסינקי","טמפרה","טורקו","אספו"], c:0, d:2},
+{q:"איזו פרה נותנת חלב?", o:["הזכר (פר)","הנקבה (פרה)","העגל","שניהם"], c:1, d:1},
+{q:"מהו מקור האנרגיה של לוחות סולאריים?", o:["רוח","גשם","שמש","גלים"], c:2, d:1},
+{q:"מי כתב את \"רומיאו ויוליה\" ו\"המלט\"?", o:["דיקנס","שייקספיר","מארק טוויין","אורוול"], c:1, d:1},
+{q:"כמה זה 20% מ-50?", o:["5","10","15","20"], c:1, d:2}
 ]
 };
 
@@ -1028,7 +1161,7 @@ const store = (() => {
 let S = null;
 function defState() {
   return { pid: rid(10), name: "", avatar: "🦁", bal: CFG.START_BAL, en: CFG.START_EN,
-    enTs: now(), w: 0, l: 0, t: 0, lg: "beg", muted: false, hist: [], ledger: [], recentL: [], recentM: [] };
+    enTs: now(), w: 0, l: 0, t: 0, lg: "beg", muted: false, hist: [], ledger: [], recentL: [], recentM: [], friends: [] };
 }
 function save() { const j = JSON.stringify(S); store.setItem(K_S, j); store.setItem(K_SIG, hash(j + SALT)); }
 function load() {
@@ -1136,7 +1269,7 @@ function renderHome() {
   $("home-record").textContent = `🏆 ${S.w} נצחונות · ${S.l} הפסדים · ${S.t} תיקו`;
   document.querySelectorAll(".league-card").forEach(c => c.classList.toggle("sel", c.dataset.league === S.lg));
   $("btn-mute").textContent = S.muted ? "🔇" : "🔊";
-  renderWallet(); renderHist();
+  renderWallet(); renderHist(); renderFriends();
 }
 function renderHist() {
   const el = $("hist-list"); el.innerHTML = "";
@@ -1152,6 +1285,33 @@ function renderHist() {
       d.innerHTML = `<span>${res[0]} מול ${h.opp} <span class="dim">(${CFG.LEAGUES[h.lg].name} · ${h.my}:${h.op})</span></span>
         <span class="h-res ${res[1]}">${res[2]} ₪</span><span class="dim">${when}</span>`;
     }
+    el.appendChild(d);
+  });
+}
+
+/* ─── חברים ─── */
+function recordFriend(res) {
+  if (!OPP || !OPP.pid) return;
+  if (!Array.isArray(S.friends)) S.friends = [];
+  let f = S.friends.find(x => x.pid === OPP.pid);
+  if (!f) { f = { pid: OPP.pid, name: OPP.name, avatar: OPP.avatar, w: 0, l: 0, t: 0, ts: now() }; S.friends.unshift(f); }
+  f.name = OPP.name; f.avatar = OPP.avatar; f.ts = now();
+  if (res === "w") f.w++; else if (res === "l") f.l++; else f.t++;
+  S.friends = S.friends.slice(0, 30);
+}
+function renderFriends() {
+  const el = $("friends-list"); if (!el) return;
+  const fr = Array.isArray(S.friends) ? S.friends : [];
+  if (!fr.length) { el.innerHTML = `<div class="hist-empty">אין עדיין חברים — כל מי שתשחק איתו יישמר כאן אוטומטית 👥</div>`; return; }
+  el.innerHTML = "";
+  fr.slice().sort((a, b) => b.ts - a.ts).forEach(f => {
+    const games = f.w + f.l + f.t;
+    const gtxt = games === 1 ? "משחק אחד" : `${games} משחקים`;
+    const d = document.createElement("div"); d.className = "friend-item";
+    d.innerHTML = `<span class="fr-av">${f.avatar}</span>
+      <div class="fr-main"><b>${f.name}</b><div class="dim">${gtxt} · ניצחת ${f.w} · הפסדת ${f.l}${f.t ? " · תיקו " + f.t : ""}</div></div>
+      <button class="btn btn-mini fr-del" title="הסר">🗑️</button>`;
+    d.querySelector(".fr-del").onclick = () => { S.friends = S.friends.filter(x => x.pid !== f.pid); save(); renderFriends(); };
     el.appendChild(d);
   });
 }
@@ -1458,14 +1618,20 @@ function pickPool(pool, recent, n, harder) {
 }
 function hostPickPlan(league) {
   const dOK = league === "beg" ? d => d <= 2 : league === "adv" ? () => true : d => d >= 2;
-  let lists = QDB.lists.map((c, i) => ({ key: c.id, i, d: c.d })).filter(x => dOK(x.d));
+  const all = QDB.lists.map((c, i) => ({ key: c.id, i, d: c.d, open: !!c.open }));
+  let openL = all.filter(x => x.open && dOK(x.d));
+  let closedL = all.filter(x => !x.open && dOK(x.d));
+  if (!openL.length) openL = all.filter(x => x.open);
+  if (!closedL.length) closedL = all.filter(x => !x.open);
   let mcs = QDB.mc.map((q, i) => ({ key: "m" + i, i, d: q.d })).filter(x => dOK(x.d));
-  if (lists.length < CFG.LIST_ROUNDS) lists = QDB.lists.map((c, i) => ({ key: c.id, i, d: c.d }));
   if (mcs.length < CFG.MC_ROUNDS) mcs = QDB.mc.map((q, i) => ({ key: "m" + i, i, d: q.d }));
-  const L = pickPool(lists, S.recentL, CFG.LIST_ROUNDS, league === "pro");
+  // 3 סבבי "רשימה": 2 נושאים פתוחים + 1 רשימה סגורה
+  const O = pickPool(openL, S.recentL, 2, false);
+  const C = pickPool(closedL, S.recentL, 1, league === "pro");
+  const L = O.concat(C);
   const Q = pickPool(mcs, S.recentM, CFG.MC_ROUNDS, false);
-  S.recentL = L.map(x => x.key).concat(S.recentL).slice(0, 15);
-  S.recentM = Q.map(x => x.key).concat(S.recentM).slice(0, 60);
+  S.recentL = L.map(x => x.key).concat(S.recentL).slice(0, 24);
+  S.recentM = Q.map(x => x.key).concat(S.recentM).slice(0, 120);
   save();
   const rounds = shuffle(L.map(x => ({ kind: "list", li: x.i })).concat(Q.map(x => ({ kind: "mc", qi: x.i }))));
   return rounds;
@@ -1506,8 +1672,8 @@ function hostNextRound() {
   clearTimeout(tHost);
   if (r.kind === "list") {
     const cat = QDB.lists[r.li];
-    HOST.listIndex = buildListIndex(cat);
-    HOST.remaining = cat.items.length;
+    if (cat.open) { HOST.listIndex = null; HOST.openSet = new Set(); HOST.remaining = Infinity; }
+    else { HOST.listIndex = buildListIndex(cat); HOST.openSet = null; HOST.remaining = cat.items.length; }
     M.starter = M.starter === S.pid ? OPP.pid : S.pid; // מתחלפים מי פותח
     const msg = { i: M.i, kind: "list", li: r.li, turn: M.starter, dur: CFG.LIST_TURN_S };
     netSend("r_start", msg); applyRoundStart(msg);
@@ -1532,19 +1698,23 @@ function hostArmListTimer() {
 RX.r_start = m => { if (PH === "match") applyRoundStart(m); };
 function applyRoundStart(m) {
   M.i = m.i; M.kind = m.kind; M.dur = m.dur; M.myPick = -1;
-  M.said = []; M.saidSet = new Set();
-  const kindTxt = m.kind === "list" ? "📝 סבב רשימה" : "🇦 שאלה אמריקאית";
-  $("g-round").textContent = `סבב ${m.i + 1}/6`;
-  banner(`${kindTxt}<div class="b-sub">סבב ${m.i + 1} מתוך 6</div>`, CFG.BANNER_MS);
+  M.said = []; M.saidSet = new Set(); M.openLocal = new Set();
   if (m.kind === "list") {
-    const cat = QDB.lists[m.li]; M.li = m.li; M.turn = m.turn;
-    M.clientIndex = buildListIndex(cat);
+    const cat = QDB.lists[m.li]; M.li = m.li; M.turn = m.turn; M.open = !!cat.open;
+    const kindTxt = M.open ? "💬 נושא פתוח" : "📝 סבב רשימה";
+    $("g-round").textContent = `סבב ${m.i + 1}/6`;
+    banner(`${kindTxt}<div class="b-sub">סבב ${m.i + 1} מתוך 6</div>`, CFG.BANNER_MS);
+    M.clientIndex = cat.open ? null : buildListIndex(cat);
     $("g-mc").hidden = true; $("g-list").hidden = false;
     $("g-cat").textContent = cat.t;
     $("g-said").innerHTML = "";
     $("g-input").value = ""; $("g-ghost").textContent = "";
+    $("g-input").placeholder = cat.open ? "כתוב משהו מהנושא…" : "הקלד תשובה…";
     renderTurn();
   } else {
+    M.open = false;
+    $("g-round").textContent = `סבב ${m.i + 1}/6`;
+    banner(`🇦 שאלה אמריקאית<div class="b-sub">סבב ${m.i + 1} מתוך 6</div>`, CFG.BANNER_MS);
     M.q = m.q; M.o = m.o;
     $("g-list").hidden = true; $("g-mc").hidden = false;
     $("g-q").textContent = m.q;
@@ -1575,9 +1745,11 @@ function submitList() {
   const inp = $("g-input");
   let text = inp.value.trim();
   if (!text) return;
-  const comp = completeText(M.clientIndex, M.saidSet, text);
-  const exact = judgeAgainst(M.clientIndex, M.saidSet, text);
-  if (exact.hit < 0 && comp) text = comp.canon;   // השלמה אוטומטית
+  if (!M.open) {   // ברשימה סגורה — השלמה אוטומטית
+    const comp = completeText(M.clientIndex, M.saidSet, text);
+    const exact = judgeAgainst(M.clientIndex, M.saidSet, text);
+    if (exact.hit < 0 && comp) text = comp.canon;
+  }
   sClick();
   if (NET.isHost) hostJudge(S.pid, text);
   else { netSend("l_input", { text }); inp.disabled = true; setTimeout(() => { if (M && M.turn === S.pid) inp.disabled = false; }, 2500); }
@@ -1587,6 +1759,7 @@ RX.l_input = m => { // מארח מקבל מהאורח
   hostJudge(OPP.pid, String(m.text).slice(0, 60));
 };
 function hostJudge(by, text) {
+  if (M.open) return hostJudgeOpen(by, text);
   const res = judgeAgainst(HOST.listIndex, M.saidSet, text);
   if (res.hit >= 0 && !res.dup) {
     const word = HOST.listIndex[res.hit].canon;
@@ -1608,12 +1781,24 @@ function hostJudge(by, text) {
     netSend("l_bad", msg); applyListBad(msg);
   }
 }
+/* נושא פתוח: מקבלים כל מילה חדשה (לא נאמרה), לפחות 2 תווים. בלי "נכון/לא נכון" */
+function hostJudgeOpen(by, text) {
+  const clean = String(text).slice(0, 40).trim();
+  const n = norm(clean);
+  if (n.length < 2) { const msg = { by, reason: "short" }; netSend("l_bad", msg); applyListBad(msg); return; }
+  if (HOST.openSet.has(n)) { const msg = { by, reason: "dup" }; netSend("l_bad", msg); applyListBad(msg); return; }
+  HOST.openSet.add(n);
+  const next = by === S.pid ? OPP.pid : S.pid;
+  const msg = { by, word: clean, next, hi: -1 };
+  netSend("l_ok", msg); applyListOk(msg);
+  M.turn = next; hostArmListTimer();
+}
 function hostListTimeout() {
   if (PH !== "match" || !M || M.kind !== "list") return;
   const loser = M.turn, win = loser === S.pid ? OPP.pid : S.pid;
   M.scores[win]++;
-  const missed = HOST.listIndex.filter(it => !M.saidSet.has(it.idx)).slice(0, 6).map(it => it.canon);
-  const more = HOST.remaining - missed.length;
+  const missed = M.open ? [] : HOST.listIndex.filter(it => !M.saidSet.has(it.idx)).slice(0, 6).map(it => it.canon);
+  const more = M.open ? 0 : HOST.remaining - missed.length;
   const em = { win, reason: "timeout", scores: M.scores, missed, more: Math.max(0, more) };
   netSend("l_end", em); applyListEnd(em);
   setTimeout(hostNextRound, 3000);
@@ -1623,11 +1808,12 @@ RX.l_bad = m => { if (PH === "match" && M && M.kind === "list") applyListBad(m);
 RX.l_end = m => { if (PH === "match" && M && M.kind === "list") applyListEnd(m); };
 
 function applyListOk(m) {
-  M.saidSet.add(m.hi);
+  if (typeof m.hi === "number" && m.hi >= 0) M.saidSet.add(m.hi);
   const chip = document.createElement("span");
   chip.className = "said-chip" + (m.by === S.pid ? "" : " op");
   chip.textContent = m.word;
   $("g-said").appendChild(chip);
+  $("g-said").scrollTop = $("g-said").scrollHeight;
   M.turn = m.next;
   if (m.by === S.pid) { sGood(); $("g-input").value = ""; $("g-ghost").textContent = ""; }
   $("g-input").disabled = M.turn !== S.pid;
@@ -1640,7 +1826,8 @@ function applyListBad(m) {
     const inp = $("g-input");
     inp.disabled = M.turn !== S.pid;
     inp.classList.add("shake"); setTimeout(() => inp.classList.remove("shake"), 400);
-    toast(m.reason === "dup" ? "כבר נאמר! 🙃" : "לא נכון… נסה שוב", "err", 1400);
+    const msg = m.reason === "dup" ? "כבר נאמר! 🙃" : m.reason === "short" ? "כתוב מילה שלמה 🙂" : "לא נכון… נסה שוב";
+    toast(msg, "err", 1400);
     inp.select && inp.select();
   }
 }
@@ -1729,9 +1916,11 @@ function applyMatchEnd(m) {
   const my = M.scores[S.pid], op = M.scores[OPP.pid];
   const fee = M.fee;
   let delta;
-  if (m.win === S.pid) { delta = fee; S.bal += fee * 2; S.w++; }
-  else if (m.win === null) { delta = 0; S.bal += fee; S.t++; }
-  else { delta = -fee; S.l++; }
+  let fres;
+  if (m.win === S.pid) { delta = fee; S.bal += fee * 2; S.w++; fres = "w"; }
+  else if (m.win === null) { delta = 0; S.bal += fee; S.t++; fres = "t"; }
+  else { delta = -fee; S.l++; fres = "l"; }
+  recordFriend(fres);
   S.hist.unshift({ ts: now(), k: "g", opp: OPP.name, lg: M.league, my, op, d: delta });
   S.hist = S.hist.slice(0, 40); save();
   $("res-emoji").textContent = m.win === S.pid ? "🏆" : m.win === null ? "🤝" : "😢";
@@ -1858,7 +2047,7 @@ function startDisconnectWin(quit = false) {
     if (left <= 0) {
       clearInterval(discTimer); discTimer = null; closeModal();
       PH = "result";
-      S.bal += M.fee * 2; S.w++;
+      S.bal += M.fee * 2; S.w++; recordFriend("w");
       S.hist.unshift({ ts: now(), k: "g", opp: OPP ? OPP.name : "יריב", lg: M.league, my: M.scores[S.pid], op: OPP ? M.scores[OPP.pid] : 0, d: M.fee });
       S.hist = S.hist.slice(0, 40); save();
       $("res-emoji").textContent = "🏆";
@@ -1953,7 +2142,7 @@ function initGame() {
   $("g-input").addEventListener("keydown", e => { if (e.key === "Enter") submitList(); });
   $("g-input").addEventListener("input", () => {
     const inp = $("g-input"), ghost = $("g-ghost");
-    if (!M || M.kind !== "list" || M.turn !== S.pid) { ghost.textContent = ""; return; }
+    if (!M || M.kind !== "list" || M.open || M.turn !== S.pid) { ghost.textContent = ""; return; }
     const comp = completeText(M.clientIndex, M.saidSet, inp.value);
     if (comp && norm(comp.canon) !== norm(inp.value)) ghost.textContent = inp.value + "  ← " + comp.canon;
     else ghost.textContent = "";
